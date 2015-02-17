@@ -17,7 +17,7 @@ var server = http.createServer(function(req, res) {
       proxy.on('error', function(error) {
         res.end('An error occurred: ' + error.message);
       });
-      var options = { 
+      var options = {
         target: 'http://127.0.0.1:' + port,
         xfwd: true,
       };
