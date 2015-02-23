@@ -1,7 +1,7 @@
-Lapew Amore
+Lapew Amour
 ===========
 
-Lapew Amore is the routing layer for [lepew](https://github.com/tizzo/lepew).
+Lapew Amour is the routing layer for [lepew](https://github.com/tizzo/lepew).
 It is responsible for looking up what docker container a given subdomain is
 running on (currently based on container name) and then proxy the request
 to that container.  It also is responsible for starting and stopping these
