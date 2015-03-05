@@ -1,0 +1,20 @@
+port: 8080
+hostname: localhost
+images:
+  'lepew/ubuntu-14.04-lamp':
+    ports:
+      - 22
+      - 80
+      - 443
+      - 3306
+      - 6379
+    penelopeServices:
+      - apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      - mysql:
+        command: 'mysqld_safe'
+        port: 3306
+      - redis:
+        command: 'redis-server'
+        port: 6379

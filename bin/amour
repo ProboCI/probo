@@ -1,0 +1,59 @@
+#! /usr/bin/env node
+var path = require('path'),
+    util = require('util'),
+    fs = require('fs');
+
+var Loader = require('yaml-config-loader');
+var yargs = require('yargs');
+var loader = new Loader();
+
+amour = require('../index');
+
+yargs
+  .describe('config', 'A YAML config file or directory of yaml files to load, can be invoked multiple times and later files will override earlier.')
+  .alias('config', 'c');
+
+var argv = yargs.argv;
+
+loader.add(path.resolve(path.join(__dirname, '..', 'defaults.yaml')), { filterKeys: true });
+loader.addAndNormalizeObject(process.env);
+
+if (argv.config) {
+  if (typeof argv.config === 'string') {
+    argv.config = [ argv.config ];
+  }
+  for (i in argv.config) {
+    loader.add(path.resolve(argv.config[i]));
+  }
+}
+
+loader.on('error', function(error){
+  if (error.name === 'YAMLException') {
+    console.error(util.print('Error parsing YAML file `', error.filePath, '`:', error.reason));
+    console.log(error);
+  }
+});
+loader.addAndNormalizeObject(argv);
+
+amour.cli.loadCommands(function(error, commands) {
+  if (error) throw error;
+});
+
+var includePath = path.join(__dirname, 'amour-' + argv._[0] + '.js');
+if (!fs.existsSync(includePath)) {
+  console.error('ERROR: Unknown command `' + argv._[0] + '`');
+  process.exit(1);
+}
+else {
+  var executor = require(includePath);
+  if (executor.options) {
+    executor.options(yargs);
+  }
+}
+
+loader.load(function(error, config) {
+  if (executor.configure) {
+    executor.configure(config);
+  }
+  executor.run(amour);
+});
