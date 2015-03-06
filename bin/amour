@@ -9,11 +9,11 @@ var loader = new Loader();
 
 amour = require('../index');
 
-yargs
+var argv = yargs
   .describe('config', 'A YAML config file or directory of yaml files to load, can be invoked multiple times and later files will override earlier.')
-  .alias('config', 'c');
-
-var argv = yargs.argv;
+  .alias('config', 'c')
+  .argv
+;
 
 loader.add(path.resolve(path.join(__dirname, '..', 'defaults.yaml')), { filterKeys: true });
 loader.addAndNormalizeObject(process.env);
@@ -57,6 +57,7 @@ amour.cli.loadCommands(function(error, commands) {
       if (executor.configure) {
         executor.configure(config);
       }
+      amour.config = config;
       executor.run(amour);
     });
   }
