@@ -35,25 +35,29 @@ loader.on('error', function(error){
 });
 loader.addAndNormalizeObject(argv);
 
+var commandName = argv._[0];
+if (commandName == undefined) {
+  commandName = 'help';
+}
+
 amour.cli.loadCommands(function(error, commands) {
   if (error) throw error;
-});
-
-var includePath = path.join(__dirname, 'amour-' + argv._[0] + '.js');
-if (!fs.existsSync(includePath)) {
-  console.error('ERROR: Unknown command `' + argv._[0] + '`');
-  process.exit(1);
-}
-else {
-  var executor = require(includePath);
-  if (executor.options) {
-    executor.options(yargs);
+  if (!commands[commandName]) {
+    console.error('ERROR: Unknown command `' + argv._[0] + '`');
+    console.error('');
+    console.error('run `amour help` for a list of available commands.');
+    process.exit(1);
   }
-}
-
-loader.load(function(error, config) {
-  if (executor.configure) {
-    executor.configure(config);
+  else {
+    var executor = commands[commandName];
+    if (executor.options) {
+      executor.options(yargs);
+    }
+    loader.load(function(error, config) {
+      if (executor.configure) {
+        executor.configure(config);
+      }
+      executor.run(amour);
+    });
   }
-  executor.run(amour);
 });
