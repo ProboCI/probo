@@ -5,11 +5,16 @@ var path = require('path'),
 
 var exports = function() {
   this.configure = this.configure.bind(this);
-  this.yargs = this.yargs.bind(this);
+  this.options = this.options.bind(this);
   this.run = this.run.bind(this);
+  this.yargs = null;
 };
 
-exports.shortDescription = 'Displays this help message.'
+exports.shortDescription = 'Displays help for specific subcommands.';
+
+exports.help = 'Useage: amour help <subcommand>\n';
+exports.help += '\n';
+exports.help += 'Displays the help provided for the subcommand.';
 
 exports.options = function(yargs) {
   this.yargs = yargs;
@@ -47,40 +52,53 @@ exports.buildAllCommandHelp = function(amour, done) {
   });
 }
 
+exports.displayAllHelp = function() {
+  var self = this;
+  this.buildAllCommandHelp(amour, function(error, output) {
+    if (error) throw error;
+    var spaces = 30;
+    console.log('usage: amour [--config] <command> [<args>]');
+    console.log('');
+    console.log('The available subcommands are:');
+    output = output.map(function(element) {
+      var name = element.name
+      var output =  '    ' + name + self.buildSpaces(spaces - name.length);
+      var wrap = wordwrap(output.length, windowsize.width);
+      var description = wrap(element.description);
+      output += description.substring(output.length);
+      return output;
+    });
+    console.log(output.join('\n'));
+    console.log('');
+    console.log('For more specific help see \'amour help <subcommand>\'');
+  });
+};
+
 exports.run = function(amour) {
   var self = this;
   var argv = this.yargs.argv;
   if (argv._[1]) {
     var includePath = path.join(__dirname, 'amour-' + argv._[1] + '.js');
     if (!fs.existsSync(includePath)) {
-      console.error('ERROR: Unknown command `' + argv._[1] + '`\n');
+      console.error('ERROR: `' + argv._[1] + '` is not an amour command.\n');
+      this.displayAllHelp();
     }
     else {
       var executor = require(includePath);
       if (executor.options) {
-        executor.options(this.yargs);
+        executor.options(self.yargs);
       }
+      if (executor.help) {
+        console.log(executor.help, '\n');
+      }
+      else if (executor.shortDescription) {
+        console.log(executor.shortDescription, '\n');
+      }
+      self.yargs.showHelp();
     }
   }
   else {
-    this.buildAllCommandHelp(amour, function(error, output) {
-      if (error) throw error;
-      var spaces = 30;
-      console.log('usage: amour [--config] <command> [<args>]');
-      console.log('');
-      console.log('The available subcommands are:');
-      output = output.map(function(element) { 
-        var name = element.name
-        var output =  '    ' + name + self.buildSpaces(spaces - name.length);
-        var wrap = wordwrap(output.length, windowsize.width);
-        var description = wrap(element.description);
-        output += description.substring(output.length);
-        return output;
-      });
-      console.log(output.join('\n'));
-      console.log('');
-      console.log('For more specific help see \'amour help <subcommand>\'');
-    });
+    this.displayAllHelp();
   }
 }
 
