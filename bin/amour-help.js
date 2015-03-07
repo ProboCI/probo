@@ -77,14 +77,14 @@ exports.displayAllHelp = function() {
 exports.run = function(amour) {
   var self = this;
   var argv = this.yargs.argv;
-  if (argv._[1]) {
-    var includePath = path.join(__dirname, 'amour-' + argv._[1] + '.js');
-    if (!fs.existsSync(includePath)) {
+
+  amour.cli.loadCommands(function(error, commands) {
+    if (!commands[argv._[1]]) {
       console.error('ERROR: `' + argv._[1] + '` is not an amour command.\n');
-      this.displayAllHelp();
+      self.displayAllHelp();
     }
     else {
-      var executor = require(includePath);
+      var executor = commands[argv._[1]];
       if (executor.options) {
         executor.options(self.yargs);
       }
@@ -96,10 +96,7 @@ exports.run = function(amour) {
       }
       self.yargs.showHelp();
     }
-  }
-  else {
-    this.displayAllHelp();
-  }
+  });
 }
 
 module.exports = exports;

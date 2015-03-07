@@ -12,8 +12,7 @@ amour = require('../index');
 var argv = yargs
   .describe('config', 'A YAML config file or directory of yaml files to load, can be invoked multiple times and later files will override earlier.')
   .alias('config', 'c')
-  .argv
-;
+  .argv;
 
 loader.add(path.resolve(path.join(__dirname, '..', 'defaults.yaml')), { filterKeys: true });
 loader.addAndNormalizeObject(process.env);
