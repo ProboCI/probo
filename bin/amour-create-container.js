@@ -11,14 +11,12 @@ exports.config = function() {
 }
 
 exports.run = function(amour) {
-  console.log('RUN WAS CALLED!');
   var docker = new Docker();
   this.docker = docker;
 
   var command = [ 'penelope' ];
   var name = null;
   // TODO: Accept argument for image to use.
-  console.log('ON LIKE DONKEY KONG');
   var container = amour.config.images[amour.config.defaultImage];
   var exposedPorts = {};
   var portBindings = {};
@@ -38,20 +36,16 @@ exports.run = function(amour) {
     }
   }
   var ports = { "80/tcp": [{ "HostPort": "11022" }]};
-  //console.log(command);
-  //console.log({Image: 'lepew/ubuntu-14.04-lamp', Cmd: command, Name: 'disco-stu'});
-  ///*
   var volumes = [
     '/vagrant/ssh_credentials/id_rsa.pub:/root/.ssh/id_rsa.pub:ro',
     '/vagrant/ssh_credentials/id_rsa:/root/.ssh/id_rsa:ro',
   ];
-  //console.log({exposed: exposedPorts, bindings: portBindings});
   var createOptions = {
     Volumes: {
       '/root/.ssh/id_rsa': {},
       '/root/.ssh/id_rsa.pub': {},
     },
-    Binds: [ 
+    Binds: [
       '/vagrant/ssh_credentials/id_rsa.pub:/root/.ssh/id_rsa.pub:ro',
       '/vagrant/ssh_credentials/id_rsa:/root/.ssh/id_rsa:ro',
     ],
