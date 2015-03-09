@@ -1,20 +1,26 @@
-port: 8080
+# App name
+name: amour
+# Port for the server to listen on
+port: 3010
 hostname: localhost
+# Can be any { socketPath: '/path' } or { host: 'somehost', port: 9999 }
+# See dockerode constructor for details: https://github.com/apocas/dockerode
+docker:
+  socketPath: '/var/run/docker.sock'
+mongoUrl: 'mongodb://localhost:27017/amour'
+# Prefixes all routes so that the app can be namespaced.
+prefix: ''
+# If a cotnainer is not specified in the repository's configuration, use this one.
+defaultImage: 'lepew/ubuntu-14.04-lamp'
 images:
   'lepew/ubuntu-14.04-lamp':
-    ports:
-      - 22
-      - 80
-      - 443
-      - 3306
-      - 6379
-    penelopeServices:
-      - apache:
+    services:
+      apache:
         command: '/usr/sbin/apache2ctl -D FOREGROUND'
         port: 80
-      - mysql:
+      mysql:
         command: 'mysqld_safe'
         port: 3306
-      - redis:
+      redis:
         command: 'redis-server'
         port: 6379
