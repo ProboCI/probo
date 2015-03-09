@@ -14,12 +14,16 @@ exports.options = function(yargs) {
   ;
 }
 
-exports.configure = function(config) {
-  this.config = config;
-};
-
 exports.run = function(amour) {
-  //console.log(this.config);
+  var Server = amour.ContainerManager;
+  var server = new Server();
+  var config = amour.config;
+  server.configure(config, function(error) {
+    if (error) throw error;
+    server.run(amour, function(error) {
+      console.log('Listening on ' + config.port);
+    });
+  });
 }
 
 module.exports = exports;
