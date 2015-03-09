@@ -51,8 +51,10 @@ amour.cli.loadCommands(function(error, commands) {
     var executor = commands[commandName];
     if (executor.options) {
       executor.options(yargs);
+      loader.addAndNormalizeObject(yargs.argv);
     }
     loader.load(function(error, config) {
+      if (error) throw error;
       if (executor.configure) {
         executor.configure(config);
       }
