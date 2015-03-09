@@ -78,13 +78,18 @@ exports.run = function(amour) {
   var self = this;
   var argv = this.yargs.argv;
 
+  var commandName = argv._[1];
+
   amour.cli.loadCommands(function(error, commands) {
-    if (!commands[argv._[1]]) {
+    if (commandName == undefined) {
+      self.displayAllHelp();
+    }
+    else if (!commands[commandName]) {
       console.error('ERROR: `' + argv._[1] + '` is not an amour command.\n');
       self.displayAllHelp();
     }
     else {
-      var executor = commands[argv._[1]];
+      var executor = commands[commandName];
       if (executor.options) {
         executor.options(self.yargs);
       }
