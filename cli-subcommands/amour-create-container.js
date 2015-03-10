@@ -27,46 +27,75 @@ exports.run = function(amour) {
     command.push('-c');
     command.push(service.command);
     if (service.port) {
-      //var protocol = service.protocol : service.protocol ? 'tcp';
-      //var protocol = service.protocol || 'tcp';
-      var protocol = 'tcp';
+      var protocol = service.protocol || 'tcp';
       var portString = service.port + '/' + protocol;
       exposedPorts[portString] = {};
       portBindings[portString] = [{ HostPort: null }];
     }
   }
-  var ports = { "80/tcp": [{ "HostPort": "11022" }]};
-  var volumes = [
-    '/vagrant/ssh_credentials/id_rsa.pub:/root/.ssh/id_rsa.pub:ro',
-    '/vagrant/ssh_credentials/id_rsa:/root/.ssh/id_rsa:ro',
-  ];
+
   var createOptions = {
+    name: 'disco-stu',
     Volumes: {
       '/root/.ssh/id_rsa': {},
       '/root/.ssh/id_rsa.pub': {},
     },
+    Image: 'lepew/ubuntu-14.04-lamp',
+    ExposedPorts: exposedPorts,
+    Volumes: [
+      '/vagrant/ssh_credentials/id_rsa.pub:/root/.ssh/id_rsa.pub:ro',
+      '/vagrant/ssh_credentials/id_rsa:/root/.ssh/id_rsa:ro',
+    ],
+    Cmd: command,
+  }
+  var startOptions = {
+    PortBindings:  portBindings,
     Binds: [
       '/vagrant/ssh_credentials/id_rsa.pub:/root/.ssh/id_rsa.pub:ro',
       '/vagrant/ssh_credentials/id_rsa:/root/.ssh/id_rsa:ro',
     ],
-    ExposedPorts: {"80/tcp":{}},
-    PortBindings:  { "80/tcp": [{ "HostPort": null }]},
-    Name: 'disco-stu'
   };
-  docker.run('lepew/ubuntu-14.04-lamp:0.4', command, null, createOptions, createOptions, function(error, data, container) {
-    console.log(arguments);
-  });
-
-  /*
-  docker.createContainer({Image: 'lepew/ubuntu-14.04-lamp', Volumes: volumes, Ports: ports, Cmd: command, Name: 'disco-stu'}, function(err, cont) {
-    cont.start(function (err, data) {
-      console.log('start', arguments);
+  console.log('creating container.');
+  docker.createContainer(createOptions, function(error, container) {
+    console.log('starting containerainer.', container);
+    container.start(startOptions, function (error, data) {
+      if (error) throw error;
+      var options = {
+        Detach: false,
+        Tty: true,
+        stout: true,
+        OpenStdout: true,
+        AttachStdin: true,
+        AttachStdout: true,
+        AttachStderr: true,
+        Cmd: [ 'drush', 'fetch', '--sql-sync', '-v', 'inspired', '--remote-environment=dev'],
+      };
+      console.log('running exec');
+      container.exec(options, function(error, exec) {
+        /*
+        exec.inspect(function(error, data) {
+          console.log(data);
+          console.log(data.OpenStdout);
+        });
+        //*/
+        if (error) throw error;
+        console.log('starting the exec');
+        exec.start({stdin: true, stdout: true}, function(error, stream) {
+          console.log('exec started');
+          if (error) throw error;
+          stream.setEncoding('utf8');
+          stream.pipe(process.stdout);
+          //process.stdin.pipe(stream);
+        });
+      });
+      /*
+      container.attach({stream: true, stdout: true, stderr: true}, function (err, stream) {
+        if (error) throw error;
+        stream.pipe(process.stdout);
+      });
+      */
     });
-    console.log('error', err, 'cont', cont);
-      // container.start(function (err, data) {
-      // });
   });
-  // */
 }
 
 module.exports = exports;
