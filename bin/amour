@@ -14,7 +14,7 @@ var argv = yargs
   .alias('config', 'c')
   .argv;
 
-loader.add(path.resolve(path.join(__dirname, '..', 'defaults.yaml')), { filterKeys: true });
+loader.add(path.resolve(path.join(__dirname, '..', 'defaults.yaml')));
 loader.addAndNormalizeObject(process.env);
 
 if (argv.config) {
