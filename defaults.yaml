@@ -12,6 +12,9 @@ mongoUrl: 'mongodb://localhost:27017/amour'
 prefix: ''
 # If a cotnainer is not specified in the repository's configuration, use this one.
 defaultImage: 'lepew/ubuntu-14.04-lamp'
+# The default image used if none is specified.
+image: 'lepew/ubuntu-14.04-lamp'
+# The images used by the host manager
 images:
   'lepew/ubuntu-14.04-lamp':
     services:
@@ -24,3 +27,9 @@ images:
       redis:
         command: 'redis-server'
         port: 6379
+# Settings for the github handler
+# port
+githubWebhookPath: /github-webhook
+githubWebhookSecret: 'CHANGE-ME'
+# This is temporary, we will need a proper oauth system to get the tokens that should be used.
+githubAPIToken: null
