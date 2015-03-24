@@ -91,7 +91,7 @@ exports.run = function(amour) {
     else {
       var executor = commands[commandName];
       if (executor.options) {
-        executor.options(self.yargs);
+        self.yargs = executor.options(self.yargs);
       }
       if (executor.help) {
         console.log(executor.help, '\n');

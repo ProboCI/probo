@@ -11,7 +11,7 @@ exports.shortDescription = '.';
 exports.help = 'Runs the API server for creating docker containers.';
 
 exports.options = function(yargs) {
-  yargs
+  return yargs
     .describe('port', 'The port to run on')
     .alias('port', 'p')
   ;

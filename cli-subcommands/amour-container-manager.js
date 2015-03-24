@@ -8,7 +8,7 @@ exports.shortDescription = 'Provides the mongo backed REST API server that manag
 exports.help = 'Runs the API server for creating docker containers.';
 
 exports.options = function(yargs) {
-  yargs
+  return yargs
     .describe('port', 'The port to listen on.')
     .alias('port', 'p')
   ;

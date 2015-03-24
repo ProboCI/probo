@@ -18,13 +18,15 @@ exports.help += 'Provides a github webhook endpoint.';
 
 exports.options = function(yargs) {
   this.yargs = yargs;
-  yargs
+  return yargs
     .describe('port', 'The port on which to listen for incoming requests.')
     .alias('port', 'p')
     .describe('github-webhook-path', 'The path at which to listen for webhooks.')
     .alias('github-webhook-path', 'P')
     .describe('github-webhook-secret', 'The webhook secret provided to GitHub.')
     .alias('github-webhook-secret', 's')
+    .describe('github-api-token', 'The API token to use to write to GitHub.')
+    .alias('github-api-token', 'a')
   ;
 };
 
