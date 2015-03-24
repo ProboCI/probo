@@ -49,18 +49,14 @@ exports.run = function(amour) {
   }
 
   var createOptions = {
-    name: 'disco-stu',
-    Volumes: {
-      '/root/.ssh/id_rsa': {},
-      '/root/.ssh/id_rsa.pub': {},
-    },
-    Image: 'lepew/ubuntu-14.04-lamp',
+    name: config.name,
+    Image: config.image,
     ExposedPorts: exposedPorts,
-    Volumes: [
-      '/vagrant/ssh_credentials/id_rsa.pub:/root/.ssh/id_rsa.pub:ro',
-      '/vagrant/ssh_credentials/id_rsa:/root/.ssh/id_rsa:ro',
-    ],
     Cmd: command,
+    Env: [
+      // Without the PWD environment variable some SSL libraries cannot find a key to load.
+      'PWD=/'
+    ],
   }
   var startOptions = {
     PortBindings:  portBindings,
@@ -71,6 +67,7 @@ exports.run = function(amour) {
   };
   console.log('creating container.');
   docker.createContainer(createOptions, function(error, container) {
+    if (error) throw error;
     console.log('starting containerainer.', container);
     container.start(startOptions, function (error, data) {
       if (error) throw error;
