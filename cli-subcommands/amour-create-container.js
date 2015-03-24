@@ -13,10 +13,8 @@ exports.config = function() {
 exports.options = function(yargs) {
   return yargs
     .describe('image', 'The image to run.')
-    .default('image', 'lepew/ubuntu-14.04-lamp')
     .alias('image', 'i')
     .describe('name', 'The name for the container.')
-    .default('name', 'lepew/ubuntu-14.04-lamp')
     .alias('name', 'n')
   ;
 }
