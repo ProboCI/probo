@@ -81,20 +81,12 @@ exports.run = function(amour) {
       };
       console.log('running exec');
       container.exec(options, function(error, exec) {
-        /*
-        exec.inspect(function(error, data) {
-          console.log(data);
-          console.log(data.OpenStdout);
-        });
-        //*/
         if (error) throw error;
         console.log('starting the exec');
         exec.start({stdin: true, stdout: true}, function(error, stream) {
           console.log('exec started');
           if (error) throw error;
-          stream.setEncoding('utf8');
           stream.pipe(process.stdout);
-          //process.stdin.pipe(stream);
         });
       });
       /*
