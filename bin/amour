@@ -32,7 +32,6 @@ loader.on('error', function(error){
     console.log(error);
   }
 });
-loader.addAndNormalizeObject(argv);
 
 var commandName = argv._[0];
 if (commandName == undefined) {
