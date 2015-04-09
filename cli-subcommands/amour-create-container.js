@@ -72,22 +72,38 @@ exports.run = function(amour) {
       if (error) throw error;
       var options = {
         Detach: false,
-        Tty: true,
+        Tty: false,
         stout: true,
         OpenStdout: true,
         AttachStdin: true,
         AttachStdout: true,
         AttachStderr: true,
-        Cmd: [ 'drush', 'fetch', '--sql-sync', '-v', 'inspired', '--remote-environment=dev'],
+        // SSH errors were observed without having a PWD set.
+        Env: [
+          'PWD=/',
+        ],
+        Cmd: [
+          'drush',
+          'fetch',
+          '--sql-sync',
+          '-v',
+          'inspired',
+          '--remote-environment=dev',
+          '--local-environment=proviso',
+          // TODO: Come up with a way to set the hostname... build id?
+        ],
       };
       console.log('running exec');
       container.exec(options, function(error, exec) {
         if (error) throw error;
         console.log('starting the exec');
-        exec.start({stdin: true, stdout: true}, function(error, stream) {
-          console.log('exec started');
-          if (error) throw error;
-          stream.pipe(process.stdout);
+        exec.resize({h: 56, w: 116}, function() { 
+          exec.start({stdin: true, stdout: true}, function(error, stream) {
+            console.log('exec started');
+            if (error) throw error;
+            stream.pipe(process.stdout);
+            stream.pipe(fs.createWriteStream('build-' + Date.now() + '.log'));
+          });
         });
       });
       /*
