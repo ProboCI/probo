@@ -4,6 +4,7 @@ var exports = function() {
 };
 
 var Docker = require('dockerode');
+var fs = require('fs');
 
 exports.shortDescription = 'TEMP Test container creation.'
 

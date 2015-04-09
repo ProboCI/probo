@@ -17,7 +17,7 @@ exports.help += '\n';
 exports.help += 'Displays the help provided for the subcommand.';
 
 exports.options = function(yargs) {
-  this.yargs = yargs;
+  return this.yargs = yargs;
 };
 
 exports.configure = function(config) {
