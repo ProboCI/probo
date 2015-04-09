@@ -27,6 +27,9 @@ images:
       redis:
         command: 'redis-server'
         port: 6379
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
+dataDir: './container-manager-data'
 # Settings for the github handler
 # port
 githubWebhookPath: /github-webhook
