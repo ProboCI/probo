@@ -11,6 +11,8 @@ exports.options = function(yargs) {
   return yargs
     .describe('port', 'The port to listen on.')
     .alias('port', 'p')
+    .describe('data-dir', 'The directory to store data in via leveldb.')
+    .alias('data-dir', 'd')
   ;
 }
 
