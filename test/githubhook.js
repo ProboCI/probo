@@ -54,7 +54,7 @@ describe("push", function(){
     var headers = {
       'X-GitHub-Event': 'push',
       'X-GitHub-Delivery': '8ec7bd00-df2b-11e4-9807-657b8ba6b6bd',
-      'X-Hub-Signature': 'sha1=3899b659705481339f4d24faf79a62b052155b0b'
+      'X-Hub-Signature': 'sha1=749d8446e3c03135899317edaa058cb4e7e92811'
     }
 
     var r = http(config.githubWebhookPath)
@@ -65,4 +65,3 @@ describe("push", function(){
       });
   });
 });
-
