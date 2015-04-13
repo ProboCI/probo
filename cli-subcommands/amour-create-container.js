@@ -28,9 +28,31 @@ exports.options = function(yargs) {
 }
 
 exports.run = function(amour) {
+  var config = amour.config;
   var jobConfig = yaml.safeLoad(fs.readFileSync(amour.config.config));
-  var container = new Container(amour.config, jobConfig);
-  container.runBuild();
+  var image = jobConfig.image || config.image;
+  var imageConfig = config.images[image];
+  if (!imageConfig) return exitWithError('Invalid image ' + image + ' selected.');
+  var options = {
+    containerName: amour.config.containerName,
+    docker: config.docker,
+    image: image,
+    imageConfig: imageConfig,
+    jobConfig: jobConfig,
+    binds: [
+      '/vagrant/ssh_credentials/id_rsa.pub:/root/.ssh/id_rsa.pub:ro',
+      '/vagrant/ssh_credentials/id_rsa:/root/.ssh/id_rsa:ro',
+    ],
+  };
+  var container = new Container(options);
+  container.runBuild(function(error, data) {
+    console.log(arguments);
+  });
 }
+
+function exitWithError(message) {
+  console.error(message);
+  process.exit(1);
+};
 
 module.exports = exports;
