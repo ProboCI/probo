@@ -1,26 +1,69 @@
 var util = require('util');
 var request = require('request');
+var should = require('should');
+
 var GithubHandler = require('../lib/GithubHandler');
 
 var config = {
   githubWebhookPath: '/ghh',
   githubWebhookSecret: 'secret',
   githubAPIToken: 'token',
-  port: 0
+  port: 0,
+  githubAPIToken: '937bf3fcff65a3b034109efcca28f5d0ae24e364', //ilya's personal token
+  api: {
+    url: "http://localhost:3000",
+    token: "token2"
+  }
 }
-var server = new GithubHandler(config);
+var ghh_server = new GithubHandler(config);
+
+// disable logging
+//ghh_server.log._level = Number.POSITIVE_INFINITY;
+
+// mock out API calls
+function init_nock(){
+  var nock = require('nock');
+  nock.enableNetConnect();
+
+  var project = {
+    id: '1234',
+    service: "github",
+    owner: "zanchin",
+    repo: "testrepo",
+    slug: "zanchin/testrepo"
+  }
+
+  var build = {
+    projectId: "123",
+    status: 'pending',
+    sha: "9dd7d8b3ccf6cdecc86920535e52c4d50da7bd64",
+    project: project
+  }
+
+  nock(config.api.url)
+    .get("/projects?service=github&slug=zanchin%2Ftestrepo&single=true")
+    .reply(200, project);
+
+  nock(config.api.url)
+    .post("/projects/"+project.id+"/builds")
+    .reply(200, build);
+}
 
 before("start GithubHandler server", function(done){
-  server.start(function(){
-    done();
-  });
+  //init_nock();
+
+  ghh_server.start(done);
+});
+
+after("stop GithubHandler server", function(done){
+  ghh_server.stop(done);
 });
 
 function http(path){
   var options = {
-    url: util.format("http://%s:%s%s", 
-                     server.server.address().address,
-                     server.server.address().port,
+    url: util.format("http://%s:%s%s",
+                     ghh_server.server.address().address,
+                     ghh_server.server.address().port,
                      path),
     json: true
   };
@@ -35,15 +78,50 @@ describe("pull", function(){
     var headers = {
       'X-GitHub-Delivery': 'a60aa880-df33-11e4-857c-eca3ec12497c',
       'X-GitHub-Event': 'pull_request',
-      'X-Hub-Signature': 'sha1=6c429a591f467a1f6167416c3485f0ad1e8c52c5'
+      'X-Hub-Signature': 'sha1=4636d00906034f52c099dfedae96095f8832994c'
     }
 
     var r = http(config.githubWebhookPath)
       .post({body: payload, headers: headers}, function(err, res, body){
-        // handles push bu returning OK and doing nothing else
+        // handles push by returning OK and doing nothing else
+        should.not.exist(err);
         body.should.eql({ok: true});
-        done();
-      });
+
+        // wait a while and then trigger a status update
+        setTimeout(function(){
+          http("/update")
+            .post({
+              body: {
+                update: {
+                  status: "success",
+                  description: "Environment built!",
+                  context: "ci/env",
+                  target_url: ""
+                },
+                build: {
+                  projectId: "123",
+
+                  status: 'success',
+                  sha: "9dd7d8b3ccf6cdecc86920535e52c4d50da7bd64",
+
+                  project: {
+                    id: '1234',
+                    service: "github",
+                    owner: "zanchin",
+                    repo: "testrepo",
+                    slug: "zanchin/testrepo"
+                  }
+                }
+              }
+            }, function(err, res, body){
+              if(err) console.log(err)
+
+              body.should.eql({success: true})
+
+              done(err);
+            });
+        }, 1000);
+     });
   });
 });
 
@@ -54,7 +132,7 @@ describe("push", function(){
     var headers = {
       'X-GitHub-Event': 'push',
       'X-GitHub-Delivery': '8ec7bd00-df2b-11e4-9807-657b8ba6b6bd',
-      'X-Hub-Signature': 'sha1=749d8446e3c03135899317edaa058cb4e7e92811'
+      'X-Hub-Signature': 'sha1=4272f07295c279aba27788c5f72a87941164ff35'
     }
 
     var r = http(config.githubWebhookPath)

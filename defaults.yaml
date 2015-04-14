@@ -29,7 +29,13 @@ images:
         port: 6379
 # Settings for the github handler
 # port
-githubWebhookPath: /github-webhook
+githubWebhookPath: '/github-webhook'
 githubWebhookSecret: 'CHANGE-ME'
 # This is temporary, we will need a proper oauth system to get the tokens that should be used.
-githubAPIToken: null
+githubAPIToken: 'personal token here'
+
+# Settings for the API or Container Manager server
+# port
+api:
+  url: "http://localhost:3000"
+  token: "API token here"

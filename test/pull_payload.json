@@ -1,5 +1,5 @@
 {
-  "action": "opened",
+  "action": "synchronize",
   "number": 1,
   "pull_request": {
     "url": "https://api.github.com/repos/zanchin/testrepo/pulls/1",
@@ -33,21 +33,21 @@
     },
     "body": "",
     "created_at": "2015-04-10T03:42:44Z",
-    "updated_at": "2015-04-10T03:42:45Z",
+    "updated_at": "2015-04-13T00:07:52Z",
     "closed_at": null,
     "merged_at": null,
-    "merge_commit_sha": "61299bd0842a9675cb252b6cc8f268c0744f262e",
+    "merge_commit_sha": "e733dc89d0309355f45651456a819c865e1c8fe8",
     "assignee": null,
     "milestone": null,
     "commits_url": "https://api.github.com/repos/zanchin/testrepo/pulls/1/commits",
     "review_comments_url": "https://api.github.com/repos/zanchin/testrepo/pulls/1/comments",
     "review_comment_url": "https://api.github.com/repos/zanchin/testrepo/pulls/comments{/number}",
     "comments_url": "https://api.github.com/repos/zanchin/testrepo/issues/1/comments",
-    "statuses_url": "https://api.github.com/repos/zanchin/testrepo/statuses/4f292fbaeab18210a80056ce0d04ea963c9381e0",
+    "statuses_url": "https://api.github.com/repos/zanchin/testrepo/statuses/9dd7d8b3ccf6cdecc86920535e52c4d50da7bd64",
     "head": {
       "label": "zanchin:feature",
       "ref": "feature",
-      "sha": "4f292fbaeab18210a80056ce0d04ea963c9381e0",
+      "sha": "9dd7d8b3ccf6cdecc86920535e52c4d50da7bd64",
       "user": {
         "login": "zanchin",
         "id": 281978,
@@ -132,7 +132,7 @@
         "releases_url": "https://api.github.com/repos/zanchin/testrepo/releases{/id}",
         "created_at": "2015-04-10T02:40:57Z",
         "updated_at": "2015-04-10T02:40:57Z",
-        "pushed_at": "2015-04-10T03:42:45Z",
+        "pushed_at": "2015-04-13T00:07:52Z",
         "git_url": "git://github.com/zanchin/testrepo.git",
         "ssh_url": "git@github.com:zanchin/testrepo.git",
         "clone_url": "https://github.com/zanchin/testrepo.git",
@@ -243,7 +243,7 @@
         "releases_url": "https://api.github.com/repos/zanchin/testrepo/releases{/id}",
         "created_at": "2015-04-10T02:40:57Z",
         "updated_at": "2015-04-10T02:40:57Z",
-        "pushed_at": "2015-04-10T03:42:45Z",
+        "pushed_at": "2015-04-13T00:07:52Z",
         "git_url": "git://github.com/zanchin/testrepo.git",
         "ssh_url": "git@github.com:zanchin/testrepo.git",
         "clone_url": "https://github.com/zanchin/testrepo.git",
@@ -289,7 +289,7 @@
         "href": "https://api.github.com/repos/zanchin/testrepo/pulls/1/commits"
       },
       "statuses": {
-        "href": "https://api.github.com/repos/zanchin/testrepo/statuses/4f292fbaeab18210a80056ce0d04ea963c9381e0"
+        "href": "https://api.github.com/repos/zanchin/testrepo/statuses/9dd7d8b3ccf6cdecc86920535e52c4d50da7bd64"
       }
     },
     "merged": false,
@@ -298,10 +298,10 @@
     "merged_by": null,
     "comments": 0,
     "review_comments": 0,
-    "commits": 1,
-    "additions": 1,
+    "commits": 2,
+    "additions": 18,
     "deletions": 0,
-    "changed_files": 1
+    "changed_files": 2
   },
   "repository": {
     "id": 33704441,
@@ -368,7 +368,7 @@
     "releases_url": "https://api.github.com/repos/zanchin/testrepo/releases{/id}",
     "created_at": "2015-04-10T02:40:57Z",
     "updated_at": "2015-04-10T02:40:57Z",
-    "pushed_at": "2015-04-10T03:42:45Z",
+    "pushed_at": "2015-04-13T00:07:52Z",
     "git_url": "git://github.com/zanchin/testrepo.git",
     "ssh_url": "git@github.com:zanchin/testrepo.git",
     "clone_url": "https://github.com/zanchin/testrepo.git",
