@@ -34,6 +34,7 @@ function init_nock(){
   }
 
   var build = {
+    id: "build1",
     projectId: "123",
     status: 'pending',
     sha: "9dd7d8b3ccf6cdecc86920535e52c4d50da7bd64",
@@ -47,10 +48,14 @@ function init_nock(){
   nock(config.api.url)
     .post("/projects/"+project.id+"/builds")
     .reply(200, build);
+
+  nock(config.api.url)
+    .get("/builds/" + build.id + "?join=project")
+    .reply(200, build);
 }
 
 before("start GithubHandler server", function(done){
-  //init_nock();
+  init_nock();
 
   ghh_server.start(done);
 });
@@ -132,7 +137,7 @@ describe("push", function(){
     var headers = {
       'X-GitHub-Event': 'push',
       'X-GitHub-Delivery': '8ec7bd00-df2b-11e4-9807-657b8ba6b6bd',
-      'X-Hub-Signature': 'sha1=4272f07295c279aba27788c5f72a87941164ff35'
+      'X-Hub-Signature': 'sha1=cb4c474352a7708d24fffa864dab9919f54ac2f6'
     }
 
     var r = http(config.githubWebhookPath)
