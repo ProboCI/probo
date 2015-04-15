@@ -30,6 +30,8 @@ images:
       php_log:
         command: 'tail -F /var/log/php/error.log'
 dataDir: './container-manager-data'
+# Volumes to mount into created containers.
+binds: []
 # Settings for the github handler
 # port
 githubWebhookPath: /github-webhook
