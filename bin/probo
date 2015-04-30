@@ -24,10 +24,12 @@ var argv = yargs
 loader.add(path.resolve(path.join(__dirname, '..', 'defaults.yaml')));
 loader.addAndNormalizeObject(process.env);
 
+var commandName = argv._[0];
+
 amour.cli.loadCommands(function(error, commands) {
   if (error) throw error;
   if (!commands[commandName]) {
-    console.error('ERROR: Unknown command `' + argv._[0] + '`');
+    console.error('ERROR: Unknown command `' + commandName + '`');
     console.error('');
     console.error('run `amour help` for a list of available commands.');
     process.exit(1);
@@ -42,7 +44,6 @@ amour.cli.loadCommands(function(error, commands) {
     }
   }
 
-  var commandName = argv._[0];
   if (commandName == undefined) {
     commandName = 'help';
   }
