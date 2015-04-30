@@ -28,6 +28,11 @@ var commandName = argv._[0];
 
 amour.cli.loadCommands(function(error, commands) {
   if (error) throw error;
+
+  if (commandName == undefined) {
+    commandName = 'help';
+  }
+
   if (!commands[commandName]) {
     console.error('ERROR: Unknown command `' + commandName + '`');
     console.error('');
@@ -42,10 +47,6 @@ amour.cli.loadCommands(function(error, commands) {
     for (i in argv.config) {
       loader.add(path.resolve(argv.config[i]));
     }
-  }
-
-  if (commandName == undefined) {
-    commandName = 'help';
   }
 
   var executor = commands[commandName];
