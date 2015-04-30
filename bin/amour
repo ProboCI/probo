@@ -7,6 +7,13 @@ var Loader = require('yaml-config-loader');
 var yargs = require('yargs');
 var loader = new Loader();
 
+loader.on('error', function(error){
+  if (error.name === 'YAMLException') {
+    console.error(util.print('Error parsing YAML file `', error.filePath, '`:', error.reason));
+    console.log(error);
+  }
+});
+
 amour = require('../index');
 
 var argv = yargs
@@ -17,27 +24,6 @@ var argv = yargs
 loader.add(path.resolve(path.join(__dirname, '..', 'defaults.yaml')));
 loader.addAndNormalizeObject(process.env);
 
-if (argv.config) {
-  if (typeof argv.config === 'string') {
-    argv.config = [ argv.config ];
-  }
-  for (i in argv.config) {
-    loader.add(path.resolve(argv.config[i]));
-  }
-}
-
-loader.on('error', function(error){
-  if (error.name === 'YAMLException') {
-    console.error(util.print('Error parsing YAML file `', error.filePath, '`:', error.reason));
-    console.log(error);
-  }
-});
-
-var commandName = argv._[0];
-if (commandName == undefined) {
-  commandName = 'help';
-}
-
 amour.cli.loadCommands(function(error, commands) {
   if (error) throw error;
   if (!commands[commandName]) {
@@ -46,26 +32,41 @@ amour.cli.loadCommands(function(error, commands) {
     console.error('run `amour help` for a list of available commands.');
     process.exit(1);
   }
-  else {
-    var executor = commands[commandName];
-    if (executor.options) {
-      yargs = executor.options(yargs);
-      var setOptions = {};
-      var key = null;
-      for (key in yargs.argv) {
-        if (yargs.argv[key] != undefined) {
-          setOptions[key] = yargs.argv[key];
-        }
-      }
-      loader.addAndNormalizeObject(setOptions);
+
+  if (argv.config) {
+    if (typeof argv.config === 'string') {
+      argv.config = [ argv.config ];
     }
-    loader.load(function(error, config) {
-      if (error) throw error;
-      if (executor.configure) {
-        executor.configure(config);
-      }
-      amour.config = config;
-      executor.run(amour);
-    });
+    for (i in argv.config) {
+      loader.add(path.resolve(argv.config[i]));
+    }
   }
+
+  var commandName = argv._[0];
+  if (commandName == undefined) {
+    commandName = 'help';
+  }
+
+  var executor = commands[commandName];
+
+  if (executor.options) {
+    yargs = executor.options(yargs);
+    var setOptions = {};
+    var key = null;
+    for (key in yargs.argv) {
+      if (yargs.argv[key] != undefined) {
+        setOptions[key] = yargs.argv[key];
+      }
+    }
+    loader.addAndNormalizeObject(setOptions);
+  }
+
+  loader.load(function(error, config) {
+    if (error) throw error;
+    if (executor.configure) {
+      executor.configure(config);
+    }
+    amour.config = config;
+    executor.run(amour);
+  });
 });
