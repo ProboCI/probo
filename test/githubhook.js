@@ -37,7 +37,6 @@ function init_nock(){
   var build = {
     id: "build1",
     projectId: "123",
-    status: 'pending',
     sha: "9dd7d8b3ccf6cdecc86920535e52c4d50da7bd64",
     project: project
   }
@@ -47,7 +46,7 @@ function init_nock(){
     .reply(200, project);
 
   nock(config.api.url)
-    .post("/projects/"+project.id+"/builds")
+    .post("/startbuild")
     .reply(200, build);
 
   nock(config.api.url)
