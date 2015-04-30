@@ -16,6 +16,7 @@ var config = {
   }
 }
 var ghh_server = new GithubHandler(config);
+ghh_server.log._level = Number.POSITIVE_INFINITY;
 
 // disable logging
 //ghh_server.log._level = Number.POSITIVE_INFINITY;
@@ -98,7 +99,7 @@ describe("pull", function(){
             .post({
               body: {
                 update: {
-                  status: "success",
+                  state: "pending",
                   description: "Environment built!",
                   context: "ci/env",
                   target_url: ""
@@ -107,7 +108,7 @@ describe("pull", function(){
                   projectId: "123",
 
                   status: 'success',
-                  sha: "9dd7d8b3ccf6cdecc86920535e52c4d50da7bd64",
+                  ref: "d0fdf6c2d2b5e7402985f1e720aa27e40d018194",
 
                   project: {
                     id: '1234',
