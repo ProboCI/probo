@@ -16,10 +16,10 @@ var config = {
   }
 }
 var ghh_server = new GithubHandler(config);
-ghh_server.log._level = Number.POSITIVE_INFINITY;
 
 // disable logging
-//ghh_server.log._level = Number.POSITIVE_INFINITY;
+ghh_server.log.level(Number.POSITIVE_INFINITY);
+ghh_server.api.log.level(Number.POSITIVE_INFINITY);
 
 // mock out API calls
 var nocked = {};
@@ -28,6 +28,9 @@ var required_nocks = [];
 var nock = require('nock');
 function init_nock(){
   //nock.enableNetConnect();
+
+  nocked = {};
+  required_nocks = [];
 
   var project = {
     id: '1234',
@@ -91,10 +94,7 @@ function init_nock(){
 }
 
 before("start GithubHandler server", function(done){
-  ghh_server.start(function(){
-    init_nock();
-    done();
-  });
+  ghh_server.start(done);
 });
 
 after("stop GithubHandler server", function(done){
@@ -117,17 +117,33 @@ function http(path){
 }
 
 describe("pull", function(){
-  it("is handled", function(done){
-    var payload = require('./pull_payload');
+  beforeEach("nock out network calls", function(){
+    nock.cleanAll();
+    init_nock();
+  });
 
+  it("is routed", function(done){
+    var payload = require('./pull_payload');
     var headers = {
       'X-GitHub-Delivery': 'a60aa880-df33-11e4-857c-eca3ec12497c',
       'X-GitHub-Event': 'pull_request',
       'X-Hub-Signature': 'sha1=4636d00906034f52c099dfedae96095f8832994c'
     }
 
-    // var r = http(config.githubWebhookPath)
-    //   .post({body: payload, headers: headers}, function _(err, res, body){
+    var r = http(config.githubWebhookPath)
+            .post({body: payload, headers: headers}, function _(err, res, body){
+              // handles push by returning OK and doing nothing else
+              body.should.eql({ok: true});
+              should.not.exist(err);
+
+              done()
+            });
+  });
+
+
+  it("is handled", function(done){
+    var payload = require('./pull_payload');
+
 
     // fire off handler event
     var event = {
@@ -137,10 +153,6 @@ describe("pull", function(){
       payload: payload
     };
     ghh_server.pullRequestHandler(event, function(err, build){
-        // handles push by returning OK and doing nothing else
-        should.not.exist(err);
-        // body.should.eql({ok: true});
-
         // make sure all internal calls were made
         for(var nock_name in required_nocks){
           required_nocks[nock_name].done();
@@ -186,21 +198,21 @@ describe("pull", function(){
   });
 });
 
-// describe("push", function(){
-//   it("is handled", function(done){
-//     var payload = require('./push_payload');
+describe("push", function(){
+  it("is handled", function(done){
+    var payload = require('./push_payload');
 
-//     var headers = {
-//       'X-GitHub-Event': 'push',
-//       'X-GitHub-Delivery': '8ec7bd00-df2b-11e4-9807-657b8ba6b6bd',
-//       'X-Hub-Signature': 'sha1=cb4c474352a7708d24fffa864dab9919f54ac2f6'
-//     }
+    var headers = {
+      'X-GitHub-Event': 'push',
+      'X-GitHub-Delivery': '8ec7bd00-df2b-11e4-9807-657b8ba6b6bd',
+      'X-Hub-Signature': 'sha1=cb4c474352a7708d24fffa864dab9919f54ac2f6'
+    }
 
-//     var r = http(config.githubWebhookPath)
-//       .post({body: payload, headers: headers}, function(err, res, body){
-//         // handles push bu returning OK and doing nothing else
-//         body.should.eql({ok: true});
-//         done();
-//       });
-//   });
-// });
+    var r = http(config.githubWebhookPath)
+      .post({body: payload, headers: headers}, function(err, res, body){
+        // handles push bu returning OK and doing nothing else
+        body.should.eql({ok: true});
+        done();
+      });
+  });
+});
