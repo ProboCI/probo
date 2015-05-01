@@ -22,9 +22,12 @@ ghh_server.log._level = Number.POSITIVE_INFINITY;
 //ghh_server.log._level = Number.POSITIVE_INFINITY;
 
 // mock out API calls
+var nocked = {};
+var required_nocks = [];
+
+var nock = require('nock');
 function init_nock(){
-  var nock = require('nock');
-  nock.enableNetConnect();
+  //nock.enableNetConnect();
 
   var project = {
     id: '1234',
@@ -41,27 +44,64 @@ function init_nock(){
     project: project
   }
 
-  nock(config.api.url)
+  // nock out ghh server - pass these requests through
+  nock.enableNetConnect(util.format("%s:%s",
+                                    ghh_server.server.address().address,
+                                    ghh_server.server.address().port));
+
+
+  // nock out API URLs
+  nocked['project_search'] = nock(config.api.url)
     .get("/projects?service=github&slug=zanchin%2Ftestrepo&single=true")
     .reply(200, project);
 
-  nock(config.api.url)
+  nocked['startbuild'] = nock(config.api.url)
     .post("/startbuild")
     .reply(200, build);
 
-  nock(config.api.url)
-    .get("/builds/" + build.id + "?join=project")
-    .reply(200, build);
+  nocked['status_update'] = nock(config.api.url)
+    .persist()
+    .filteringPath(/status\/[^/]*/g, 'status/context')
+    .post("/builds/" + build.id + "/status/context")
+    .reply(200, {
+      "state": "success",
+      "description": "Tests passed Thu Apr 30 2015 17:41:43 GMT-0400 (EDT)",
+      "context": "ci/tests"
+    });
+
+  // nock out github URLs
+  var nocks = nock.load('./test/http_capture.json');
+  nocks.forEach(function(n, i){
+    if(i != 2){
+      nocked['github_' + i] = n;
+    }
+  });
+
+  Object.keys(nocked).filter(function(name){
+    var excluded = ["status_update"];
+    return excluded.indexOf(name) < 0;
+  }).forEach(function(name){
+    required_nocks.push(nocked[name]);
+  });
+
+  // nock.recorder.rec({
+  //   output_objects: true,
+  //   dont_print: true
+  // });
 }
 
 before("start GithubHandler server", function(done){
-  init_nock();
-
-  ghh_server.start(done);
+  ghh_server.start(function(){
+    init_nock();
+    done();
+  });
 });
 
 after("stop GithubHandler server", function(done){
   ghh_server.stop(done);
+
+  // var nockCallObjects = nock.recorder.play();
+  // require('fs').writeFileSync("http_capture.json", util.inspect(nockCallObjects, null, 5));
 });
 
 function http(path){
@@ -86,65 +126,81 @@ describe("pull", function(){
       'X-Hub-Signature': 'sha1=4636d00906034f52c099dfedae96095f8832994c'
     }
 
-    var r = http(config.githubWebhookPath)
-      .post({body: payload, headers: headers}, function(err, res, body){
+    // var r = http(config.githubWebhookPath)
+    //   .post({body: payload, headers: headers}, function _(err, res, body){
+
+    // fire off handler event
+    var event = {
+      event: 'pull_request',
+      id: 'a60aa880-df33-11e4-857c-eca3ec12497c',
+      url: '/ghh',
+      payload: payload
+    };
+    ghh_server.pullRequestHandler(event, function(err, build){
         // handles push by returning OK and doing nothing else
         should.not.exist(err);
-        body.should.eql({ok: true});
+        // body.should.eql({ok: true});
 
-        // wait a while and then trigger a status update
-        setTimeout(function(){
-          http("/update")
-            .post({
-              body: {
-                update: {
-                  state: "pending",
-                  description: "Environment built!",
-                  context: "ci/env",
-                  target_url: ""
-                },
-                build: {
-                  projectId: "123",
+        // make sure all internal calls were made
+        for(var nock_name in required_nocks){
+          required_nocks[nock_name].done();
+        }
 
-                  status: 'success',
-                  ref: "d0fdf6c2d2b5e7402985f1e720aa27e40d018194",
+        done();
 
-                  project: {
-                    id: '1234',
-                    service: "github",
-                    owner: "zanchin",
-                    repo: "testrepo",
-                    slug: "zanchin/testrepo"
-                  }
-                }
-              }
-            }, function(err, res, body){
-              if(err) console.log(err)
+        // // wait a while and then trigger a status update
+        // setTimeout(function(){
+        //   http("/update")
+        //     .post({
+        //       body: {
+        //         update: {
+        //           state: "pending",
+        //           description: "Environment built!",
+        //           context: "ci/env",
+        //           target_url: ""
+        //         },
+        //         build: {
+        //           projectId: "123",
 
-              body.should.eql({success: true})
+        //           status: 'success',
+        //           ref: "d0fdf6c2d2b5e7402985f1e720aa27e40d018194",
 
-              done(err);
-            });
-        }, 1000);
+        //           project: {
+        //             id: '1234',
+        //             service: "github",
+        //             owner: "zanchin",
+        //             repo: "testrepo",
+        //             slug: "zanchin/testrepo"
+        //           }
+        //         }
+        //       }
+        //     }, function(err, res, body){
+        //       if(err) console.log(err)
+
+        //       body.should.eql({success: true})
+
+        //       done(err);
+        //     });
+        // }, 1000);
      });
   });
 });
 
-describe("push", function(){
-  it("is handled", function(done){
-    var payload = require('./push_payload');
+// describe("push", function(){
+//   it("is handled", function(done){
+//     var payload = require('./push_payload');
 
-    var headers = {
-      'X-GitHub-Event': 'push',
-      'X-GitHub-Delivery': '8ec7bd00-df2b-11e4-9807-657b8ba6b6bd',
-      'X-Hub-Signature': 'sha1=cb4c474352a7708d24fffa864dab9919f54ac2f6'
-    }
+//     var headers = {
+//       'X-GitHub-Event': 'push',
+//       'X-GitHub-Delivery': '8ec7bd00-df2b-11e4-9807-657b8ba6b6bd',
+//       'X-Hub-Signature': 'sha1=cb4c474352a7708d24fffa864dab9919f54ac2f6'
+//     }
 
-    var r = http(config.githubWebhookPath)
-      .post({body: payload, headers: headers}, function(err, res, body){
-        // handles push bu returning OK and doing nothing else
-        body.should.eql({ok: true});
-        done();
-      });
-  });
-});
+//     var r = http(config.githubWebhookPath)
+//       .post({body: payload, headers: headers}, function(err, res, body){
+//         // handles push bu returning OK and doing nothing else
+//         body.should.eql({ok: true});
+//         done();
+//       });
+//   });
+// });
