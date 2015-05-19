@@ -1,5 +1,6 @@
 Probo
 ===========
+[![Build Status](https://travis-ci.org/ProboCI/probo.svg?branch=master)](https://travis-ci.org/ProboCI/probo)
 
 Probo is an open source continuous integration and quality assurance tool
 that lets you build branches and pull requests inside docker containers,
