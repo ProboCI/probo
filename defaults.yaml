@@ -7,7 +7,6 @@ hostname: localhost
 # See dockerode constructor for details: https://github.com/apocas/dockerode
 docker:
   socketPath: '/var/run/docker.sock'
-mongoUrl: 'mongodb://localhost:27017/amour'
 # Prefixes all routes so that the app can be namespaced.
 prefix: ''
 # If a cotnainer is not specified in the repository's configuration, use this one.
@@ -44,3 +43,7 @@ githubAPIToken: 'personal token here'
 api:
   url: "http://localhost:3000"
   token: "API token here"
+
+# Github Handler settings:
+githubWebhookPath: /github-webhook
+githubWebhookSecret: 'CHANGE-ME'
