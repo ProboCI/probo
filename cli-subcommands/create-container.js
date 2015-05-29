@@ -19,7 +19,7 @@ exports.config = function() {
 
 exports.options = function(yargs) {
   return yargs
-    .describe('config', 'The .proviso.yml file to build from.')
+    .describe('config', 'The .probo.yml file to build from.')
     .alias('image', 'i')
     .demand('config')
     .describe('container-name', 'The name to give the docker container')
@@ -29,14 +29,15 @@ exports.options = function(yargs) {
   ;
 }
 
-exports.run = function(amour) {
-  var config = amour.config;
-  var jobConfig = yaml.safeLoad(fs.readFileSync(amour.config.config));
+exports.run = function(probo) {
+  var config = probo.config;
+  var jobConfig = yaml.safeLoad(fs.readFileSync(probo.config.config));
+  // Defaults should move into the CM.
   var image = jobConfig.image || config.image;
   var imageConfig = config.images[image];
   if (!imageConfig) return exitWithError('Invalid image ' + image + ' selected.');
   var options = {
-    containerName: amour.config.containerName,
+    containerName: probo.config.containerName,
     docker: config.docker,
     image: image,
     imageConfig: imageConfig,
@@ -58,7 +59,12 @@ exports.run = function(amour) {
   else {
     var container = new Container(options);
     container.runBuild(function(error, data) {
-      console.log(arguments);
+      if (error) {
+        console.error('ERROR', error);
+      }
+      else {
+        console.log('Created', data.Id);
+      }
     });
   }
 }
