@@ -1,8 +1,6 @@
 var fs = require('fs')
    ,yaml = require('js-yaml')
-   ,request = require('request')
    ,Container = require('../lib/Container')
-   ,Promise = require('bluebird')
    ,co = require('co')
 ;
 
@@ -11,13 +9,9 @@ var exports = function() {
   this.run = this.run.bind(this);
 };
 
-var Docker = require('dockerode');
-var fs = require('fs');
-
 exports.shortDescription = 'TEMP Test probo.yml configs execution in a container.'
 
-exports.config = function() {
-}
+exports.config = function() {}
 
 exports.options = function(yargs) {
   return yargs
@@ -47,7 +41,7 @@ exports.run = function(probo) {
     var results = yield container.runBuildSteps()
     // console.log('Executed', results);
 
-  }).catch(function(err){console.error('ERROR', err.stack);})
+  }).catch(function(err){console.error('ERROR', err.stack)})
 }
 
 module.exports = exports;
