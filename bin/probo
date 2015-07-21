@@ -14,7 +14,7 @@ loader.on('error', function(error){
   }
 });
 
-amour = require('../index');
+var probo = require('../index');
 
 var argv = yargs
   .describe('config', 'A YAML config file or directory of yaml files to load, can be invoked multiple times and later files will override earlier.')
@@ -26,7 +26,7 @@ loader.addAndNormalizeObject(process.env);
 
 var commandName = argv._[0];
 
-amour.cli.loadCommands(function(error, commands) {
+probo.cli.loadCommands(function(error, commands) {
   if (error) throw error;
 
   if (commandName == undefined) {
@@ -36,7 +36,7 @@ amour.cli.loadCommands(function(error, commands) {
   if (!commands[commandName]) {
     console.error('ERROR: Unknown command `' + commandName + '`');
     console.error('');
-    console.error('run `amour help` for a list of available commands.');
+    console.error('run `probo help` for a list of available commands.');
     process.exit(1);
   }
 
@@ -44,7 +44,7 @@ amour.cli.loadCommands(function(error, commands) {
     if (typeof argv.config === 'string') {
       argv.config = [ argv.config ];
     }
-    for (i in argv.config) {
+    for (var i in argv.config) {
       loader.add(path.resolve(argv.config[i]));
     }
   }
@@ -68,7 +68,7 @@ amour.cli.loadCommands(function(error, commands) {
     if (executor.configure) {
       executor.configure(config);
     }
-    amour.config = config;
-    executor.run(amour);
+    probo.config = config;
+    executor.run(probo);
   });
 });
