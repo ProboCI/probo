@@ -1,0 +1,12 @@
+{
+  "restartable": "rs",
+  "ignore": [
+    ".git",
+    "node_modules",
+    "bower_components",
+    ".sass-cache",
+    "container-manager-data/*",
+    "*flycheck*"
+  ],
+  "verbose": true
+}
