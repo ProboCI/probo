@@ -45,17 +45,19 @@ exports.run = function(probo) {
   co(function* (){
     var container = new Container(options);
 
-    var results = yield container.runBuildSteps()
-    // console.log('Executed', results);
+    //yield container.findOrCreate()
+    var tasks = yield container.buildTasks()
 
-    var stream = results[results.length-1].stream;
-    // stream.pipe(process.stdout)
+    for(let task of tasks){
+      let result = yield task.run
 
-    var chunk
-    while((chunk = yield read(stream))){
-      console.log("output: " + chunk.toString().trim())
+      var chunk
+      while((chunk = yield read(result.stream))){
+        console.log("output: " + chunk.toString().trim())
+      }
+
+      console.log("exit code:", (yield result.exec).ExitCode)
     }
-    console.log("OUTPUT FINISHED")
   })
 }
 
