@@ -41,11 +41,8 @@ exports.run = function(probo) {
     attachLogs: true
   };
 
-
   co(function* (){
     var container = new Container(options);
-
-    //yield container.findOrCreate()
     var tasks = yield container.buildTasks()
 
     for(let task of tasks){
