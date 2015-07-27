@@ -25,7 +25,7 @@ exports.options = function(yargs) {
     .describe('container-name', 'The name to give the docker container')
     .alias('container-name', 'n')
     .demand('container-name')
-    .describe('container-manager-url', 'If specified, the running container manager URL to start the container from.');
+    .describe('container-manager-url', 'If specified, the running container manager URL to start the container from.')
   ;
 }
 
@@ -43,6 +43,7 @@ exports.run = function(probo) {
     imageConfig: imageConfig,
     jobConfig: jobConfig,
     binds: config.binds,
+    attachLogs: true,
   };
   if (config.containerManagerUrl) {
     var requestOptions = {

@@ -1,3 +1,5 @@
 *.swp
 *~
 node_modules
+out
+container-manager-data

@@ -1,8 +1,14 @@
+"use strict";
+
 var fs = require('fs')
    ,yaml = require('js-yaml')
    ,Container = require('../lib/Container')
-   ,co = require('co')
+   ,co = require('../lib/safeco')
+   ,read = require('co-read')
 ;
+
+var Promise = require('bluebird')
+Promise.longStackTraces();
 
 var exports = function() {
   this.configure = this.configure.bind(this);
@@ -37,11 +43,19 @@ exports.run = function(probo) {
 
   co(function* (){
     var container = new Container(options);
+    var tasks = yield container.buildTasks()
 
-    var results = yield container.runBuildSteps()
-    // console.log('Executed', results);
+    for(let task of tasks){
+      let result = yield task.run
 
-  }).catch(function(err){console.error('ERROR', err.stack)})
+      var chunk
+      while((chunk = yield read(result.stream))){
+        console.log("output: " + chunk.toString().trim())
+      }
+
+      console.log("exit code:", (yield result.exec).ExitCode)
+    }
+  })
 }
 
 module.exports = exports;
