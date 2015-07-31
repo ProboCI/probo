@@ -7,6 +7,13 @@ hostname: localhost
 # See dockerode constructor for details: https://github.com/apocas/dockerode
 docker:
   socketPath: '/var/run/docker.sock'
+# name of the instance used in status updates
+instanceName: 'ProboCI-dev'
+# prefix to use for container names
+containerNamePrefix: "probo"
+# container capacity of this container manager instance
+containerCapacity: -1  # -1 is unlimited or not set
+
 # Prefixes all routes so that the app can be namespaced.
 prefix: ''
 # If a cotnainer is not specified in the repository's configuration, use this one.

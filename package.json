@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "JSONStream": "^1.0.4",
     "async": "^0.9.0",
     "biguint-format": "^1.0.0",
     "bl": "^0.9.4",
