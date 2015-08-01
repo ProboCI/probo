@@ -25,7 +25,7 @@ images:
   'lepew/ubuntu-14.04-lamp':
     services:
       apache:
-        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        command: 'rm /var/run/apache2/apache2.pid; /usr/sbin/apache2ctl -D FOREGROUND'
         port: 80
       mysql:
         command: 'mysqld_safe'
