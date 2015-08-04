@@ -5,7 +5,7 @@ var http = require('http')
 var should = require('should')
 var waitForPort = require('../../lib/waitForPort')
 
-var wait_opts = {numRetries: 2, retryInterval: 500, debug: false}
+var wait_opts = {numRetries: 1, retryInterval: 100, debug: false}
 function extend(){
   var ret = {}
   for(var i in arguments){
@@ -19,50 +19,96 @@ function extend(){
 }
 
 describe("waiting for port to be open", function(){
-  var tcp_server, http_server;
-  var tcp_port, http_port;
+  describe("validates", function(){
+    it("port", function(){
+      (function(){
+        waitForPort(null, null)
+      }).should.throw("Invalid port: NaN");
+    })
 
-  // currently TCP checks are broken. Get a Parse Error on connect for some reason
-  describe.skip("tcp", function(){
+    it("type", function(){
+      (function(){
+        waitForPort("hi", 2213, {type: "bad"})
+      }).should.throw("Invalid check type: bad");
+    })
+
+    it("unknown options", function(){
+      (function(){
+        waitForPort("hi", 2213, {type: "bad", retries: 3})
+      }).should.throw("Invalid opt 'retries', probably a typo");
+    })
+
+    it("returns a Promise", function(){
+      var ret = waitForPort("hi", 2213);
+      ret.should.have.property("then").which.is.type("function")
+    })
+  })
+
+  describe("tcp", function(){
+    var server, port
+
     before("start TCP server", function(done){
-      tcp_server = net.createServer(function (socket) {
-        console.log("client connected")
+      server = net.createServer(function (socket) {
         socket.write('Echo server\r\n');
-        socket.end()
       }).listen(0, function listenting(){
-        tcp_port = tcp_server.address().port
+        port = server.address().port
+
+        try {
+          // if nock is enabled, disabled it for this server
+          var nock = require('nock')
+          nock.enableNetConnect('localhost:' + port);
+        } catch (e){}
+
+
         done()
       });
     });
 
     after("close server", function(){
-      tcp_server.close()
+      server.close()
     })
 
     it("server is started", function(){
-      should(tcp_port).be.type('number')
+      should(port).be.type('number')
     })
 
     it("will connect", function(done){
-      waitForPort('localhost', tcp_port, extend(wait_opts, {type: 'net'}), function(err){
-        should(err).be.ok
+      waitForPort('localhost', port, extend(wait_opts, {type: 'tcp'}), function(err){
+        should.not.exist(err)
         done(err)
+      })
+    })
+
+    it("will timeout w/o server", function(done){
+      server.close()
+
+      var start = +new Date()
+      waitForPort('localhost', port, extend(wait_opts, {type: 'tcp'}), function(err){
+        var duration = +new Date() - start
+        should.exist(err)
+
+        var expectedDuration = wait_opts.numRetries * wait_opts.retryInterval
+        duration.should.be.approximately(expectedDuration, 20)
+
+        done()
       })
     })
   })
 
   describe("http", function(){
+    var server, port
+
     before("start HTTP server", function(done){
-      http_server = http.createServer(function (req, res) {
+      server = http.createServer(function (req, res) {
         res.writeHead(200, {'Content-Type': 'text/plain'});
         res.end('Hello World\n');
       }).listen(0, function listenting(){
-        http_port = http_server.address().port
+        port = server.address().port
 
         try {
           // if nock is enabled, disabled it for this server
           var nock = require('nock')
-          nock.enableNetConnect('localhost:' + http_port);
+          nock.enableNetConnect('localhost:' + port);
         } catch (e){}
 
         done()
@@ -70,26 +116,26 @@ describe("waiting for port to be open", function(){
     });
 
     after("close server", function(){
-      http_server.close()
+      server.close()
     })
 
     it("server is started", function(done){
-      should(http_port).be.type('number')
+      should(port).be.type('number')
       done()
     })
 
     it("will connect to a server", function(done){
-      waitForPort('localhost', http_port, extend(wait_opts, {type: 'http'}), function(err){
+      waitForPort('localhost', port, extend(wait_opts, {type: 'http'}), function(err){
         should.not.exist(err)
         done(err)
       })
     })
 
     it("will timeout w/o server", function(done){
-      http_server.close()
+      server.close()
 
       var start = +new Date()
-      waitForPort('localhost', http_port, extend(wait_opts, {type: 'http'}), function(err){
+      waitForPort('localhost', port, extend(wait_opts, {type: 'http'}), function(err){
         var duration = +new Date() - start
         should.exist(err)
 
