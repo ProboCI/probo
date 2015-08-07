@@ -12,7 +12,7 @@ var exports = function() {
 
 exports.shortDescription = 'Displays help for specific subcommands.';
 
-exports.help = 'Useage: amour help <subcommand>\n';
+exports.help = 'Useage: probo help <subcommand>\n';
 exports.help += '\n';
 exports.help += 'Displays the help provided for the subcommand.';
 
@@ -31,8 +31,8 @@ exports.buildSpaces = function(number) {
   return output;
 };
 
-exports.buildAllCommandHelp = function(amour, done) {
-  amour.cli.loadCommands(function(error, commands) {
+exports.buildAllCommandHelp = function(probo, done) {
+  probo.cli.loadCommands(function(error, commands) {
     if (error) return done(error);
     var output = [];
     var name = '';
@@ -52,12 +52,12 @@ exports.buildAllCommandHelp = function(amour, done) {
   });
 }
 
-exports.displayAllHelp = function() {
+exports.displayAllHelp = function(probo) {
   var self = this;
-  this.buildAllCommandHelp(amour, function(error, output) {
+  this.buildAllCommandHelp(probo, function(error, output) {
     if (error) throw error;
     var spaces = 30;
-    console.log('usage: amour [--config] <command> [<args>]');
+    console.log('usage: probo [--config] <command> [<args>]');
     console.log('');
     console.log('The available subcommands are:');
     output = output.map(function(element) {
@@ -70,22 +70,22 @@ exports.displayAllHelp = function() {
     });
     console.log(output.join('\n'));
     console.log('');
-    console.log('For more specific help see \'amour help <subcommand>\'');
+    console.log('For more specific help see \'probo help <subcommand>\'');
   });
 };
 
-exports.run = function(amour) {
+exports.run = function(probo) {
   var self = this;
   var argv = this.yargs.argv;
 
   var commandName = argv._[1];
 
-  amour.cli.loadCommands(function(error, commands) {
+  probo.cli.loadCommands(function(error, commands) {
     if (commandName == undefined) {
-      self.displayAllHelp();
+      self.displayAllHelp(probo);
     }
     else if (!commands[commandName]) {
-      console.error('ERROR: `' + argv._[1] + '` is not an amour command.\n');
+      console.error('ERROR: `' + argv._[1] + '` is not an probo command.\n');
       self.displayAllHelp();
     }
     else {
