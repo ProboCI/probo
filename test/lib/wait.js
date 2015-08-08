@@ -1,4 +1,5 @@
 var co = require('co')
+require('co-mocha')
 var net = require('net')
 var http = require('http')
 
@@ -54,7 +55,7 @@ describe("waiting for port to be open", function(){
         port = server.address().port
 
         try {
-          // if nock is enabled, disabled it for this server
+          // if nock is enabled, disable it for this server
           var nock = require('nock')
           nock.enableNetConnect('localhost:' + port);
         } catch (e){}
@@ -79,6 +80,11 @@ describe("waiting for port to be open", function(){
       })
     })
 
+    it("will connect (promise-based)", function* (){
+      yield waitForPort('localhost', port, extend(wait_opts, {type: 'tcp'}))
+      // does not throw = good!
+    })
+
     it("will timeout w/o server", function(done){
       server.close()
 
@@ -93,6 +99,24 @@ describe("waiting for port to be open", function(){
         done()
       })
     })
+
+    it("will timeout w/o server (promised-based)", function* (){
+      // server is already closed
+
+      var start = +new Date()
+      var thrown = false
+      try {
+        yield waitForPort('localhost', port, extend(wait_opts, {type: 'tcp'}))
+      } catch(err){
+        thrown = true
+        var duration = +new Date() - start
+        should.exist(err)
+      }
+      thrown.should.eql(true)
+
+      var expectedDuration = wait_opts.numRetries * wait_opts.retryInterval
+      duration.should.be.approximately(expectedDuration, 20)
+    })
   })
 
   describe("http", function(){
@@ -106,7 +130,7 @@ describe("waiting for port to be open", function(){
         port = server.address().port
 
         try {
-          // if nock is enabled, disabled it for this server
+          // if nock is enabled, disable it for this server
           var nock = require('nock')
           nock.enableNetConnect('localhost:' + port);
         } catch (e){}
