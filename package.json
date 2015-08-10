@@ -8,7 +8,7 @@
     "container-manager": "node ./bin/probo container-manager -p 3020",
     "ghh": "node ./bin/probo github-handler -p 3010",
     "test": "mocha --recursive --require should",
-    "watch": "mocha -w --recursive --require should | bunyan"
+    "watch": "mocha -w --recursive --require should"
   },
   "author": "",
   "license": "ISC",
@@ -45,6 +45,7 @@
     "yargs": "^3.4.5"
   },
   "devDependencies": {
+    "co-mocha": "^1.1.2",
     "mocha": "^2.2.4",
     "nock": "^1.6.0",
     "shell-quote": "^1.4.3",
