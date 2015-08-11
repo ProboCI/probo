@@ -40,6 +40,7 @@ exports.run = function(probo) {
     containerName: probo.config.containerName,
     docker: config.docker,
     image: image,
+    build: {ref: "d65cf9baf3d14caeaa357471366e88cf"},
     imageConfig: imageConfig,
     jobConfig: jobConfig,
     binds: config.binds,

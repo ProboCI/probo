@@ -4,7 +4,7 @@ var fs = require('fs')
    ,yaml = require('js-yaml')
    ,Container = require('../lib/Container')
    ,co = require('../lib/safeco')
-   ,read = require('co-read')
+   ,runBuild = require('../lib/container_manager/build_runner')
 ;
 
 var Promise = require('bluebird')
@@ -45,16 +45,7 @@ exports.run = function(probo) {
     var container = new Container(options);
     var tasks = yield container.buildTasks()
 
-    for(let task of tasks){
-      let result = yield task.run
-
-      var chunk
-      while((chunk = yield read(result.stream))){
-        console.log("output: " + chunk.toString().trim())
-      }
-
-      console.log("exit code:", (yield result.exec).ExitCode)
-    }
+    yield* runBuild(tasks, {container: container, nostop: true})
   })
 }
 
