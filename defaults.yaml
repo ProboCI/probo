@@ -13,6 +13,7 @@ instanceName: 'ProboCI-dev'
 containerNamePrefix: "probo"
 # container capacity of this container manager instance
 containerCapacity: -1  # -1 is unlimited or not set
+containerIdleTimeout: 30m # can use time units here. no units = ms
 
 # Prefixes all routes so that the app can be namespaced.
 prefix: ''
