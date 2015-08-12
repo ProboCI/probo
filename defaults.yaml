@@ -13,6 +13,12 @@ instanceName: 'ProboCI-dev'
 containerNamePrefix: "probo"
 # container capacity of this container manager instance
 containerCapacity: -1  # -1 is unlimited or not set
+
+# If a container proxy lookup needs to start a non-running (but existing)
+# container, it'll automatically stop the container after this timeout
+# However, every time the proxy's lookup cache expires and it sends another
+# proxy lookup request to the Container Manager, that container's idle timeout
+# is reset again to this timeout value
 containerIdleTimeout: 30m # can use time units here. no units = ms
 
 # Prefixes all routes so that the app can be namespaced.
