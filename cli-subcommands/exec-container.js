@@ -4,7 +4,7 @@ var fs = require('fs')
    ,yaml = require('js-yaml')
    ,Container = require('../lib/Container')
    ,co = require('../lib/safeco')
-   ,runBuild = require('../lib/container_manager/build_runner')
+   ,runTasks = require('../lib/container_manager/task_runner')
 ;
 
 var Promise = require('bluebird')
@@ -45,7 +45,7 @@ exports.run = function(probo) {
     var container = new Container(options);
     var tasks = yield container.buildTasks()
 
-    yield* runBuild(tasks, {container: container, nostop: true})
+    yield* runTasks(tasks, {container: container, nostop: true})
   })
 }
 
