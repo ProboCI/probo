@@ -13,6 +13,7 @@ instanceName: 'ProboCI-dev'
 containerNamePrefix: "probo"
 # container capacity of this container manager instance
 containerCapacity: -1  # -1 is unlimited or not set
+#proxyStartupPause: 2s   # Amount of time to pause after a proxy request starts a container
 
 # If a container proxy lookup needs to start a non-running (but existing)
 # container, it'll automatically stop the container after this timeout
