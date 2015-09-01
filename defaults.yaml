@@ -61,6 +61,5 @@ api:
   url: "http://localhost:3000"
   token: "API token here"
 
-# Github Handler settings:
-githubWebhookPath: /github-webhook
-githubWebhookSecret: 'CHANGE-ME'
+# weave (log aggregator server)
+weaveUrl: "http://localhost:3060"
