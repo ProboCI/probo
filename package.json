@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js | bunyan",
-    "container-manager": "node ./bin/probo container-manager -p 3020",
-    "ghh": "node ./bin/probo github-handler -p 3010",
+    "container-manager": "node ./bin/probo container-manager -c cm.yml",
+    "ghh": "node ./bin/probo github-handler -c ghh.yml",
     "test": "mocha --recursive --require should",
     "watch": "mocha -w --recursive --require should"
   },
