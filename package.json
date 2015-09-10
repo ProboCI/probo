@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "",
   "main": "index.js",
+  "repository": "https://github.com/ProboCI/probo.git",
   "scripts": {
     "start": "node index.js | bunyan",
     "container-manager": "node ./bin/probo container-manager -c cm.yml",
