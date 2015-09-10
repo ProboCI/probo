@@ -25,12 +25,12 @@ containerIdleTimeout: 30m # can use time units here. no units = ms
 # Prefixes all routes so that the app can be namespaced.
 prefix: ''
 # If a cotnainer is not specified in the repository's configuration, use this one.
-defaultImage: 'lepew/ubuntu-14.04-lamp'
+defaultImage: 'proboci/ubuntu-14.04-lamp'
 # The default image used if none is specified.
-image: 'lepew/ubuntu-14.04-lamp'
+image: 'proboci/ubuntu-14.04-lamp'
 # The images used by the host manager
 images:
-  'lepew/ubuntu-14.04-lamp':
+  'proboci/ubuntu-14.04-lamp':
     services:
       cleanapache:
         command: 'rm /var/run/apache2/apache2.pid'
