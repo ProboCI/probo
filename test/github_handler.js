@@ -2,6 +2,10 @@ var util = require('util');
 var request = require('request');
 var should = require('should');
 
+var sinon = require('sinon')
+var nock = require('nock')
+var nockout = require('./__nockout')
+
 var GithubHandler = require('../lib/GithubHandler');
 
 var config = {
@@ -9,84 +13,13 @@ var config = {
   githubWebhookSecret: 'secret',
   githubAPIToken: 'token',
   port: 0,
-  githubAPIToken: '937bf3fcff65a3b034109efcca28f5d0ae24e364', //ilya's personal token
   api: {
     url: "http://localhost:3000",
-    token: "token2"
+    token: "token"
   },
   log_level: Number.POSITIVE_INFINITY  // disable logging
 }
 var ghh_server = new GithubHandler(config);
-
-// mock out API calls
-var nocked = {};
-var required_nocks = [];
-
-var nock = require('nock');
-function init_nock(){
-  //nock.enableNetConnect();
-
-  nocked = {};
-  required_nocks = [];
-
-  var project = {
-    id: '1234',
-    service: "github",
-    owner: "zanchin",
-    repo: "testrepo",
-    slug: "zanchin/testrepo"
-  }
-
-  var build = {
-    id: "build1",
-    projectId: "123",
-    sha: "9dd7d8b3ccf6cdecc86920535e52c4d50da7bd64",
-    project: project
-  }
-
-  // nock out ghh server - pass these requests through
-  nock.enableNetConnect(ghh_server.server.url.replace("http://", ''));
-
-
-  // nock out API URLs
-  nocked['project_search'] = nock(config.api.url)
-    .get("/projects?service=github&slug=zanchin%2Ftestrepo&single=true")
-    .reply(200, project);
-
-  nocked['startbuild'] = nock(config.api.url)
-    .post("/startbuild")
-    .reply(200, build);
-
-  nocked['status_update'] = nock(config.api.url)
-    .persist()
-    .filteringPath(/status\/[^/]*/g, 'status/context')
-    .post("/builds/" + build.id + "/status/context")
-    .reply(200, {
-      "state": "success",
-      "description": "Tests passed Thu Apr 30 2015 17:41:43 GMT-0400 (EDT)",
-      "context": "ci/tests"
-    });
-
-  // nock out github URLs
-  var nocks = nock.load('./test/http_capture.json');
-  nocks.forEach(function(n, i){
-    if(i != 2){
-      nocked['github_' + i] = n;
-    }
-  });
-
-  Object.keys(nocked).filter(function(name){
-    var excluded = ["status_update"];
-    return excluded.indexOf(name) < 0;
-  }).forEach(function(name){
-    required_nocks.push(nocked[name]);
-  });
-
-  // nock.recorder.rec({
-  //   output_objects: true,
-  //   dont_print: true
-  // });
-}
 
 function http(path, ghh){
   ghh = ghh || ghh_server;
@@ -105,20 +38,20 @@ describe("webhooks", function(){
 
   after("stop GithubHandler server", function(done){
     ghh_server.stop(done);
-
-    // var nockCallObjects = nock.recorder.play();
-    // require('fs').writeFileSync("http_capture.json", util.inspect(nockCallObjects, null, 5));
   });
 
-
   describe("pull", function(){
+    var nocker
     beforeEach("nock out network calls", function(){
-      nock.cleanAll();
-      init_nock();
+      nocker = init_nock();
+    });
+
+    afterEach("reset network mocks", function(){
+      nocker.cleanup()
     });
 
     it("is routed", function(done){
-      var payload = require('./pull_payload');
+      var payload = require('./fixtures/pull_payload');
       var headers = {
         'X-GitHub-Delivery': 'a60aa880-df33-11e4-857c-eca3ec12497c',
         'X-GitHub-Event': 'pull_request',
@@ -131,13 +64,15 @@ describe("webhooks", function(){
         body.should.eql({ok: true});
         should.not.exist(err);
 
-        done()
+        // pause for a little before finishing to allow push processing to run
+        // and hit all the GH nocked endpoints
+        setTimeout(done, 100)
       });
     });
 
 
     it("is handled", function(done){
-      var payload = require('./pull_payload');
+      var payload = require('./fixtures/pull_payload');
 
       // fire off handler event
       var event = {
@@ -150,21 +85,34 @@ describe("webhooks", function(){
         should.not.exist(err);
         build.should.eql({
           id: "build1",
-          projectId: "123",
-          sha: "9dd7d8b3ccf6cdecc86920535e52c4d50da7bd64",
+          projectId: "1234",
+          ref: "9dd7d8b3ccf6cdecc86920535e52c4d50da7bd64",
+          pull_request: "1", // normalize pull request identifier to a string
+          branch: "feature",
+          config: {
+            fetcher_config: {
+              "environment.remote": "dev",
+              "info_fetcher.class": "FetcherServices\\InfoFetcher\\FetcherServices",
+              "info_fetcher.config": {
+                host: "https://extranet.zivtech.com",
+              },
+              name: "awesome"
+            },
+            image: "lepew/ubuntu-14.04-lamp",
+            provisioner: "fetcher"
+          },
           project: {
             id: "1234",
+            // provider_id: 33704441,
             owner: "zanchin",
             repo: "testrepo",
             service: "github",
             slug: "zanchin/testrepo"
+          },
+          request: {
+            omitted: true
           }
         });
-
-        // makesure all internal calls were made
-        for(var nock_name in required_nocks){
-          required_nocks[nock_name].done();
-        }
 
         done();
       });
@@ -191,19 +139,10 @@ describe("webhooks", function(){
   });
 });
 
+
+
 describe("status update endpoint", function(){
   var ghh;
-
-  function mock(obj, attr_name, new_attr){
-    var orig = obj[attr_name];
-    obj[attr_name] = new_attr;
-
-    function reset(){
-      obj[attr_name] = orig;
-    }
-
-    return {value: orig, reset: reset};
-  }
 
   before("start another ghh", function(done){
     ghh = new GithubHandler(config);
@@ -213,12 +152,17 @@ describe("status update endpoint", function(){
     });
   });
 
+  var mocked
+  before("set up mocks", function(){
+    // call the first cb arg w/ no arguments
+    mocked = sinon.stub(ghh, 'postStatusToGithub').yields()
+  })
+
+  after("clear mocks", function(){
+    mocked.reset();
+  })
+
   it("accepts /update", function(done){
-    var mocked = mock(ghh, 'postStatusToGithub', function _(project, ref, status, cb/*(err)*/){
-      // no-op
-      mocked.reset();
-      cb();
-    });
 
     var update = {
       state: "pending",
@@ -254,12 +198,6 @@ describe("status update endpoint", function(){
   });
 
   it("accepts /builds/:bid/status/:context", function(done){
-    var mocked = mock(ghh, 'postStatusToGithub', function _(project, ref, status, cb/*(err)*/){
-      // no-op
-      mocked.reset();
-      cb();
-    });
-
     var update = {
       state: "pending",
       description: "Environment built!",
@@ -298,3 +236,61 @@ describe("status update endpoint", function(){
     });
   });
 });
+
+
+// mock out API calls
+function init_nock(){
+  var project = {
+    id: '1234',
+    service: "github",
+    owner: "zanchin",
+    repo: "testrepo",
+    slug: "zanchin/testrepo"
+  }
+
+  var build_id = "build1"
+
+  // nock out ghh server - pass these requests through
+  nock.enableNetConnect(ghh_server.server.url.replace("http://", ''));
+
+  // nock out github URLs
+  var nocker = nockout('github.json', {
+    not_required: ["status_update"],
+    processor: function(nocks){
+      // nock out API URLs
+      nocks.push(nock(config.api.url)
+                 .get("/projects?service=github&slug=zanchin%2Ftestrepo&single=true")
+                 .reply(200, project));
+      nocks[nocks.length - 1].name = "project_search"
+
+      nocks.push(nock(config.api.url)
+                 .post("/startbuild")
+                 .reply(200, function(uri, requestBody){
+                   // start build sets id and project id on build
+                   // and puts project inside build, returning build
+                   var body = JSON.parse(requestBody)
+                   body.build.id = build_id
+                   body.build.projectId = body.project.id
+                   body.build.project = body.project
+                   delete body.project
+                   return body.build
+                 }, {
+                   'content-type': 'application/json'
+                 }));
+      nocks[nocks.length - 1].name = "startbuild"
+
+      nocks.push(nock(config.api.url)
+                 .persist()
+                 .filteringPath(/status\/[^/]*/g, 'status/context')
+                 .post("/builds/" + build_id + "/status/context")
+                 .reply(200, {
+                   "state": "success",
+                   "description": "Tests passed Thu Apr 30 2015 17:41:43 GMT-0400 (EDT)",
+                   "context": "ci/tests"
+                 }));
+      nocks[nocks.length - 1].name = "status_update"
+    }
+  })
+
+  return nocker
+}
