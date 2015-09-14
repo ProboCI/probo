@@ -87,7 +87,7 @@ describe("webhooks", function(){
           id: "build1",
           projectId: "1234",
           ref: "9dd7d8b3ccf6cdecc86920535e52c4d50da7bd64",
-          pull_request: "1", // normalize pull request identifier to a string
+          pullRequest: "1", // normalize pull request identifier to a string
           branch: "feature",
           config: {
             fetcher_config: {
