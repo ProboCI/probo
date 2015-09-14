@@ -61,5 +61,5 @@ api:
   url: "http://localhost:3000"
   token: "API token here"
 
-# weave (log aggregator server)
-weaveUrl: "http://localhost:3060"
+# loom (log aggregator server)
+loomUrl: "http://localhost:3060"
