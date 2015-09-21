@@ -62,4 +62,9 @@ api:
   token: "API token here"
 
 # loom (log aggregator server)
-loomUrl: "http://localhost:3060"
+loom:
+  url: "http://localhost:3060"
+
+# asset server (must NOT be localhost because it's called from within container)
+assets:
+  url: "http://localhost:3070"
