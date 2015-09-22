@@ -18,8 +18,8 @@ describe("tasks", function(){
       gc.script.should.eql(`unset HISTFILE
 export PS4='\$ '
 set -x
-mkdir /code
-cd /code
+mkdir -p $SRC_DIR
+cd $SRC_DIR
 wget -q -O - --header "Authorization:token auth_token" https://api.github.com/repos/owner/repo/tarball/master | tar xzf - --strip-components=1
 `)
 
@@ -42,8 +42,8 @@ wget -q -O - --header "Authorization:token auth_token" https://api.github.com/re
       ad.script.should.eql(`unset HISTFILE
 export PS4='$ '
 set -x
-mkdir /assets
-cd /assets
+mkdir -p $ASSET_DIR
+cd $ASSET_DIR
 wget -nv -O db.tgz http://asset.server/asset/bucket-name/db.tgz
 wget -nv -O files.tgz http://asset.server/asset/bucket-name/files
 `)
