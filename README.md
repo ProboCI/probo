@@ -8,6 +8,10 @@ reports back on the progress of each step, and then *keeps the environment
 around* and gives you a link so that you can go and preview the work in a
 shared space.
 
+## Quickstart
+
+See the [Quickstart](QUICKSTART.md) guide for how to get up and running with your own instance of Probo
+
 ## Compatability
 The code uses generators and requires node 0.11.x or greater, with the --harmony-generators or --harmony flags, or any version of io.js
 

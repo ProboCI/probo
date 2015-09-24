@@ -1,4 +1,4 @@
-#! /usr/bin/env iojs
+#! /usr/bin/env node
 var path = require('path'),
     util = require('util'),
     fs = require('fs');
