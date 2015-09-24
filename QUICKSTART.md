@@ -25,7 +25,7 @@ git clone https://github.com/ProboCI/probo-proxy.git
 
 ### Node.js
 
-Probo requires any version of `io.js`, or node `0.12` or greater.
+Probo requires `io.js`, or node `4.x` or greater.
 
 ### Docker
 

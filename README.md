@@ -13,5 +13,4 @@ shared space.
 See the [Quickstart](QUICKSTART.md) guide for how to get up and running with your own instance of Probo
 
 ## Compatability
-The code uses generators and requires node 0.11.x or greater, with the --harmony-generators or --harmony flags, or any version of io.js
-
+The code uses generators and requires node `io.js` or `node` 4.x+.
