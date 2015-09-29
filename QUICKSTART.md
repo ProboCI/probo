@@ -219,7 +219,7 @@ Sample `.probo.yaml` file:
 
 ``` yaml
 # Each step is the build/test process
-# the name of teach step is the build context, and will get its own status updates
+# the name of each step is the build context, and will get its own status updates
 steps:
   - name: Look Around
     plugin: 'Shell'  # this is the default plugin
