@@ -19,19 +19,22 @@ exports.config = function() {
 
 exports.options = function(yargs) {
   return yargs
-    .describe('config', 'The .probo.yml file to build from.')
-    .alias('image', 'i')
-    .demand('config')
+    .describe('build-file', 'The .probo.yml file to build from.')
+    .alias('build-file', 'b')
+    .demand('build-file')
     .describe('container-name', 'The name to give the docker container')
     .alias('container-name', 'n')
     .demand('container-name')
     .describe('container-manager-url', 'If specified, the running container manager URL to start the container from.')
+    .alias('container-manager-url', 'u')
+    .describe('commit-ref', 'The commit to in for use in build steps.')
+    .alias('commit-ref', 'r')
   ;
 }
 
 exports.run = function(probo) {
   var config = probo.config;
-  var jobConfig = yaml.safeLoad(fs.readFileSync(probo.config.config));
+  var jobConfig = yaml.safeLoad(fs.readFileSync(probo.config.buildFile));
   // Defaults should move into the CM.
   var image = jobConfig.image || config.image;
   var imageConfig = config.images[image];
@@ -40,12 +43,15 @@ exports.run = function(probo) {
     containerName: probo.config.containerName,
     docker: config.docker,
     image: image,
-    build: {ref: "d65cf9baf3d14caeaa357471366e88cf"},
+    build: {},
     imageConfig: imageConfig,
     jobConfig: jobConfig,
     binds: config.binds,
     attachLogs: true,
   };
+  if (config.commitRef) {
+    options.build.ref = config.commitRef;
+  }
   if (config.containerManagerUrl) {
     var requestOptions = {
       method: 'post',
