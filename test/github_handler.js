@@ -111,7 +111,7 @@ describe("webhooks", function(){
           },
           request: {
             branch: 'feature',
-            id: 33015959,
+            pull_request_id: 33015959,
             owner: 'zanchin',
             pull_request: 1,
             repo: 'testrepo',
