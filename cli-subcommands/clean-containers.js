@@ -215,8 +215,8 @@ function printBranches(branches, indent){
  *  "stopped" - if the docker container exists and is stopped
  *  "running" - if the docker container exists and is running
  * disk:
- *  imageSize - size of the container's image in bytes, if container exists, null otherwise
- *  containerSize - size of the container's ownlayer in bytes, if container exists, null otherwise
+ *  .imageSize - size of the container's image in bytes, if container exists, null otherwise
+ *  .containerSize - size of the container's ownlayer in bytes, if container exists, null otherwise
  */
 function* setContainerStatus(build){
   var container = new Container({
