@@ -6,12 +6,13 @@ var through = require('through2')
 var JSONStream = require('JSONStream')
 var GitHubApi = require('github')
 var Promise = require('bluebird')
+var _ = require('lodash')
+var request = require('request')
+var requestAsync = require('request-promise')
 
 var bytes = require('bytes')
 
 var Container = require('../lib/Container')
-
-
 
 var github = new GitHubApi({
   version: "3.0.0",
@@ -23,7 +24,7 @@ var github = new GitHubApi({
 Promise.promisifyAll(github.pullRequests)
 
 var probo_config; // will be filled in on startup
-
+var utils;        // defined at the bottom of the file
 
 var exports = function() {
   this.configure = this.configure.bind(this);
@@ -42,8 +43,7 @@ exports.options = function(yargs) {
 }
 
 function* get_builds(cm){
-  // convert DB readStream to a real stream with objects. not efficient, but this is utility code
-  var buildStream = cm.streamFromDB('builds').pipe(new JSONStream.stringify()).pipe(new JSONStream.parse('*'))
+  var buildStream = request(`http://${probo_config.hostname}:${probo_config.port}/builds`).pipe(new JSONStream.parse('*'))
 
   // parse out just what we need and filter
   buildStream = buildStream.pipe(through.obj(function(build, enc, callback){
@@ -89,13 +89,7 @@ function* getGithubPRStatus(project, pr){
     }
 
     // create a map from PR number to PR object
-    var prs = {}
-    for(let pr of pull_requests){
-//      console.log(pr)
-      prs[pr.number + ""] = pr
-    }
-
-    pr_cache[project.id] = prs
+    pr_cache[project.id] = utils.indexBy(pull_requests, 'number')
   }
 
   return pr_cache[project.id][pr]
@@ -122,9 +116,6 @@ function* builds_to_projects(builds){
       project.builds = []
       project.pull_requests = []
       project.branches = []
-
-      // temp storage for pr and branch arrays
-      project._temp = {pull_requests: {}, branches: {}}
     }
     delete build.project
     project.builds.push(build)
@@ -132,43 +123,25 @@ function* builds_to_projects(builds){
     // turn pr and branch into a string to avoid undefined values
     build.pullRequest = build.pullRequest + ""
     build.branch = build.branch + ""
-
-    project._temp.pull_requests[build.pullRequest] = project._temp.pull_requests[build.pullRequest] || []
-    project._temp.branches[build.branch] = project._temp.branches[build.branch] || []
-
-    project._temp.pull_requests[build.pullRequest].push(build)
-    project._temp.branches[build.branch].push(build)
   }
+
+  let createdAt_desc = utils.sorter('createdAt', 'desc')
 
   // turn projects back into an array
-  var sorter = function(field, dir){
-    // sorts by descending order if dir is 'desc', ascending otherwise
-    return function cmp(a, b){
-      var value_a = typeof field == 'function' ? field(a) : a[field]
-      var value_b = typeof field == 'function' ? field(b) : b[field]
-
-      if(typeof value_a == 'undefined') value_a = 'undefined'
-      if(typeof value_b == 'undefined') value_b = 'undefined'
-
-      if(value_a < value_b) return dir == 'desc' ? 1 : -1
-      if(value_a === value_b) return 0
-      return dir == 'desc' ? -1 : 1
-    }
-  }
-
   var project_array = []
   for(let project_name in projects){
     let project = projects[project_name]
 
     // sort the builds by descending start date
-    let createdAt_desc = sorter('createdAt', 'desc')
     project.builds.sort(createdAt_desc)
 
     // turn PRs into an array
-    for(let pr in project._temp.pull_requests){
+    let prs = utils.indexBy(project.builds, 'pullRequest')
+    // console.log(prs)
+    for(let pr in prs){
       let pull_request = {
         pr: pr,
-        builds: project._temp.pull_requests[pr],
+        builds: prs[pr],
       }
       if(project.provider.slug === 'github'){
         pull_request.state = yield* getGithubPRStatus(project, pr)
@@ -181,18 +154,17 @@ function* builds_to_projects(builds){
     }
 
     // turn branches into an array
-    for(let branch in project._temp.branches){
+    let branches = utils.indexBy(project.builds, 'branch')
+    for(let branch in branches){
       project.branches.push({
         branch: branch,
-        builds: project._temp.branches[branch],
+        // sort the builds in the branch
+        builds: branches[branch].sort(createdAt_desc),  
       })
-
-      // sort the builds in the branch
-      project._temp.branches[branch].sort(createdAt_desc)
     }
 
     // sort by descending PR number
-    project.pull_requests.sort(sorter('pr', 'desc'))
+    project.pull_requests.sort(utils.sorter('pr', 'desc'))
 
     project_array.push(project)
     delete project._temp
@@ -202,61 +174,51 @@ function* builds_to_projects(builds){
 }
 
 function* get_container_names_for_project(project){
-  let container = new Container({
-    docker: probo_config.docker
-  })
-  let docker = Promise.promisifyAll(container.docker)
-  let containers = yield docker.listContainersAsync({all: true})
+  let response = JSON.parse(yield requestAsync(`http://${probo_config.hostname}:${probo_config.port}/containers`))
 
-  // filter containers by only the probo ones
-  let container_names = containers.map(function(c){
-    return c.Names[0].substr(1)
-  }).filter(function(name){
-    return name.indexOf(`probo--${project.name.replace('/', '.')}--${project.id}`) === 0
+  let container_names = response.containers.filter(function(c){
+    return c.name.indexOf(`probo--${project.name.replace('/', '.')}--${project.id}`) === 0
+  }).map(function(c){
+    return c.name
   })
 
   return container_names
 }
 
-function printBuilds(builds){
+function printBuilds(builds, indent){
+  indent = indent || "\t"
   for(let build of builds){
-    console.log(`\tBuild ${build.createdAt} pr:${build.pullRequest} branch:${build.branch} container:${build.docker.state}`)
+    console.log(`${indent}Build ${build.createdAt} pr:${build.pullRequest} branch:${build.branch} container:${build.container.state}`)
   }
 }
 
-function printPRs(pull_requests){
+function printPRs(pull_requests, indent){
+  indent = indent || "\t"
   for(let pr of pull_requests){
-    console.log(`\tPR [${pr.builds.length}] ${pr.pr} state: ${pr.state ? pr.state.state : "n/a"}`)
-    printBuilds(pr.builds)
+    console.log(`${indent}PR ${pr.pr} state: ${pr.state ? pr.state.state : "n/a"} [${pr.builds.length} builds]`)
+    printBuilds(pr.builds, indent + "\t")
   }
 }
 
-function printBranches(branches){
+function printBranches(branches, indent){
+  indent = indent || "\t"
   for(let branch of branches){
-    console.log(`\tBranch [${branch.builds.length}] ${branch.branch}`)
-    printBuilds(branch.builds)
+    console.log(`\tBranch ${branch.branch} [${pr.builds.length} builds]`)
+    printBuilds(pr.builds, indent + "\t")
   }
 }
 
 /**
- * Sets a .docker object on the build with the status of the container. Values are:
+ * Sets .container properties on the build with the status of the container. Values are:
  * state:
  *  null - if the docker container does not exist for the build
  *  "stopped" - if the docker container exists and is stopped
  *  "running" - if the docker container exists and is running
- * size:
+ * disk:
  *  imageSize - size of the container's image in bytes, if container exists, null otherwise
  *  containerSize - size of the container's ownlayer in bytes, if container exists, null otherwise
  */
 function* setContainerStatus(build){
-  // for(let build of builds){
-
-  //   var usage = 
-  //   if(usage.containerSize){  // no container size = container or image doesn't exist
-  //       console.log([container.container.id, bytes(usage.containerSize), bytes(usage.imageSize)].join("\t"))
-  //   }
-  // }
-
   var container = new Container({
     docker: probo_config.docker,
     containerId: build.container.id
@@ -273,12 +235,12 @@ function* setContainerStatus(build){
     }
   }
 
-  build.docker = yield {
-    usage: yield container.getDiskUsage(),
+  _.assign(build.container, yield {
+    disk: yield container.getDiskUsage(),
     state: yield getState(container)
-  }
+  })
 
-  // console.log(build.docker)
+  // console.log(build.container)
 
   return build
 }
@@ -286,10 +248,10 @@ function* setContainerStatus(build){
 
 function* start(){
   // list all builds
-  var cm = new this.probo.ContainerManager()
-  cm.configure(this.probo.config, function(){})
+  // var cm = new this.probo.ContainerManager()
+  // cm.configure(this.probo.config, function(){})
 
-  var builds = yield* get_builds(cm)
+  var builds = yield* get_builds()
   var projects = yield* builds_to_projects(builds) // list of projects each with a builds array
 
   // console.log(JSON.stringify(builds, null, 2))
@@ -300,6 +262,10 @@ function* start(){
   for (let build of builds){
     yield* setContainerStatus(build)
   }
+
+  // console.log(JSON.stringify(builds, null, 2))
+  // return
+
 
   for(let project of projects){
     // console.log(project)
@@ -390,3 +356,31 @@ exports.run = co.wrap(function* (probo) {
 })
 
 module.exports = exports;
+
+utils = {
+  indexBy: function(array, field){
+    // like lodash.indexBy, but instead of a single value, maps keys to an array of values
+    return array.reduce(function(accum, obj){
+      var key = obj[field]
+      accum[key] = accum[key] || []
+
+      accum[key].push(obj)
+      return accum
+    }, {})
+  },
+
+  sorter: function(field, dir){
+    // sorts by descending order if dir is 'desc', ascending otherwise
+    return function cmp(a, b){
+      var value_a = typeof field == 'function' ? field(a) : a[field]
+      var value_b = typeof field == 'function' ? field(b) : b[field]
+
+      if(typeof value_a == 'undefined') value_a = 'undefined'
+      if(typeof value_b == 'undefined') value_b = 'undefined'
+
+      if(value_a < value_b) return dir == 'desc' ? 1 : -1
+      if(value_a === value_b) return 0
+      return dir == 'desc' ? -1 : 1
+    }
+  }
+}
