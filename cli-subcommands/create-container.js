@@ -48,15 +48,19 @@ exports.run = function(probo) {
   var imageConfig = config.images[image];
   if (!imageConfig) return exitWithError('Invalid image ' + image + ' selected.');
   var options = {
+    containerName: probo.config.containerName,
+    docker: config.docker,
+    imageConfig: imageConfig,
+    config: jobConfig,
+    // TODO: We seem to treat this differently in Container from ContainerManager.
+    // This structure needs to be audited/cleaned up.
+    jobConfig: jobConfig,
+    binds: config.binds,
+    attachLogs: true,
     build: {
-      containerName: probo.config.containerName,
-      docker: config.docker,
-      image: image,
-      build: {},
-      imageConfig: imageConfig,
-      config: jobConfig,
-      binds: config.binds,
-      attachLogs: true,
+      config: {
+        image: image,
+      }
     },
     project: {
       // TODO: What should we do about the expectation that we pass in project ID?
@@ -94,16 +98,6 @@ exports.run = function(probo) {
       .catch(function(error) {
         console.error('ERROR', error);
       })
-    /*
-    container.runBuild(function(error, data) {
-      if (error) {
-        console.error('ERROR', error);
-      }
-      else {
-        console.log('Created', data.Id);
-      }
-    });
-    */
   }
 }
 
