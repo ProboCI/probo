@@ -12,7 +12,7 @@ var exports = function() {
 var Docker = require('dockerode');
 var fs = require('fs');
 
-exports.shortDescription = 'TEMP Test container creation.'
+exports.shortDescription = 'Simple comand line interface to perform a build on a container.'
 
 exports.config = function() {
 }
@@ -29,6 +29,14 @@ exports.options = function(yargs) {
     .alias('container-manager-url', 'u')
     .describe('commit-ref', 'The commit to in for use in build steps.')
     .alias('commit-ref', 'r')
+    .describe('provider-slug', 'The identifying string used in this provider. With Github this would be `organization/repository`.')
+    .alias('provider-slug', 'R')
+    .demand('provider-slug')
+    .describe('provider-type', 'The provider to fetch code from (defaults to `github`.')
+    .default('provider-type', 'github')
+    .describe('provider-api-token', 'The personal API token for the provider.')
+    .alias('provider-api-token', 'A')
+    .demand('provider-api-token')
   ;
 }
 
@@ -42,12 +50,29 @@ exports.run = function(probo) {
   var options = {
     containerName: probo.config.containerName,
     docker: config.docker,
-    image: image,
-    build: {},
     imageConfig: imageConfig,
+    config: jobConfig,
+    // TODO: We seem to treat this differently in Container from ContainerManager.
+    // This structure needs to be audited/cleaned up.
     jobConfig: jobConfig,
     binds: config.binds,
     attachLogs: true,
+    build: {
+      config: {
+        image: image,
+      }
+    },
+    project: {
+      // TODO: What should we do about the expectation that we pass in project ID?
+      id: 123,
+      slug: config.providerSlug,
+      provider: {
+        type: config.providerType,
+      },
+      service_auth: {
+        token: config.providerApiToken,
+      }
+    },
   };
   if (config.commitRef) {
     options.build.ref = config.commitRef;
@@ -55,25 +80,24 @@ exports.run = function(probo) {
   if (config.containerManagerUrl) {
     var requestOptions = {
       method: 'post',
-      body: options,
-      uri: 'http://' + config.containerManagerUrl,
+      uri: 'http://' + config.containerManagerUrl + '/startbuild',
       body: options,
       json: true,
     };
+    console.log(requestOptions);
     request(requestOptions, function(error, response, body) {
-      console.log(body);
+      console.log(error, body);
     });
   }
   else {
     var container = new Container(options);
-    container.runBuild(function(error, data) {
-      if (error) {
-        console.error('ERROR', error);
-      }
-      else {
+    container.runBuild()
+      .then(function(data) {
         console.log('Created', data.Id);
-      }
-    });
+      })
+      .catch(function(error) {
+        console.error('ERROR', error);
+      })
   }
 }
 

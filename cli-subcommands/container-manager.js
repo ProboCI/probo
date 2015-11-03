@@ -1,3 +1,5 @@
+var logger = require('../lib/logger');
+
 var exports = function() {
   this.configure = this.configure.bind(this);
   this.run = this.run.bind(this);
@@ -23,7 +25,8 @@ exports.run = function(amour) {
   server.configure(config, function(error) {
     if (error) throw error;
     server.run(amour, function(error) {
-      console.log('Listening on ' + config.port);
+      logger.getLogger('container-manager')
+        .info({ config }, `Listening on ${config.port}`);
     });
   });
 }

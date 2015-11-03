@@ -11,9 +11,9 @@ var Container = require('../lib/Container')
 
 var github = new GitHubApi({
   version: "3.0.0",
-  // debug: true,
   headers: {
-    "user-agent": "Probo" // GitHub is happy with a unique user agent
+    // GitHub requires a unique user agent
+    "user-agent": "Probo"
   }
 });
 Promise.promisifyAll(github.pullRequests)
@@ -157,7 +157,7 @@ function* start(){
       })
 
       Promise.promisifyAll(container.container)
-      
+
       try {
         let res = yield container.container.removeAsync({force: true, v: true}) // volumes too
         console.log(`container ${container_name} REMOVED`)
@@ -173,7 +173,7 @@ function* start(){
     console.log("all old containers removed!")
 
     var existing_probo_containers = yield* get_container_names_for_project(project)
-    
+
     console.log("all exitsing containers:", existing_probo_containers)
 
     // find containers that should not be in the active list
