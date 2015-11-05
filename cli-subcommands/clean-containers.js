@@ -188,7 +188,7 @@ function* get_container_names_for_project(project){
 function printBuilds(builds, indent){
   indent = indent || "\t"
   for(let build of builds){
-    console.log(`${indent}Build ${build.createdAt} pr:${build.pullRequest} branch:${build.branch} container:${build.container.state}`)
+    console.log(`${indent}Build ${build.id} ${build.createdAt} pr:${build.pullRequest} branch:${build.branch} container:${build.container.state}`)
   }
 }
 
