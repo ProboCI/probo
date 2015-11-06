@@ -110,7 +110,17 @@ describe("webhooks", function(){
             slug: "zanchin/testrepo"
           },
           request: {
-            omitted: true
+            branch: 'feature',
+            pull_request_id: 33015959,
+            owner: 'zanchin',
+            pull_request: 1,
+            repo: 'testrepo',
+            repo_id: 33704441,
+            service: 'github',
+            sha: '9dd7d8b3ccf6cdecc86920535e52c4d50da7bd64',
+            slug: 'zanchin/testrepo',
+            type: 'pull_request',
+            payload: payload
           }
         });
 
