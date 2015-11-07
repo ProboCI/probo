@@ -6,7 +6,8 @@
     "bower_components",
     ".sass-cache",
     "container-manager-data/*",
-    "*flycheck*"
+    "*flycheck*",
+    "logs/*"
   ],
   "verbose": true
 }
