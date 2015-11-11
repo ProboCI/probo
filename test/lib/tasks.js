@@ -1,4 +1,4 @@
-var GitCheckout = require('../../lib/plugins/TaskRunner/GitCheckout')
+var GithubDownloader = require('../../lib/plugins/TaskRunner/GithubDownloader')
 var AssetDownloader = require('../../lib/plugins/TaskRunner/AssetDownloader')
 
 var mock_container = {
@@ -6,24 +6,28 @@ var mock_container = {
 }
 
 describe("tasks", function(){
-  describe("GitCheckout", function(){
+  describe("GithubDownloader", function(){
     it("builds proper task configuration", function(){
-      var gc = new GitCheckout(mock_container, {
-        auth_token: "auth_token",
-        provider_type: "github",
-        repo_slug: "owner/repo",
+      var build = {
         ref: "master"
-      })
+      }
+      var project = {
+        provider: { type: 'github' },
+        slug: 'owner/repo',
+        service_auth: {token: "auth_token"}
+      }
+      var gc = new GithubDownloader(mock_container, {build, project})
 
       gc.script.should.eql(`unset HISTFILE
 export PS4='\$ '
 set -x
+mkdir -p $SRC_DIR; cd $SRC_DIR
 mkdir -p $SRC_DIR
 cd $SRC_DIR
 wget -q -O - --header "Authorization:token auth_token" https://api.github.com/repos/owner/repo/tarball/master | tar xzf - --strip-components=1
 `)
 
-      gc.description().should.eql("GitCheckout owner/repo @ master")
+      gc.description().should.eql("GithubDownloader owner/repo @ master")
     })
   })
 
@@ -42,6 +46,7 @@ wget -q -O - --header "Authorization:token auth_token" https://api.github.com/re
       ad.script.should.eql(`unset HISTFILE
 export PS4='$ '
 set -x
+mkdir -p $SRC_DIR; cd $SRC_DIR
 mkdir -p $ASSET_DIR
 cd $ASSET_DIR
 wget -nv -O db.tgz http://asset.server/asset/bucket-name/db.tgz
