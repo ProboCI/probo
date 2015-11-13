@@ -2,17 +2,14 @@
 
 var co = require('co')
 var read = require('co-read')
-var through = require('through2')
+var through2 = require('through2')
 var JSONStream = require('JSONStream')
 var GitHubApi = require('github')
 var Promise = require('bluebird')
 var _ = require('lodash')
 var request = require('request')
 var requestAsync = require('request-promise')
-
 var bytes = require('bytes')
-
-var Container = require('../lib/Container')
 
 var github = new GitHubApi({
   version: "3.0.0",
@@ -37,16 +34,22 @@ exports.help = 'Cleans up obsolete containers';
 
 exports.options = function(yargs) {
   return yargs
-    .describe('data-dir', 'The directory where leveldb data is stored.')
-    .alias('data-dir', 'd')
+    .describe('c', 'Optinal yaml config file')
   ;
 }
 
-function* get_builds(cm){
-  var buildStream = request(`http://${probo_config.hostname}:${probo_config.port}/builds`).pipe(new JSONStream.parse('*'))
+/**
+ * @param Array builds  - List of existing builds on the GH instance.
+ * @param Object opts - Options object
+ * @param boolean opts.all=false  - if true, fetch all builds, whether an container exists for the build or not. By default, only returns builds that have an existing container
+*/
+function* get_builds(opts){
+  opts = opts || {}
+  var query = `${opts.all ? "all=true" : ""}`
+  var buildStream = request(`http://${probo_config.hostname}:${probo_config.port}/builds?${query}`).pipe(new JSONStream.parse('*'))
 
   // parse out just what we need and filter
-  buildStream = buildStream.pipe(through.obj(function(build, enc, callback){
+  buildStream = buildStream.pipe(through2.obj(function(build, enc, callback){
     if(build.container){
       this.push({
         id: build.id,
@@ -79,6 +82,7 @@ function* getGithubPRStatus(project, pr){
     var pull_requests = []
     try {
       // get list of pull requests for the project
+      console.log("getting Github PR statuses for project " + project.slug)
       pull_requests = yield github.pullRequests.getAllAsync({
         user: project.owner,
         repo: project.repo,
@@ -89,7 +93,7 @@ function* getGithubPRStatus(project, pr){
     }
 
     // create a map from PR number to PR object
-    pr_cache[project.id] = utils.indexBy(pull_requests, 'number')
+    pr_cache[project.id] = utils.indexBy(pull_requests, 'number', true)
   }
 
   return pr_cache[project.id][pr]
@@ -99,9 +103,13 @@ function* getGithubPRStatus(project, pr){
 /**
  * Returns an array of projects.
  * Each project has .builds, .prs, and .branches arrays.
- * The builds array is all the builds for the project, sorted by createdAt date, descending.
- * The prs array is all the PRs, sorted by PR number, descending. Each object is {pr, builds, state}. State is GH info for the PR, if it's a GH project.
- * The branches array is all the builds for a particular branch, sorted by createdAt in descending order. Each object is {branch, builds}
+ * The builds array is all the builds for the project, sorted by createdAt date,
+ *   descending.
+ * The prs array is all the PRs, sorted by PR number, descending.
+ *   Each object is {pr, builds, state}. State is GH info for the PR,
+ *   if it's a GH project.
+ * The branches array is all the builds for a particular branch,
+ *   sorted by createdAt in descending order. Each object is {branch, builds}
  */
 function* builds_to_projects(builds){
   var projects = {}
@@ -159,7 +167,7 @@ function* builds_to_projects(builds){
       project.branches.push({
         branch: branch,
         // sort the builds in the branch
-        builds: branches[branch].sort(createdAt_desc),  
+        builds: branches[branch].sort(createdAt_desc),
       })
     }
 
@@ -203,153 +211,29 @@ function printPRs(pull_requests, indent){
 function printBranches(branches, indent){
   indent = indent || "\t"
   for(let branch of branches){
-    console.log(`\tBranch ${branch.branch} [${pr.builds.length} builds]`)
-    printBuilds(pr.builds, indent + "\t")
+    console.log(`\tBranch ${branch.branch} [${branch.builds.length} builds]`)
+    printBuilds(branch.builds, indent + "\t")
   }
 }
-
-/**
- * Sets .container properties on the build with the status of the container. Values are:
- * state:
- *  null - if the docker container does not exist for the build
- *  "stopped" - if the docker container exists and is stopped
- *  "running" - if the docker container exists and is running
- * disk:
- *  .imageSize - size of the container's image in bytes, if container exists, null otherwise
- *  .containerSize - size of the container's ownlayer in bytes, if container exists, null otherwise
- */
-function* setContainerStatus(build){
-  var container = new Container({
-    docker: probo_config.docker,
-    containerId: build.container.id
-  })
-
-  function* getState(container){
-    try {
-      var state = yield container.getState()
-      return state.Running ? "running" : "stopped"
-    } catch (e){
-      if(e.statusCode === 404) // 404 if container doesn't exist
-        return null
-      throw e
-    }
-  }
-
-  _.assign(build.container, yield {
-    disk: yield container.getDiskUsage(),
-    state: yield getState(container)
-  })
-
-  // console.log(build.container)
-
-  return build
-}
-
 
 function* start(){
   // list all builds
-  // var cm = new this.probo.ContainerManager()
-  // cm.configure(this.probo.config, function(){})
-
   var builds = yield* get_builds()
   var projects = yield* builds_to_projects(builds) // list of projects each with a builds array
 
-  // console.log(JSON.stringify(builds, null, 2))
-
-  // now we have projects with builds
-  // console.log(JSON.stringify(projects, null, 2))
-
-  for (let build of builds){
-    yield* setContainerStatus(build)
-  }
-
-  // console.log(JSON.stringify(builds, null, 2))
-  // return
-
-
   for(let project of projects){
-    // console.log(project)
-
     console.log(`Project ${project.id} ${project.slug}`)
     //printBuilds(project.builds)
     printPRs(project.pull_requests)
-    //printBranches(project.branches)
-
-    continue
-
-
-    var latest_shas = pull_requests.map(function(pr){ return pr.head.sha })
-
-    // find build containers not matching the latest sha
-    function contains(haystack, needle){ return haystack.indexOf(needle) >=0 }
-    var old_builds = project.builds.filter(function(build){
-      return !contains(latest_shas, build.ref)
-    }).map(function(build){ return build.container.name })
-    var current_builds = project.builds.filter(function(build){
-      return contains(latest_shas, build.ref)
-    }).map(function(build){ return build.container.name })
-
-    console.log("old builds", old_builds.length, old_builds)
-    console.log("current builds", current_builds.length, current_builds)
-
-    console.log("attempting to stop/kill all old containers...")
-
-    for(let container_name of old_builds){
-      console.log(container_name)
-
-      let container = new Container({
-        docker: this.probo.config.docker,
-        containerId: container_name
-      })
-
-      Promise.promisifyAll(container.container)
-
-      try {
-        let res = yield container.container.removeAsync({force: true, v: true}) // volumes too
-        console.log(`container ${container_name} REMOVED`)
-      } catch(e){
-        if(e.statusCode == 404){
-          // container is already gone
-          console.log(`container ${container_name} already REMOVED`)
-        } else {
-          console.log(`container ${container_name} FAILED: ${e.message}`)
-        }
-      }
-    }
-
-    return
-
-    console.log("all old containers removed!")
-
-    var existing_probo_containers = yield* get_container_names_for_project(project)
-
-    console.log("all exitsing containers:", existing_probo_containers)
-
-    // find containers that should not be in the active list
-    let bad_containers = existing_probo_containers.filter(function(name){
-      return contains(old_builds, name)
-    })
-
-    let good_containers = existing_probo_containers.filter(function(name){
-      return !contains(old_builds, name)
-    })
-
-    console.log("containers to be deleted:", bad_containers)
-    console.log("containers to be kept:", good_containers)
+    // printBranches(project.branches)
   }
 }
 
-
-
 exports.run = co.wrap(function* (probo) {
-  // disable bunyan output
-  var logger = (require ('../lib/logger')).getLogger();
-  logger._level = Number.POSITIVE_INFINITY;
-
   probo_config = probo.config
 
   try{
-    yield start.apply({probo})
+    yield start()
   } catch(e) {
     console.error(e.stack)
   }
@@ -358,8 +242,15 @@ exports.run = co.wrap(function* (probo) {
 module.exports = exports;
 
 utils = {
-  indexBy: function(array, field){
-    // like lodash.indexBy, but instead of a single value, maps keys to an array of values
+  /**
+   * like lodash.indexBy, but instead of a single value, maps keys to an array of values.
+   * @param [single=false] boolean - if true, uses the lodash implementation (resulting in single value per key)
+   */
+  indexBy: function(array, field, single){
+    if(single){
+      return _.indexBy(array, field)
+    }
+
     return array.reduce(function(accum, obj){
       var key = obj[field]
       accum[key] = accum[key] || []
