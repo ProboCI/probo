@@ -1,17 +1,26 @@
 {
-  "name": "nodeapp",
+  "name": "Probo.ci",
   "version": "0.1.0",
-  "description": "",
+  "description": "The main repository for the probo project.",
+  "homepage": "http://probo.ci",
   "main": "index.js",
   "repository": "https://github.com/ProboCI/probo.git",
   "scripts": {
-    "start": "node index.js | bunyan",
-    "container-manager": "node ./bin/probo container-manager -c cm.yml",
-    "ghh": "node ./bin/probo github-handler -c ghh.yml",
     "test": "mocha --recursive --require should",
     "watch": "mocha -w --recursive --require should"
   },
-  "author": "",
+  "contributors": [
+    {
+      "name": "Howard Tyson",
+      "email": "howard@howardtyson.com",
+      "url": "http://howardtyson.com"
+    },
+    {
+      "name": "Ilya Braude",
+      "email": "ilya@ilyabraude.com",
+      "url": "http://www.ilyabraude.com/"
+    }
+  ],
   "license": "ISC",
   "dependencies": {
     "JSONStream": "^1.0.4",
@@ -47,6 +56,7 @@
   },
   "devDependencies": {
     "co-mocha": "^1.1.2",
+    "istanbul": "^0.4.0",
     "mocha": "^2.2.4",
     "nock": "^1.6.0",
     "shell-quote": "^1.4.3",
