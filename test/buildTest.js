@@ -47,18 +47,16 @@ describe('Build', function() {
     var callbacks = resolver(5, done)
     build.on('taskStart', callbacks[0])
     build.on('taskEnd', callbacks[1])
-    // TODO: Is this a Task plugin test or a build test?
     step.on('start', callbacks[2])
     step.on('end', callbacks[3])
     build.run(callbacks[4]);
   })
-  // TODO: This is a test describing how a step behaves, not a build.
-  // TODO: Should a build have a method to get a stream that multiplexes all component build streams together? probably...
-  it.only('should stream an event', function(done) {
-    var build = new Build()
+  it('should stream an event', function(done) {
+    var build = new Build({ id: 1 })
     var step = new Step()
     build.addStep(step)
     var callbacks = resolver(2, function() {
+      streamData[0].buildId.should.equal(1)
       streamData[0].data.should.equal('stdout input line 1')
       streamData[0].stream.should.equal('stdout')
       streamData[1].data.should.equal('stdout input line 2')
@@ -75,7 +73,9 @@ describe('Build', function() {
       streamData.push(data)
       cb()
     }
-    step.getStream().pipe(through2.obj(chunkProcessor, callbacks[0]))
+    build
+      .getStream()
+      .pipe(through2.obj(chunkProcessor, callbacks[0]))
     build.run(callbacks[1])
   })
 })

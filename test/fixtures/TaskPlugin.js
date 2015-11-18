@@ -5,8 +5,11 @@ var through2 = require('through2')
 /**
  * A test fixture step class.
  */
-var Step = function() {
+var Step = function(options) {
+  var options = options || {}
   var self = this
+  // TODO: Random self assignment
+  self.id = options.id || null
   self.run = self.run.bind(self)
   self.getStream = self.getStream.bind(self)
   self.stdOutStream = through2()
@@ -18,22 +21,25 @@ var Step = function() {
 util.inherits(Step, events.EventEmitter)
 
 Step.prototype._attachStreams = function() {
+  var self = this
   var callbacks = this.resolver(2, function() {
-    this.stream.end() 
+    self.stream.end()
   })
   this.stdOutStream
-    .pipe(this.multiplexStream('stdout', callbacks[0]))
-    .pipe(this.stream, { end: false })
+    .pipe(self.multiplexStream('stdout', callbacks[0]))
+    .pipe(self.stream, { end: false })
   this.stdErrStream
-    .pipe(this.multiplexStream('stderr', callbacks[1]))
-    .pipe(this.stream, { end: false })
+    .pipe(self.multiplexStream('stderr', callbacks[1]))
+    .pipe(self.stream, { end: false })
 }
 
 Step.prototype.multiplexStream = function(stream, done) {
+  var self = this
   return through2.obj(function(data, enc, cb) {
     this.push({
       stream,
       data,
+      stepId: self.id
     })
     cb()
   }, done)
