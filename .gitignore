@@ -4,3 +4,4 @@ node_modules
 container-manager-data
 out
 *.sw*
+coverage

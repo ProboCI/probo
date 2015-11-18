@@ -7,6 +7,7 @@
   "repository": "https://github.com/ProboCI/probo.git",
   "scripts": {
     "test": "mocha --recursive --require should",
+    "coverage": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha",
     "watch": "mocha -w --recursive --require should"
   },
   "contributors": [
