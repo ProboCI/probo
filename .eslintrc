@@ -10,7 +10,7 @@ rules:
     - unix
   semi:
     - 2
-    - never
+    - always
   array-bracket-spacing: 
     - 2
     - "never"
@@ -151,6 +151,7 @@ rules:
   max-nested-callbacks: 
     - 1
     - 3
+  vars-on-top: 2
 env:
   es6: true
   node: true
