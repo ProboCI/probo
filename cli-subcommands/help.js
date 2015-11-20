@@ -1,7 +1,7 @@
 var path = require('path'),
-    fs = require('fs'),
-    wordwrap = require('wordwrap'),
-    windowsize = require('window-size');
+  fs = require('fs'),
+  wordwrap = require('wordwrap'),
+  windowsize = require('window-size');
 
 var exports = function() {
   this.configure = this.configure.bind(this);
@@ -50,7 +50,7 @@ exports.buildAllCommandHelp = function(probo, done) {
       done(null, output);
     }
   });
-}
+};
 
 exports.displayAllHelp = function(probo) {
   var self = this;
@@ -61,8 +61,8 @@ exports.displayAllHelp = function(probo) {
     console.log('');
     console.log('The available subcommands are:');
     output = output.map(function(element) {
-      var name = element.name
-      var output =  '    ' + name + self.buildSpaces(spaces - name.length);
+      var name = element.name;
+      var output = '    ' + name + self.buildSpaces(spaces - name.length);
       var wrap = wordwrap(output.length, windowsize.width);
       var description = wrap(element.description);
       output += description.substring(output.length);
@@ -81,7 +81,7 @@ exports.run = function(probo) {
   var commandName = argv._[1];
 
   probo.cli.loadCommands(function(error, commands) {
-    if (commandName == undefined) {
+    if (commandName === undefined) {
       self.displayAllHelp(probo);
     }
     else if (!commands[commandName]) {
@@ -102,6 +102,6 @@ exports.run = function(probo) {
       self.yargs.showHelp();
     }
   });
-}
+};
 
 module.exports = exports;

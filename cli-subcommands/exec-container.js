@@ -1,13 +1,13 @@
-"use strict";
+'use strict';
 
 var fs = require('fs')
-   ,yaml = require('js-yaml')
-   ,Container = require('../lib/Container')
-   ,co = require('../lib/safeco')
-   ,runTasks = require('../lib/container_manager/task_runner')
-;
+   , yaml = require('js-yaml')
+   , Container = require('../lib/Container')
+   , co = require('../lib/safeco')
+   , runTasks = require('../lib/container_manager/task_runner')
+   ;
 
-var Promise = require('bluebird')
+var Promise = require('bluebird');
 Promise.longStackTraces();
 
 var exports = function() {
@@ -15,9 +15,9 @@ var exports = function() {
   this.run = this.run.bind(this);
 };
 
-exports.shortDescription = 'TEMP Test probo.yml configs execution in a container.'
+exports.shortDescription = 'TEMP Test probo.yml configs execution in a container.';
 
-exports.config = function() {}
+exports.config = function() {};
 
 exports.options = function(yargs) {
   return yargs
@@ -28,7 +28,7 @@ exports.options = function(yargs) {
     .alias('container-name', 'n')
     .demand('container-name')
   ;
-}
+};
 
 exports.run = function(probo) {
   var config = probo.config;
@@ -41,12 +41,12 @@ exports.run = function(probo) {
     attachLogs: true
   };
 
-  co(function* (){
+  co(function* () {
     var container = new Container(options);
-    var tasks = yield container.buildTasks()
+    var tasks = yield container.buildTasks();
 
-    yield* runTasks(tasks, {container: container, nostop: true})
-  })
-}
+    yield* runTasks(tasks, {container: container, nostop: true});
+  });
+};
 
 module.exports = exports;

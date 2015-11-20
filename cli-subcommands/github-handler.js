@@ -37,6 +37,6 @@ exports.configure = function(config) {
 
 exports.run = function(amour) {
   server.start();
-}
+};
 
 module.exports = exports;
