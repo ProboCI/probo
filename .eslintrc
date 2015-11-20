@@ -94,6 +94,7 @@ rules:
   no-spaced-func: 2
   no-trailing-spaces: 2
   no-undef-init: 2
+  no-undefined: 2
   no-unused-expressions: 2
   no-unused-vars: 
     - 2
@@ -155,4 +156,8 @@ rules:
 env:
   es6: true
   node: true
+globals:
+  describe: true
+  it: true
+  angular: true
 extends: 'eslint:recommended'
