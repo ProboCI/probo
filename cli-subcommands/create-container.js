@@ -1,8 +1,8 @@
 var fs = require('fs')
-   ,yaml = require('js-yaml')
-   ,request = require('request')
-   ,Container = require('../lib/Container')
-;
+   , yaml = require('js-yaml')
+   , request = require('request')
+   , Container = require('../lib/Container')
+   ;
 
 var exports = function() {
   this.configure = this.configure.bind(this);
@@ -12,10 +12,10 @@ var exports = function() {
 var Docker = require('dockerode');
 var fs = require('fs');
 
-exports.shortDescription = 'Simple comand line interface to perform a build on a container.'
+exports.shortDescription = 'Simple comand line interface to perform a build on a container.';
 
 exports.config = function() {
-}
+};
 
 exports.options = function(yargs) {
   return yargs
@@ -38,7 +38,7 @@ exports.options = function(yargs) {
     .alias('provider-api-token', 'A')
     .demand('provider-api-token')
   ;
-}
+};
 
 exports.run = function(probo) {
   var config = probo.config;
@@ -97,13 +97,13 @@ exports.run = function(probo) {
       })
       .catch(function(error) {
         console.error('ERROR', error);
-      })
+      });
   }
-}
+};
 
 function exitWithError(message) {
   console.error(message);
   process.exit(1);
-};
+}
 
 module.exports = exports;
