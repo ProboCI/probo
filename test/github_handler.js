@@ -1,3 +1,4 @@
+'use strict';
 var util = require('util');
 var request = require('request');
 var should = require('should');
@@ -7,6 +8,7 @@ var nock = require('nock');
 var nockout = require('./__nockout');
 
 var GithubHandler = require('../lib/GithubHandler');
+var nocker = null;
 
 var config = {
   githubWebhookPath: '/ghh',
@@ -15,18 +17,18 @@ var config = {
   port: 0,
   api: {
     url: 'http://localhost:3000',
-    token: 'token'
+    token: 'token',
   },
-  log_level: Number.POSITIVE_INFINITY  // disable logging
+  log_level: Number.POSITIVE_INFINITY,
 };
 var ghh_server = new GithubHandler(config);
 
 function http(path, ghh) {
-  ghh = ghh || ghh_server;
   var options = {
     url: util.format('%s%s', ghh.server.url, path),
-    json: true
+    json: true,
   };
+  ghh = ghh || ghh_server;
 
   return request.defaults(options);
 }
@@ -55,7 +57,7 @@ describe('webhooks', function() {
       var headers = {
         'X-GitHub-Delivery': 'a60aa880-df33-11e4-857c-eca3ec12497c',
         'X-GitHub-Event': 'pull_request',
-        'X-Hub-Signature': 'sha1=4636d00906034f52c099dfedae96095f8832994c'
+        'X-Hub-Signature': 'sha1=4636d00906034f52c099dfedae96095f8832994c',
       };
 
       http(config.githubWebhookPath)
@@ -79,7 +81,7 @@ describe('webhooks', function() {
         event: 'pull_request',
         id: 'a60aa880-df33-11e4-857c-eca3ec12497c',
         url: '/ghh',
-        payload: payload
+        payload: payload,
       };
       ghh_server.pullRequestHandler(event, function(err, build) {
         should.not.exist(err);
@@ -87,7 +89,8 @@ describe('webhooks', function() {
           id: 'build1',
           projectId: '1234',
           ref: '9dd7d8b3ccf6cdecc86920535e52c4d50da7bd64',
-          pullRequest: '1', // normalize pull request identifier to a string
+          // Normalize pull request identifier to a string.
+          pullRequest: '1',
           branch: 'feature',
           config: {
             fetcher_config: {
@@ -96,10 +99,10 @@ describe('webhooks', function() {
               'info_fetcher.config': {
                 host: 'https://extranet.zivtech.com',
               },
-              name: 'awesome'
+              'name': 'awesome',
             },
             image: 'lepew/ubuntu-14.04-lamp',
-            provisioner: 'fetcher'
+            provisioner: 'fetcher',
           },
           project: {
             id: '1234',
@@ -107,7 +110,7 @@ describe('webhooks', function() {
             owner: 'zanchin',
             repo: 'testrepo',
             service: 'github',
-            slug: 'zanchin/testrepo'
+            slug: 'zanchin/testrepo',
           },
           request: {
             branch: 'feature',
@@ -120,8 +123,8 @@ describe('webhooks', function() {
             sha: '9dd7d8b3ccf6cdecc86920535e52c4d50da7bd64',
             slug: 'zanchin/testrepo',
             type: 'pull_request',
-            payload: payload
-          }
+            payload: payload,
+          },
         });
 
         done();
@@ -136,15 +139,15 @@ describe('webhooks', function() {
       var headers = {
         'X-GitHub-Event': 'push',
         'X-GitHub-Delivery': '8ec7bd00-df2b-11e4-9807-657b8ba6b6bd',
-        'X-Hub-Signature': 'sha1=cb4c474352a7708d24fffa864dab9919f54ac2f6'
+        'X-Hub-Signature': 'sha1=cb4c474352a7708d24fffa864dab9919f54ac2f6',
       };
 
-      var r = http(config.githubWebhookPath)
-              .post({body: payload, headers: headers}, function(err, res, body) {
-                // handles push bu returning OK and doing nothing else
-                body.should.eql({ok: true});
-                done();
-              });
+      http(config.githubWebhookPath)
+        .post({body: payload, headers: headers}, function(err, res, body) {
+          // handles push bu returning OK and doing nothing else
+          body.should.eql({ok: true});
+          done();
+        });
     });
   });
 });
@@ -153,6 +156,7 @@ describe('webhooks', function() {
 
 describe('status update endpoint', function() {
   var ghh;
+  var mocked;
 
   before('start another ghh', function(done) {
     ghh = new GithubHandler(config);
@@ -162,7 +166,6 @@ describe('status update endpoint', function() {
     });
   });
 
-  var mocked;
   before('set up mocks', function() {
     // call the first cb arg w/ no arguments
     mocked = sinon.stub(ghh, 'postStatusToGithub').yields();
@@ -178,7 +181,7 @@ describe('status update endpoint', function() {
       state: 'pending',
       description: 'Environment built!',
       context: 'ci/env',
-      target_url: 'http://my_url.com'
+      target_url: 'http://my_url.com',
     };
 
     var build = {
@@ -192,13 +195,13 @@ describe('status update endpoint', function() {
         service: 'github',
         owner: 'zanchin',
         repo: 'testrepo',
-        slug: 'zanchin/testrepo'
-      }
+        slug: 'zanchin/testrepo',
+      },
     };
 
     http('/update', ghh).post({body: {
       update: update,
-      build: build
+      build: build,
     }}, function _(err, res, body) {
       should.not.exist(err);
       body.should.eql(update);
@@ -212,7 +215,7 @@ describe('status update endpoint', function() {
       state: 'pending',
       description: 'Environment built!',
       context: 'ignored context',
-      target_url: 'http://my_url.com'
+      target_url: 'http://my_url.com',
     };
 
     var build = {
@@ -226,20 +229,23 @@ describe('status update endpoint', function() {
         service: 'github',
         owner: 'zanchin',
         repo: 'testrepo',
-        slug: 'zanchin/testrepo'
-      }
+        slug: 'zanchin/testrepo',
+      },
     };
 
-    http('/builds/' + build.id + '/status/' + 'ci-env', ghh).post({body: {
-      update: update,
-      build: build
-    }}, function _(err, res, body) {
+    http('/builds/' + build.id + '/status/' + 'ci-env', ghh).post({
+      body: {
+        update: update,
+        build: build,
+      },
+    }, function(err, res, body) {
       should.not.exist(err);
       body.should.eql({
         state: 'pending',
         description: 'Environment built!',
-        context: 'ci-env',  // NOTE context gets inserted from URL
-        target_url: 'http://my_url.com'
+        // NOTE context gets inserted from URL.
+        context: 'ci-env',
+        target_url: 'http://my_url.com',
       });
 
       done(err);
@@ -255,23 +261,23 @@ function init_nock() {
     service: 'github',
     owner: 'zanchin',
     repo: 'testrepo',
-    slug: 'zanchin/testrepo'
+    slug: 'zanchin/testrepo',
   };
 
-  var build_id = "build1";
+  var build_id = 'build1';
 
   // nock out ghh server - pass these requests through
   nock.enableNetConnect(ghh_server.server.url.replace('http://', ''));
 
-  // nock out github URLs
-  var nocker = nockout('github.json', {
+  // Nock out github URLs.
+  nockout('github.json', {
     not_required: ['status_update'],
     processor: function(nocks) {
       // nock out API URLs
       nocks.push(nock(config.api.url)
                  .get('/projects?service=github&slug=zanchin%2Ftestrepo&single=true')
                  .reply(200, project));
-      nocks[nocks.length - 1].name = "project_search";
+      nocks[nocks.length - 1].name = 'project_search';
 
       nocks.push(nock(config.api.url)
                  .post('/startbuild')
@@ -285,21 +291,21 @@ function init_nock() {
                    delete body.project;
                    return body.build;
                  }, {
-                   'content-type': 'application/json'
+                   'content-type': 'application/json',
                  }));
-      nocks[nocks.length - 1].name = "startbuild";
+      nocks[nocks.length - 1].name = 'startbuild';
 
       nocks.push(nock(config.api.url)
                  .persist()
                  .filteringPath(/status\/[^/]*/g, 'status/context')
                  .post('/builds/' + build_id + '/status/context')
                  .reply(200, {
-                   'state': 'success',
-                   'description': 'Tests passed Thu Apr 30 2015 17:41:43 GMT-0400 (EDT)',
-                   'context': 'ci/tests'
+                   state: 'success',
+                   description: 'Tests passed Thu Apr 30 2015 17:41:43 GMT-0400 (EDT)',
+                   context: 'ci/tests',
                  }));
-      nocks[nocks.length - 1].name = "status_update";
-    }
+      nocks[nocks.length - 1].name = 'status_update';
+    },
   });
 
   return nocker;
