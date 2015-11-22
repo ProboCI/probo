@@ -255,6 +255,51 @@ describe('status update endpoint', function() {
 });
 
 
+describe('probo.yaml file parsing', function() {
+  var mocks = [];
+  var ghh;
+
+  before('init mocks', function() {
+    ghh = new GithubHandler(config);
+    mocks.push(sinon.stub(ghh, 'getGithubApi').returns({
+      repos: {
+        getContent: function(opts, cb) {
+          if (opts.path === '') {
+            // listing of files
+            cb(null, [{name: '.probo.yaml'}]);
+          }
+          else {
+            // getting content of a file - return a malformed YAML file
+            cb(null, {
+              path: '.probo.yaml',
+              content: new Buffer(`steps:
+  - name: task
+  command: 'bad command'`).toString('base64')
+            });
+          }
+        }
+      }
+    }));
+  });
+
+  after('restore mocks', function() {
+    mocks.forEach(function(mock) {
+      mock.reset();
+    });
+  });
+
+  it('throws an error for a bad yaml', function(done) {
+    ghh.fetchProboYamlConfigFromGithub({}, null, function(err) {
+      err.message.should.eql(`Failed to parse .probo.yaml:bad indentation of a mapping entry at line 3, column 3:
+      command: 'bad command'
+      ^`);
+      done();
+    });
+  });
+});
+
+
+
 // mock out API calls
 function initNock() {
   var project = {
