@@ -257,10 +257,17 @@ describe('status update endpoint', function() {
 
 describe('probo.yaml file parsing', function() {
   var mocks = [];
+  var update_spy;
   var ghh;
+
+  var err_msg = `Failed to parse .probo.yaml:bad indentation of a mapping entry at line 3, column 3:
+      command: 'bad command'
+      ^`;
 
   before('init mocks', function() {
     ghh = new GithubHandler(config);
+
+    // mock out Github API calls
     mocks.push(sinon.stub(ghh, 'getGithubApi').returns({
       repos: {
         getContent: function(opts, cb) {
@@ -280,6 +287,15 @@ describe('probo.yaml file parsing', function() {
         }
       }
     }));
+
+    // mock out internal API calls
+    mocks.push(
+      sinon.stub(ghh.api, 'findProjectByRepo').yields(null, {})
+    );
+
+    // ensure that buildStatusUpdateHandler is called
+    update_spy = sinon.stub(ghh, 'buildStatusUpdateHandler').yields();
+    mocks.push(update_spy);
   });
 
   after('restore mocks', function() {
@@ -290,9 +306,21 @@ describe('probo.yaml file parsing', function() {
 
   it('throws an error for a bad yaml', function(done) {
     ghh.fetchProboYamlConfigFromGithub({}, null, function(err) {
-      err.message.should.eql(`Failed to parse .probo.yaml:bad indentation of a mapping entry at line 3, column 3:
-      command: 'bad command'
-      ^`);
+      err.message.should.eql(err_msg);
+      done();
+    });
+  });
+
+  it('sends status update for bad yaml', function(done) {
+    ghh.processRequest({sha: 'sha1'}, function() {
+      update_spy.calledWith({
+        state: 'failure',
+        description: err_msg,
+        context: 'ProboCI/env'
+      }, {
+        ref: 'sha1',
+        project: {}
+      }).should.be.ok;
       done();
     });
   });
