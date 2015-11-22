@@ -1,7 +1,6 @@
 // NOTE: run this test independently as
 // npm test test/lib/container.js
 
-var co = require('co')
 require('co-mocha')
 var sinon = require('sinon')
 var Promise = require('bluebird')
@@ -13,9 +12,33 @@ var Container = require('../../lib/Container')
 //require('nock').restore()
 
 describe("Container", function(){
-  describe("stats", function(){
+  describe("events", function(){
+    it("fires a generic stateChange event", function(done){
+      var container = new Container({});
+
+      var event = sinon.spy();
+      var stateChange = function(){
+        event.called.should.be.ok;
+
+        var args = Array.prototype.slice.call(arguments);
+        args.should.eql(['stopping']);
+
+        done();
+      }
+
+      container.on('stopping', event);
+      container.on('stateChange', stateChange);
+
+      // stub out stop method on internal container
+      container.container = { stop: sinon.spy() }
+
+      container.stop();
+    })
+  })
+
+  describe.only("stats", function(){
     var container, containerInfo
-    
+
     before(function*(){
       container = new Container({
         docker: {
@@ -40,16 +63,8 @@ describe("Container", function(){
       container.containerId = containerInfo.Id
     })
 
-    before(function(){
-
-    })
-
     after(function*(){
       yield container.remove({force: true})
-    })
-
-    after(function(){
-      // stubs.reset()
     })
 
     it("image size", function* (){
@@ -76,7 +91,7 @@ describe("Container", function(){
       } catch(e){
         e.message.should.eql(`Command failed: /bin/sh -c du -bs /var/lib/docker/aufs/diff/${container.containerId}\ndu: cannot access ‘/var/lib/docker/aufs/diff/${container.containerId}’: Permission denied\n`)
       }
-      
+
     })
   })
 })
