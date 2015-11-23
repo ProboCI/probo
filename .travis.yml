@@ -1,3 +1,5 @@
+# Run this faster because it can run on container based infra.
+sudo: false
 language: node_js
 node_js:
   - "iojs"
