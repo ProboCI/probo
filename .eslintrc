@@ -159,6 +159,9 @@ rules:
     - 2
   no-lonely-if:
     - 2
+  camelcase:
+    - 2
+    - always
 env:
   es6: true
   node: true
