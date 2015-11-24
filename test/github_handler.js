@@ -19,37 +19,39 @@ var config = {
     url: 'http://localhost:3000',
     token: 'token',
   },
-  log_level: Number.POSITIVE_INFINITY,
+  logLevel: Number.POSITIVE_INFINITY,
 };
-var ghh_server = new GithubHandler(config);
+var ghhServer = new GithubHandler(config);
 
 function http(path, ghh) {
+  ghh = ghh || ghhServer;
   var options = {
     url: util.format('%s%s', ghh.server.url, path),
     json: true,
   };
-  ghh = ghh || ghh_server;
 
   return request.defaults(options);
 }
 
 describe('webhooks', function() {
   before('start GithubHandler server', function(done) {
-    ghh_server.start(done);
+    ghhServer.start(done);
   });
 
   after('stop GithubHandler server', function(done) {
-    ghh_server.stop(done);
+    ghhServer.stop(done);
   });
 
   describe('pull', function() {
     var nocker;
     beforeEach('nock out network calls', function() {
-      nocker = init_nock();
+      console.log('init nocker');
+      nocker = initNock();
     });
 
     afterEach('reset network mocks', function() {
-      nocker.cleanup();
+      // TODO: Why isn't nocker defined here?
+      // nocker.cleanup();
     });
 
     it('is routed', function(done) {
@@ -61,11 +63,12 @@ describe('webhooks', function() {
       };
 
       http(config.githubWebhookPath)
-      .post({body: payload, headers: headers}, function _(err, res, body) {
+      .post({body: payload, headers: headers}, function(err, res, body) {
         // handles push by returning OK and doing nothing else
         body.should.eql({ok: true});
         should.not.exist(err);
 
+        // TODO: WAT? why isn't this a set of async callbacks so we actually know when it's done?!
         // pause for a little before finishing to allow push processing to run
         // and hit all the GH nocked endpoints
         setTimeout(done, 100);
@@ -83,7 +86,7 @@ describe('webhooks', function() {
         url: '/ghh',
         payload: payload,
       };
-      ghh_server.pullRequestHandler(event, function(err, build) {
+      ghhServer.pullRequestHandler(event, function(err, build) {
         should.not.exist(err);
         build.should.eql({
           id: 'build1',
@@ -255,7 +258,7 @@ describe('status update endpoint', function() {
 
 
 // mock out API calls
-function init_nock() {
+function initNock() {
   var project = {
     id: '1234',
     service: 'github',
@@ -267,7 +270,7 @@ function init_nock() {
   var build_id = 'build1';
 
   // nock out ghh server - pass these requests through
-  nock.enableNetConnect(ghh_server.server.url.replace('http://', ''));
+  nock.enableNetConnect(ghhServer.server.url.replace('http://', ''));
 
   // Nock out github URLs.
   nockout('github.json', {
