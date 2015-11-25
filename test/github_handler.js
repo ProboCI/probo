@@ -69,7 +69,7 @@ describe('webhooks', function() {
         // TODO: WAT? why isn't this a set of async callbacks so we actually know when it's done?!
         // pause for a little before finishing to allow push processing to run
         // and hit all the GH nocked endpoints
-        setTimeout(done, 100);
+        setTimeout(done, 200);
       });
     });
 
