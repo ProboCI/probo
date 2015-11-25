@@ -8,7 +8,6 @@ var nock = require('nock');
 var nockout = require('./__nockout');
 
 var GithubHandler = require('../lib/GithubHandler');
-var nocker = null;
 
 var config = {
   githubWebhookPath: '/ghh',
@@ -50,8 +49,7 @@ describe('webhooks', function() {
     });
 
     afterEach('reset network mocks', function() {
-      // TODO: Why isn't nocker defined here?
-      // nocker.cleanup();
+      nocker.cleanup();
     });
 
     it('is routed', function(done) {
@@ -273,7 +271,7 @@ function initNock() {
   nock.enableNetConnect(ghhServer.server.url.replace('http://', ''));
 
   // Nock out github URLs.
-  nockout('github.json', {
+  return nockout('github.json', {
     not_required: ['status_update'],
     processor: function(nocks) {
       // nock out API URLs
@@ -310,6 +308,4 @@ function initNock() {
       nocks[nocks.length - 1].name = 'status_update';
     },
   });
-
-  return nocker;
 }
