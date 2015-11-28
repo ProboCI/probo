@@ -257,10 +257,10 @@ describe('status update endpoint', function() {
 
 describe('probo.yaml file parsing', function() {
   var mocks = [];
-  var update_spy;
+  var updateSpy;
   var ghh;
 
-  var err_msg = `Failed to parse .probo.yaml:bad indentation of a mapping entry at line 3, column 3:
+  var errorMessage = `Failed to parse .probo.yaml:bad indentation of a mapping entry at line 3, column 3:
       command: 'bad command'
       ^`;
 
@@ -276,16 +276,16 @@ describe('probo.yaml file parsing', function() {
             cb(null, [{name: '.probo.yaml'}]);
           }
           else {
-            // getting content of a file - return a malformed YAML file
+            // Getting content of a file - return a malformed YAML file.
             cb(null, {
               path: '.probo.yaml',
               content: new Buffer(`steps:
   - name: task
-  command: 'bad command'`).toString('base64')
+  command: 'bad command'`).toString('base64'),
             });
           }
-        }
-      }
+        },
+      },
     }));
 
     // mock out internal API calls
@@ -294,8 +294,8 @@ describe('probo.yaml file parsing', function() {
     );
 
     // ensure that buildStatusUpdateHandler is called
-    update_spy = sinon.stub(ghh, 'buildStatusUpdateHandler').yields();
-    mocks.push(update_spy);
+    updateSpy = sinon.stub(ghh, 'buildStatusUpdateHandler').yields();
+    mocks.push(updateSpy);
   });
 
   after('restore mocks', function() {
@@ -306,29 +306,28 @@ describe('probo.yaml file parsing', function() {
 
   it('throws an error for a bad yaml', function(done) {
     ghh.fetchProboYamlConfigFromGithub({}, null, function(err) {
-      err.message.should.eql(err_msg);
+      err.message.should.eql(errorMessage);
       done();
     });
   });
 
   it('sends status update for bad yaml', function(done) {
     ghh.processRequest({sha: 'sha1'}, function() {
-      update_spy.calledWith({
+      var param1 = {
         state: 'failure',
-        description: err_msg,
-        context: 'ProboCI/env'
-      }, {
+        description: errorMessage,
+        context: 'ProboCI/env',
+      };
+      var param2 = {
         ref: 'sha1',
-        project: {}
-      }).should.be.ok;
+        project: {},
+      };
+      updateSpy.calledWith(param1, param2).should.equal(true);
       done();
     });
   });
 });
 
-
-
-// mock out API calls
 function initNock() {
   var project = {
     id: '1234',
@@ -338,7 +337,7 @@ function initNock() {
     slug: 'zanchin/testrepo',
   };
 
-  var build_id = 'build1';
+  var buildId = 'build1';
 
   // nock out ghh server - pass these requests through
   nock.enableNetConnect(ghhServer.server.url.replace('http://', ''));
@@ -359,7 +358,7 @@ function initNock() {
                    // start build sets id and project id on build
                    // and puts project inside build, returning build
                    var body = JSON.parse(requestBody);
-                   body.build.id = build_id;
+                   body.build.id = buildId;
                    body.build.projectId = body.project.id;
                    body.build.project = body.project;
                    delete body.project;
@@ -372,7 +371,7 @@ function initNock() {
       nocks.push(nock(config.api.url)
                  .persist()
                  .filteringPath(/status\/[^/]*/g, 'status/context')
-                 .post('/builds/' + build_id + '/status/context')
+                 .post('/builds/' + buildId + '/status/context')
                  .reply(200, {
                    state: 'success',
                    description: 'Tests passed Thu Apr 30 2015 17:41:43 GMT-0400 (EDT)',
