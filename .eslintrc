@@ -170,8 +170,14 @@ env:
   es6: true
   node: true
 globals:
+  # mocha globals:
   describe: true
+  before: true
+  after: true
+  beforeEach: true
+  afterEach: true
   it: true
+
   angular: true
 extends: 'eslint:recommended'
 globals:
