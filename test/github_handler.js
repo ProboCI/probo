@@ -44,7 +44,6 @@ describe('webhooks', function() {
   describe('pull', function() {
     var nocker;
     beforeEach('nock out network calls', function() {
-      console.log('init nocker');
       nocker = initNock();
     });
 
