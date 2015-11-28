@@ -1,8 +1,10 @@
+'use strict';
 var tasks = require('../lib/plugins').TaskRunner;
+var should = require('should');
 
 function createTask(Task, opts) {
   var container = {
-    log: {child: function() {}}
+    log: {child: function() {}},
   };
   return new Task(container, opts);
 }
@@ -12,7 +14,7 @@ describe('plugins', function() {
     it('initializes properly', function() {
       var task = createTask(tasks.Shell, {command: 'command'});
 
-      task.id.should.exist;
+      should.exist(task.id);
       task.id.should.be.type('string');
       task.plugin.should.eql('Shell');
       task.name.should.eql('Shell task');
@@ -29,25 +31,25 @@ describe('plugins', function() {
         plugin: 'Shell',
         timeout: 6000,
         options: {command: 'command'},
-        result: {code: null, time: null}
+        result: {code: null, time: null},
       });
     });
 
     it('emits status upates events', function(done) {
       var task = createTask(tasks.Shell, {command: 'command'});
-      task.id = "this is a task id";
+      task.id = 'this is a task id';
 
       task.on('update', function(context, status, _task) {
         task.should.eql(_task);
         context.should.eql('Shell/Shell task');
         status.should.containEql({
           state: 'pending',
-          description: 'command'
+          description: 'command',
         });
 
         // task gets embedded into the status object
         status.task.should.containEql({
-          id: 'this is a task id'
+          id: 'this is a task id',
         });
 
         done();

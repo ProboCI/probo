@@ -1,22 +1,23 @@
+'use strict';
 var GithubDownloader = require('../../lib/plugins/TaskRunner/GithubDownloader');
 var AssetDownloader = require('../../lib/plugins/TaskRunner/AssetDownloader');
 
-var mock_container = {
-  log: {child: function() {}}
+var mockContainer = {
+  log: {child: function() {}},
 };
 
 describe('tasks', function() {
   describe('GithubDownloader', function() {
     it('builds proper task configuration', function() {
       var build = {
-        ref: 'master'
+        ref: 'master',
       };
       var project = {
         provider: {type: 'github'},
         slug: 'owner/repo',
-        service_auth: {token: 'auth_token'}
+        service_auth: {token: 'auth_token'},
       };
-      var gc = new GithubDownloader(mock_container, {build, project});
+      var gc = new GithubDownloader(mockContainer, {build, project});
 
       gc.script.should.eql(`unset HISTFILE
 export PS4='\$ '
@@ -34,14 +35,15 @@ wget -q -O - --header "Authorization:token auth_token" https://api.github.com/re
 
   describe('AssetDownloader', function() {
     it('builds proper task configuration', function() {
-      var ad = new AssetDownloader(mock_container, {
-        asset_server_url: 'http://asset.server',
-        asset_bucket: 'bucket-name',
+      var options = {
+        assetServerUrl: 'http://asset.server',
+        assetBucket: 'bucket-name',
         assets: [
           'db.tgz',
-          {'files': 'files.tgz'}
-        ]
-      });
+          {files: 'files.tgz'},
+        ],
+      };
+      var ad = new AssetDownloader(mockContainer, options);
 
       ad.script.should.eql(`unset HISTFILE
 export PS4='$ '
