@@ -197,8 +197,9 @@ describe('status update endpoint', function() {
       projectId: '123',
 
       status: 'success',
-      ref: 'd0fdf6c2d2b5e7402985f1e720aa27e40d018194',
-
+      commit: {
+        ref: 'd0fdf6c2d2b5e7402985f1e720aa27e40d018194'
+      },
       project: {
         id: '1234',
         service: 'github',
@@ -231,8 +232,9 @@ describe('status update endpoint', function() {
       projectId: '123',
 
       status: 'success',
-      ref: 'd0fdf6c2d2b5e7402985f1e720aa27e40d018194',
-
+      commit: {
+        ref: 'd0fdf6c2d2b5e7402985f1e720aa27e40d018194'
+      },
       project: {
         id: '1234',
         service: 'github',
