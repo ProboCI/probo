@@ -169,10 +169,6 @@ rules:
 env:
   es6: true
   node: true
-globals:
-  describe: true
-  it: true
-  angular: true
 extends: 'eslint:recommended'
 globals:
   # Methods for mocha tests.
