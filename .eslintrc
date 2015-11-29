@@ -153,20 +153,22 @@ rules:
     - 1
     - 6
   valid-jsdoc:
-    - 2
+    - 1
+    -
+      requireReturn: false
+      prefer:
+        returns: return
   no-inline-comments:
     - 2
   no-lonely-if:
     - 2
   camelcase:
     - 2
+    - { properties: never }
+  no-console: 0
 env:
   es6: true
   node: true
-globals:
-  describe: true
-  it: true
-  angular: true
 extends: 'eslint:recommended'
 globals:
   # Methods for mocha tests.
