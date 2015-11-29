@@ -11,7 +11,7 @@ var Container = require('../../lib/Container');
 
 //require('nock').restore()
 
-describe('Container', function() {
+describe.skip('Container', function() {
   describe('events', function() {
     it('fires a generic stateChange event', function(done) {
       var container = new Container({});
@@ -36,7 +36,7 @@ describe('Container', function() {
     });
   });
 
-  describe.only('stats', function() {
+  describe('stats', function() {
     var container, containerInfo;
 
     before(function*() {
