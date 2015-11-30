@@ -13,7 +13,7 @@ var github = new GitHubApi({
   version: '3.0.0',
   headers: {
     // GitHub requires a unique user agent
-    'user-agent': 'Probo'
+    'user-agent': 'Probo',
   },
 });
 Promise.promisifyAll(github.pullRequests);
@@ -89,7 +89,7 @@ function builds_to_projects(builds) {
 
 function* get_container_names_for_project(project) {
   let container = new Container({
-    docker: probo_config.docker
+    docker: probo_config.docker,
   });
   let docker = Promise.promisifyAll(container.docker);
   let containers = yield docker.listContainersAsync({all: true});
