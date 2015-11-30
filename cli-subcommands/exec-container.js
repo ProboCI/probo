@@ -1,11 +1,10 @@
 'use strict';
 
-var fs = require('fs')
-   , yaml = require('js-yaml')
-   , Container = require('../lib/Container')
-   , co = require('../lib/safeco')
-   , runTasks = require('../lib/container_manager/task_runner')
-   ;
+var fs = require('fs');
+var yaml = require('js-yaml');
+var Container = require('../lib/Container');
+var co = require('../lib/safeco');
+var runTasks = require('../lib/container_manager/task_runner');
 
 var Promise = require('bluebird');
 Promise.longStackTraces();
@@ -38,7 +37,7 @@ exports.run = function(probo) {
     containerName: probo.config.containerName,
     containerId: probo.config.containerName,
     jobConfig: jobConfig,
-    attachLogs: true
+    attachLogs: true,
   };
 
   co(function* () {
