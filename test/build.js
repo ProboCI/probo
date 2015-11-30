@@ -84,4 +84,8 @@ describe('Build', function() {
       .pipe(through2.obj(chunkProcessor, callbacks[0]));
     build.run(callbacks[1]);
   });
+  it('should stop running tasks when the first one fails by default');
+  it('should continue running tasks when a failed task is marked continueOnFailure');
+  it('should allow tasks marked as optional to fail without makring the build as a failure');
+  it('should suppress the output of steps marked not for reporting');
 });
