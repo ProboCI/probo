@@ -1,6 +1,8 @@
+'use strict';
+
 // NOCK CONFIGUATION
 // var default_nock_mode = "RECORD"
-var default_nock_mode = "PLAY";
+var default_nock_mode = 'PLAY';
 
 var nock = require('nock');
 // opts: {processor, not_required, mode}
@@ -43,7 +45,7 @@ function init_nock(fixture, opts) {
     console.log('recording');
     nock.recorder.rec({
       output_objects: true,
-      dont_print: true
+      dont_print: true,
     });
   }
 
@@ -62,10 +64,11 @@ function init_nock(fixture, opts) {
         for (var nock_name in required_nocks) {
           required_nocks[nock_name].done();
         }
-      } finally {
+      }
+      finally {
         nock.cleanAll();
       }
-    }
+    },
   };
 }
 
