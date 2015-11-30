@@ -8,7 +8,9 @@ var mockContainer = {
 describe('GithubDownloader', function() {
   it('builds proper task configuration', function() {
     var build = {
-      ref: 'master',
+      commit: {
+        ref: 'master',
+      },
     };
     var project = {
       provider: {type: 'github'},
