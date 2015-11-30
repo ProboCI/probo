@@ -1,3 +1,4 @@
+'use strict';
 var through2 = require('through2');
 
 var lib = require('..');
@@ -17,22 +18,27 @@ Step.prototype.emitEvent = function(name, data) {
 /**
  * Create an array of callbacks and call done only once all have been resolved.
  *
+ * TODO: Move this into an include or library, we need it in multiple places.
+ *
  * @param {integer} callbackNumber - The number of callbacks to produce and require.
  * @param {function} done - The callback to call once all
- * @returns {Array} - An array of functions to be bound to callbacks.
+ * @return {Array} - An array of functions to be bound to callbacks.
  */
 function resolver(callbackNumber, done) {
   var callbacks = [];
   var results = [];
   var calledCallbacks = 0;
-  for (var i = 0 ; i < callbackNumber ; i++) {
-    callbacks.push(function() {
+  function createCallback() {
+    return function() {
       results.push(arguments);
       calledCallbacks++;
       if (calledCallbacks === callbackNumber) {
         done(null, results);
       }
-    });
+    };
+  }
+  for (var i = 0; i < callbackNumber; i++) {
+    callbacks.push(createCallback());
   }
   return callbacks;
 }
@@ -54,6 +60,7 @@ describe('Build', function() {
   it('should stream an event', function(done) {
     var build = new Build({id: 1});
     var step = new Step();
+    var streamData = [];
     build.addStep(step);
     var callbacks = resolver(2, function() {
       streamData[0].buildId.should.equal(1);
@@ -67,7 +74,6 @@ describe('Build', function() {
       streamData[3].stream.should.equal('stderr');
       done();
     });
-    var streamData = [];
     var chunkProcessor = function(data, enc, cb) {
       data.data = data.data.toString();
       streamData.push(data);
