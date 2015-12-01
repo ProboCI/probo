@@ -327,7 +327,7 @@ describe('probo.yaml file parsing', function() {
         context: 'ProboCI/env',
       };
       var param2 = {
-        ref: 'sha1',
+        commit: {ref: 'sha1'},
         project: {},
       };
       updateSpy.calledWith(param1, param2).should.equal(true);
