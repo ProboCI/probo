@@ -1,5 +1,6 @@
 'use strict';
 var through2 = require('through2');
+var should = require('should');
 var Resolver = require('multiple-callback-resolver');
 
 var lib = require('..');
@@ -16,7 +17,7 @@ Step.prototype.emitEvent = function(name, data) {
   this.emit('change', data);
 };
 
-describe('Build', function() {
+describe.only('Build', function() {
   it('should emit the appropriate events when running a build step', function(done) {
     var build = new Build();
     var container = new Container({docker: null});
@@ -57,7 +58,32 @@ describe('Build', function() {
       .pipe(through2.obj(chunkProcessor, callbacks[0]));
     build.run(callbacks[1]);
   });
-  it('should stop running tasks when the first one fails by default');
+  it('should emit an error if configured to on failure', function(done) {
+    var build = new Build({emitErrors: true});
+    build.addStep(new Step({fail: true}));
+    build.on('error', function(error) {
+      should.exist(error);
+      done();
+    });
+    build.run();
+  });
+  it('should stop running tasks when the first one fails by default', function(done) {
+    var build = new Build();
+    build.setContainer = new Container({docker: null});
+    var step1 = new Step();
+    build.addStep(step1);
+    var step2 = new Step({fail: true});
+    build.addStep(step2);
+    var step3 = new Step();
+    build.addStep(step3);
+    build.run(function(error) {
+      step1.state.should.equal('completed');
+      step2.state.should.equal('errored');
+      step3.state.should.equal('pending');
+      should.exist(error);
+      done(null);
+    });
+  });
   it('should continue running tasks when a failed task is marked continueOnFailure');
   it('should allow tasks marked as optional to fail without makring the build as a failure');
   it('should suppress the output of steps marked not for reporting');

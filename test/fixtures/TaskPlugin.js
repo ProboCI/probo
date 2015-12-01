@@ -15,12 +15,14 @@ var Step = function(options) {
   var self = this;
   // TODO: Random self assignment
   self.id = options.id || null;
+  self.fail = options.fail || null;
   self.run = self.run.bind(self);
   self.getStream = self.getStream.bind(self);
   self.stdOutStream = through2();
   self.stdErrStream = through2();
   self.stream = through2.obj();
   self._attachStreams();
+  self.state = 'pending';
   events.EventEmitter.call(self);
 };
 util.inherits(Step, events.EventEmitter);
@@ -36,6 +38,10 @@ Step.prototype._attachStreams = function() {
   this.stdErrStream
     .pipe(self.multiplexStream('stderr', callbacks[1]))
     .pipe(self.stream, {end: false});
+};
+
+Step.prototype.getState = function() {
+  return this.state;
 };
 
 Step.prototype.multiplexStream = function(stream, done) {
@@ -54,7 +60,9 @@ Step.prototype.getStream = function() {
   return this.stream;
 };
 
-Step.prototype.run = function(cb) {
+Step.prototype.run = function(done) {
+  var error = null;
+  this.state = 'running';
   this.emit('start');
   this.stdOutStream.write('stdout input line 1');
   this.stdErrStream.write('stderr input line 1');
@@ -63,7 +71,12 @@ Step.prototype.run = function(cb) {
   this.stdOutStream.end();
   this.stdErrStream.end();
   this.emit('end');
-  cb();
+  this.state = 'completed';
+  if (this.fail) {
+    this.state = 'errored';
+    error = new Error('Task failed');
+  }
+  done(error);
 };
 
 module.exports = Step;
