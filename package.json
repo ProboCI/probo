@@ -66,9 +66,10 @@
   "devDependencies": {
     "co-mocha": "^1.1.2",
     "coveralls": "^2.11.4",
-    "istanbul": "^0.4.0",
     "eslint": "^1.7.3",
+    "istanbul": "^0.4.0",
     "mocha": "^2.2.4",
+    "multiple-callback-resolver": "^1.1.0",
     "nock": "^1.6.0",
     "shell-quote": "^1.4.3",
     "should": "^5.2.0",

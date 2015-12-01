@@ -1,5 +1,6 @@
 'use strict';
 var through2 = require('through2');
+var Resolver = require('multiple-callback-resolver');
 
 var lib = require('..');
 var Build = lib.Build;
@@ -15,34 +16,6 @@ Step.prototype.emitEvent = function(name, data) {
   this.emit('change', data);
 };
 
-/**
- * Create an array of callbacks and call done only once all have been resolved.
- *
- * TODO: Move this into an include or library, we need it in multiple places.
- *
- * @param {integer} callbackNumber - The number of callbacks to produce and require.
- * @param {function} done - The callback to call once all
- * @return {Array} - An array of functions to be bound to callbacks.
- */
-function resolver(callbackNumber, done) {
-  var callbacks = [];
-  var results = [];
-  var calledCallbacks = 0;
-  function createCallback() {
-    return function() {
-      results.push(arguments);
-      calledCallbacks++;
-      if (calledCallbacks === callbackNumber) {
-        done(null, results);
-      }
-    };
-  }
-  for (var i = 0; i < callbackNumber; i++) {
-    callbacks.push(createCallback());
-  }
-  return callbacks;
-}
-
 describe('Build', function() {
   it('should emit the appropriate events when running a build step', function(done) {
     var build = new Build();
@@ -50,7 +23,7 @@ describe('Build', function() {
     build.setContainer(container);
     var step = new Step();
     build.addStep(step);
-    var callbacks = resolver(5, done);
+    var callbacks = Resolver.resolver(5, {nonError: true}, done);
     build.on('taskStart', callbacks[0]);
     build.on('taskEnd', callbacks[1]);
     step.on('start', callbacks[2]);
@@ -62,7 +35,7 @@ describe('Build', function() {
     var step = new Step();
     var streamData = [];
     build.addStep(step);
-    var callbacks = resolver(2, function() {
+    var callbacks = Resolver.resolver(2, {nonError: true}, function() {
       streamData[0].buildId.should.equal(1);
       streamData[0].data.should.equal('stdout input line 1');
       streamData[0].stream.should.equal('stdout');

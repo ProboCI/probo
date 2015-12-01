@@ -2,12 +2,16 @@
 var util = require('util');
 var events = require('events');
 var through2 = require('through2');
+var Resolver = require('multiple-callback-resolver');
 
 /**
  * A test fixture step class.
+ *
+ * @param {object} options - An options has for conifguring the class.
+ * @param {object} options.fail - Whether to fail when run.
  */
 var Step = function(options) {
-  var options = options || {};
+  options = options || {};
   var self = this;
   // TODO: Random self assignment
   self.id = options.id || null;
@@ -23,7 +27,7 @@ util.inherits(Step, events.EventEmitter);
 
 Step.prototype._attachStreams = function() {
   var self = this;
-  var callbacks = this.resolver(2, function() {
+  var callbacks = Resolver.resolver(2, {nonError: true}, function() {
     self.stream.end();
   });
   this.stdOutStream
@@ -40,29 +44,10 @@ Step.prototype.multiplexStream = function(stream, done) {
     this.push({
       stream,
       data,
-      stepId: self.id
+      stepId: self.id,
     });
     cb();
   }, done);
-};
-
-// TODO: Rename the resolver, maybe move it into its own library
-// TODO: Add ability to call done with an error if any callback was called with an error
-// TODO: Add ability to return the data passed to the callback if any data was passed to the callback
-Step.prototype.resolver = function resolver(callbackNumber, done) {
-  var callbacks = [];
-  var results = [];
-  var calledCallbacks = 0;
-  for (var i = 0 ; i < callbackNumber ; i++) {
-    callbacks.push(function() {
-      results.push(arguments);
-      calledCallbacks++;
-      if (calledCallbacks === callbackNumber) {
-        done(null, results);
-      }
-    });
-  }
-  return callbacks;
 };
 
 Step.prototype.getStream = function() {
