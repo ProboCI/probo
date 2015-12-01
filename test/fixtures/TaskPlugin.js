@@ -9,21 +9,23 @@ var Resolver = require('multiple-callback-resolver');
  *
  * @param {object} options - An options has for conifguring the class.
  * @param {object} options.fail - Whether to fail when run.
+ * @param {object} options.id - The id for this build step.
+ * @param {object} options.continueOnFailure - Whether to continue running the build if this task fails.
  */
 var Step = function(options) {
   options = options || {};
-  var self = this;
+  this.continueOnFailure = options.continueOnFailure || false;
+  this.fail = options.fail || null;
   // TODO: Random self assignment
-  self.id = options.id || null;
-  self.fail = options.fail || null;
-  self.run = self.run.bind(self);
-  self.getStream = self.getStream.bind(self);
-  self.stdOutStream = through2();
-  self.stdErrStream = through2();
-  self.stream = through2.obj();
-  self._attachStreams();
-  self.state = 'pending';
-  events.EventEmitter.call(self);
+  this.id = options.id || null;
+  this.run = this.run.bind(this);
+  this.getStream = this.getStream.bind(this);
+  this.stdOutStream = through2();
+  this.stdErrStream = through2();
+  this.stream = through2.obj();
+  this._attachStreams();
+  this.state = 'pending';
+  events.EventEmitter.call(this);
 };
 util.inherits(Step, events.EventEmitter);
 

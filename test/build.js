@@ -84,7 +84,23 @@ describe.only('Build', function() {
       done(null);
     });
   });
-  it('should continue running tasks when a failed task is marked continueOnFailure');
+  it('should continue running tasks when a failed task is marked continueOnFailure', function(done) {
+    var build = new Build();
+    build.setContainer = new Container({docker: null});
+    var step1 = new Step();
+    build.addStep(step1);
+    var step2 = new Step({fail: true});
+    build.addStep(step2);
+    var step3 = new Step();
+    build.addStep(step3);
+    build.run(function(error) {
+      step1.state.should.equal('completed');
+      step2.state.should.equal('errored');
+      step3.state.should.equal('completed');
+      should.exist(error);
+      done(null);
+    });
+  });
   it('should allow tasks marked as optional to fail without makring the build as a failure');
   it('should suppress the output of steps marked not for reporting');
 });
