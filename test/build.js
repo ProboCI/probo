@@ -89,7 +89,7 @@ describe.only('Build', function() {
     build.setContainer = new Container({docker: null});
     var step1 = new Step();
     build.addStep(step1);
-    var step2 = new Step({fail: true});
+    var step2 = new Step({fail: true, continueOnFailure: true});
     build.addStep(step2);
     var step3 = new Step();
     build.addStep(step3);
