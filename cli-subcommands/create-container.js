@@ -1,3 +1,4 @@
+/* eslint no-process-exit: 0*/
 'use strict';
 
 var fs = require('fs');
@@ -101,7 +102,7 @@ exports.run = function(probo) {
 
 function exitWithError(message) {
   console.error(message);
-  throw new Error('There was an error.');
+  process.exit(1);
 }
 
 module.exports = exports;
