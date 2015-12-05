@@ -11,10 +11,14 @@ var Resolver = require('multiple-callback-resolver');
  * @param {object} options.fail - Whether to fail when run.
  * @param {object} options.id - The id for this build step.
  * @param {object} options.continueOnFailure - Whether to continue running the build if this task fails.
+ * @param {object} options.optional - Optional tasks do not cause the build to fail when an a task fails.
+ * @param {string} name - The name.
  */
-var Step = function(options) {
+var Step = function(options, name) {
+  this.name = name || '';
   options = options || {};
   this.continueOnFailure = options.continueOnFailure || false;
+  this.optional = options.optional || false;
   this.fail = options.fail || null;
   // TODO: Random self assignment
   this.id = options.id || null;

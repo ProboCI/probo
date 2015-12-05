@@ -17,7 +17,7 @@ Step.prototype.emitEvent = function(name, data) {
   this.emit('change', data);
 };
 
-describe('Build', function() {
+describe.only('Build', function() {
   it('should emit the appropriate events when running a build step', function(done) {
     var build = new Build();
     var container = new Container({docker: null});
@@ -97,10 +97,28 @@ describe('Build', function() {
       step1.state.should.equal('completed');
       step2.state.should.equal('errored');
       step3.state.should.equal('completed');
+      build.state.should.equal('failed');
       should.exist(error);
       done(null);
     });
   });
-  it('should allow tasks marked as optional to fail without makring the build as a failure');
+  it('should allow tasks marked as optional to fail without marking the build as a failure', function(done) {
+    var build = new Build();
+    build.setContainer = new Container({docker: null});
+    var step1 = new Step();
+    build.addStep(step1);
+    var step2 = new Step({fail: true, continueOnFailure: true, optional: true});
+    build.addStep(step2);
+    var step3 = new Step();
+    build.addStep(step3);
+    build.run(function(error) {
+      step1.state.should.equal('completed');
+      step2.state.should.equal('errored');
+      step3.state.should.equal('completed');
+      build.state.should.equal('completed');
+      should.not.exist(error);
+      done(null);
+    });
+  });
   it('should suppress the output of steps marked not for reporting');
 });
