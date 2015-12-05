@@ -1,5 +1,5 @@
 # App name
-name: amour
+name: probo
 # Port for the server to listen on
 port: 3010
 hostname: localhost
