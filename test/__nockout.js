@@ -48,6 +48,7 @@ function init_nock(fixture, opts) {
   }
 
   return {
+    nock: nock,
     nocked: nocked,
     nocks: nocks,
     required: required_nocks,

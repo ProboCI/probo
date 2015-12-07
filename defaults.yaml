@@ -71,4 +71,4 @@ assets:
 
 # auth credentials service (i.e., for stash)
 auth:
-  url: "http://localhost:3011"
+  url: "http://localhost:3000/auth_lookup"
