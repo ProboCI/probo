@@ -17,7 +17,7 @@ Step.prototype.emitEvent = function(name, data) {
   this.emit('change', data);
 };
 
-describe.only('Build', function() {
+describe('Build', function() {
   it('should emit the appropriate events when running a build step', function(done) {
     var build = new Build();
     var container = new Container({docker: null});
