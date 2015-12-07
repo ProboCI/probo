@@ -94,11 +94,11 @@ describe.only('Build', function() {
     var step3 = new Step();
     build.addStep(step3);
     build.run(function(error) {
+      should.exist(error);
       step1.state.should.equal('completed');
       step2.state.should.equal('errored');
       step3.state.should.equal('completed');
       build.state.should.equal('failed');
-      should.exist(error);
       done(null);
     });
   });
@@ -112,13 +112,19 @@ describe.only('Build', function() {
     var step3 = new Step();
     build.addStep(step3);
     build.run(function(error) {
+      should.not.exist(error);
       step1.state.should.equal('completed');
       step2.state.should.equal('errored');
       step3.state.should.equal('completed');
       build.state.should.equal('completed');
-      should.not.exist(error);
       done(null);
     });
   });
+  // Should the step be responsible for this or the build? I think the the Step.
   it('should suppress the output of steps marked not for reporting');
+  describe('step initialization', function() {
+    it('should initialize steps before running them');
+    // TODO: Do we need a finalize step really?
+    it('should finalize steps after finishing them');
+  });
 });
