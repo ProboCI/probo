@@ -91,7 +91,7 @@ describe('waiting for port to be open', function() {
       // does not throw = good!
     });
 
-    it('will timeout w/o server', function(done) {
+    it.skip('will timeout w/o server', function(done) {
       server.close();
 
       var start = +new Date();
@@ -106,7 +106,7 @@ describe('waiting for port to be open', function() {
       });
     });
 
-    it('will timeout w/o server (promised-based)', function* () {
+    it.skip('will timeout w/o server (promised-based)', function* () {
       // server is already closed
 
       var start = +new Date();
@@ -167,7 +167,7 @@ describe('waiting for port to be open', function() {
       });
     });
 
-    it('will timeout w/o server', function(done) {
+    it.skip('will timeout w/o server', function(done) {
       server.close();
 
       var start = +new Date();
