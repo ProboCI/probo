@@ -1,3 +1,5 @@
+'use strict';
+
 var GithubHandler = require('../lib/GithubHandler');
 
 var exports = function() {
@@ -7,7 +9,6 @@ var exports = function() {
   this.yargs = null;
 };
 
-var config = {};
 var server = {};
 
 exports.shortDescription = 'Runs a webhook handler and sends updates to github status API.';

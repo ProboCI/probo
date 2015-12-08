@@ -1,7 +1,7 @@
-var path = require('path'),
-  fs = require('fs'),
-  wordwrap = require('wordwrap'),
-  windowsize = require('window-size');
+'use strict';
+
+var wordwrap = require('wordwrap');
+var windowsize = require('window-size');
 
 var exports = function() {
   this.configure = this.configure.bind(this);
@@ -25,7 +25,7 @@ exports.configure = function(config) {
 
 exports.buildSpaces = function(number) {
   var output = '';
-  for (var i = 0 ; i < number ; i++) {
+  for (var i = 0; i < number; i++) {
     output += ' ';
   }
   return output;
@@ -41,7 +41,7 @@ exports.buildAllCommandHelp = function(probo, done) {
       if (command.shortDescription) {
         var element = {
           name: name,
-          description: command.shortDescription
+          description: command.shortDescription,
         };
         output.push(element);
       }

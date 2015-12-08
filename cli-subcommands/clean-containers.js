@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 var co = require('co');
 var read = require('co-read');
@@ -13,8 +13,8 @@ var github = new GitHubApi({
   version: '3.0.0',
   headers: {
     // GitHub requires a unique user agent
-    'user-agent': 'Probo'
-  }
+    'user-agent': 'Probo',
+  },
 });
 Promise.promisifyAll(github.pullRequests);
 
@@ -49,7 +49,7 @@ function* get_builds(cm) {
         ref: build.ref,
         project: build.project,
         container: build.container,
-        createdAt: build.createdAt
+        createdAt: build.createdAt,
       });
     }
 
@@ -89,7 +89,7 @@ function builds_to_projects(builds) {
 
 function* get_container_names_for_project(project) {
   let container = new Container({
-    docker: probo_config.docker
+    docker: probo_config.docker,
   });
   let docker = Promise.promisifyAll(container.docker);
   let containers = yield docker.listContainersAsync({all: true});
@@ -129,7 +129,7 @@ function* start() {
     var pull_requests = yield github.pullRequests.getAllAsync({
       user: project.owner,
       repo: project.repo,
-      state: 'open'
+      state: 'open',
     });
 
     var latest_shas = pull_requests.map(function(pr) { return pr.head.sha; });
@@ -153,7 +153,7 @@ function* start() {
 
       let container = new Container({
         docker: this.probo.config.docker,
-        containerId: container_name
+        containerId: container_name,
       });
 
       Promise.promisifyAll(container.container);
@@ -161,11 +161,13 @@ function* start() {
       try {
         let res = yield container.container.removeAsync({force: true, v: true}); // volumes too
         console.log(`container ${container_name} REMOVED`);
-      } catch (e) {
+      }
+      catch (e) {
         if (e.statusCode === 404) {
           // container is already gone
           console.log(`container ${container_name} already REMOVED`);
-        } else {
+        }
+        else {
           console.log(`container ${container_name} FAILED: ${e.message}`);
         }
       }
@@ -201,7 +203,8 @@ exports.run = co.wrap(function* (probo) {
 
   try {
     yield start.apply({probo});
-  } catch (e) {
+  }
+  catch (e) {
     console.error(e.stack);
   }
 });

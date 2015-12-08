@@ -1,16 +1,15 @@
-var fs = require('fs')
-   , yaml = require('js-yaml')
-   , request = require('request')
-   , Container = require('../lib/Container')
-   ;
+/* eslint no-process-exit: 0*/
+'use strict';
+
+var fs = require('fs');
+var yaml = require('js-yaml');
+var request = require('request');
+var Container = require('../lib/Container');
 
 var exports = function() {
   this.configure = this.configure.bind(this);
   this.run = this.run.bind(this);
 };
-
-var Docker = require('dockerode');
-var fs = require('fs');
 
 exports.shortDescription = 'Simple comand line interface to perform a build on a container.';
 
@@ -60,7 +59,7 @@ exports.run = function(probo) {
     build: {
       config: {
         image: image,
-      }
+      },
     },
     project: {
       // TODO: What should we do about the expectation that we pass in project ID?
@@ -71,7 +70,7 @@ exports.run = function(probo) {
       },
       service_auth: {
         token: config.providerApiToken,
-      }
+      },
     },
   };
   if (config.commitRef) {
