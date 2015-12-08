@@ -1,25 +1,25 @@
 'use strict';
 
 // NOCK CONFIGUATION
-// var default_nock_mode = "RECORD"
-var default_nock_mode = 'PLAY';
+// var defaultNockMode = "RECORD"
+var defaultNockMode = 'PLAY';
 
 var nock = require('nock');
 // opts: {processor, not_required, mode}
-function init_nock(fixture, opts) {
-  var fixture_file = './test/fixtures/' + fixture;
+function initNock(fixture, opts) {
+  var fixtureFile = './test/fixtures/' + fixture;
 
   var nocked = {};
-  var required_nocks = [];
+  var requiredNocks = [];
 
   opts = opts || {};
   opts.not_required = opts.not_required || [];
 
-  var nock_mode = opts.mode || default_nock_mode;
+  var nockMode = opts.mode || defaultNockMode;
 
   var nocks;
-  if (nock_mode === 'PLAY') {
-    nocks = nock.load(fixture_file);
+  if (nockMode === 'PLAY') {
+    nocks = nock.load(fixtureFile);
 
     if (opts.processor) {
       var ret = opts.processor(nocks);
@@ -37,11 +37,11 @@ function init_nock(fixture, opts) {
     Object.keys(nocked).filter(function(name) {
       return opts.not_required.indexOf(name) < 0;
     }).forEach(function(name) {
-      required_nocks.push(nocked[name]);
+      requiredNocks.push(nocked[name]);
     });
   }
 
-  if (nock_mode === 'RECORD') {
+  if (nockMode === 'RECORD') {
     console.log('recording');
     nock.recorder.rec({
       output_objects: true,
@@ -53,17 +53,19 @@ function init_nock(fixture, opts) {
     nock: nock,
     nocked: nocked,
     nocks: nocks,
-    required: required_nocks,
+    required: requiredNocks,
     cleanup: function() {
-      if (nock_mode === 'RECORD') {
+      if (nockMode === 'RECORD') {
         var nockCallObjects = nock.recorder.play();
-        require('fs').writeFileSync(fixture_file, JSON.stringify(nockCallObjects, null, 2));
+        require('fs').writeFileSync(fixtureFile, JSON.stringify(nockCallObjects, null, 2));
       }
 
       // makesure all internal calls were made
       try {
-        for (var nock_name in required_nocks) {
-          required_nocks[nock_name].done();
+        for (let nockName in requiredNocks) {
+          if (requiredNocks.hasOwnProperty(nockName)) {
+            requiredNocks[nockName].done();
+          }
         }
       }
       finally {
@@ -74,4 +76,4 @@ function init_nock(fixture, opts) {
 }
 
 
-module.exports = init_nock;
+module.exports = initNock;
