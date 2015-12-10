@@ -37,6 +37,7 @@ exports.configure = function(config) {
 };
 
 exports.run = function(amour) {
+  process.title = 'probo-ghh';
   server.start();
 };
 
