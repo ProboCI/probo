@@ -1,7 +1,7 @@
-var path = require('path'),
-  fs = require('fs'),
-  wordwrap = require('wordwrap'),
-  windowsize = require('window-size');
+'use strict';
+
+var wordwrap = require('wordwrap');
+var windowsize = require('window-size');
 
 var exports = function() {
   this.configure = this.configure.bind(this);
@@ -17,7 +17,8 @@ exports.help += '\n';
 exports.help += 'Displays the help provided for the subcommand.';
 
 exports.options = function(yargs) {
-  return this.yargs = yargs;
+  this.yargs = yargs;
+  return yargs;
 };
 
 exports.configure = function(config) {
@@ -25,7 +26,7 @@ exports.configure = function(config) {
 
 exports.buildSpaces = function(number) {
   var output = '';
-  for (var i = 0 ; i < number ; i++) {
+  for (var i = 0; i < number; i++) {
     output += ' ';
   }
   return output;
@@ -35,15 +36,16 @@ exports.buildAllCommandHelp = function(probo, done) {
   probo.cli.loadCommands(function(error, commands) {
     if (error) return done(error);
     var output = [];
-    var name = '';
-    for (name in commands) {
-      var command = commands[name];
-      if (command.shortDescription) {
-        var element = {
-          name: name,
-          description: command.shortDescription
-        };
-        output.push(element);
+    for (let name in commands) {
+      if (commands.hasOwnProperty(name)) {
+        let command = commands[name];
+        if (command.shortDescription) {
+          var element = {
+            name: name,
+            description: command.shortDescription,
+          };
+          output.push(element);
+        }
       }
     }
     if (done) {
@@ -81,7 +83,7 @@ exports.run = function(probo) {
   var commandName = argv._[1];
 
   probo.cli.loadCommands(function(error, commands) {
-    if (commandName === undefined) {
+    if (!commandName) {
       self.displayAllHelp(probo);
     }
     else if (!commands[commandName]) {
