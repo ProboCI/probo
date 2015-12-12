@@ -1,15 +1,10 @@
 // NOTE: run this test independently as
 // npm test test/lib/container.js
 
-require('co-mocha');
 var sinon = require('sinon');
-var Promise = require('bluebird');
-
-var child_process = require('child_process');
+var should = require('should');
 
 var Container = require('../../lib/Container');
-
-//require('nock').restore()
 
 describe('Container', function() {
   describe('events', function() {
@@ -36,62 +31,33 @@ describe('Container', function() {
     });
   });
 
-  describe.skip('stats', function() {
-    var container, containerInfo;
+  describe('stats', function() {
+    var container;
 
-    before(function*() {
-      container = new Container({
-        docker: {
-          socketPath: '/var/run/docker.sock'
-        },
-        image: 'proboci/ubuntu-14.04-lamp',
-        imageConfig: {
-          'proboci/ubuntu-14.04-lamp': {
-            services: []
-          }
-        },
-        build: {
-          ref: null,
-          id: null
-        }
+    it('disk usage', function(done) {
+      container = new Container({containerId: 'blah'});
+
+      // mock out dockerode's container.modem.dial call,
+      // to make sure our 'inspect' patch is working correctly
+      // (and as are future dockerode versions)
+      sinon.stub(container.container.modem, 'dial', function(opts, cb) {
+        opts.should.containEql({
+          method: 'GET',
+          options: {size: true},
+          path: '/containers/blah/json?',
+        });
+        cb(null, require('../fixtures/container_inspect.json'));
       });
 
-      Promise.promisifyAll(container);
+      container.getDiskUsage(function(err, disk) {
+        should.not.exist(err);
+        disk.should.eql({
+          containerSize: 5257740,
+          imageSize: 1113815794,
+        });
 
-      // will start the container too
-      containerInfo = yield container.create();
-      container.containerId = containerInfo.Id;
-    });
-
-    after(function*() {
-      yield container.remove({force: true});
-    });
-
-    it('image size', function* () {
-      var size = yield container.imageSizeAsync(containerInfo.Image);
-      size.should.be.a.Number;
-    });
-
-    it('container size', function* () {
-      // test 1: make sure execing and parsing works
-      var stubs = sinon.stub(child_process, 'exec').yields(null, '123 /var/lib/...', '');
-      try {
-        var size = yield container.containerSizeAsync();
-        size.should.be.a.Number;
-      }
-      finally {
-        stubs.restore();
-      }
-
-
-      // test 2: error handling
-      try {
-        yield container.containerSizeAsync();
-        throw new Error('Should not get here');
-      } catch (e) {
-        e.message.should.eql(`Command failed: /bin/sh -c du -bs /var/lib/docker/aufs/diff/${container.containerId}\ndu: cannot access ‘/var/lib/docker/aufs/diff/${container.containerId}’: Permission denied\n`);
-      }
-
+        done();
+      });
     });
   });
 });
