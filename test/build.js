@@ -18,6 +18,9 @@ Step.prototype.emitEvent = function(name, data) {
 };
 
 describe('Build', function() {
+  it('should not error if it is run and there are no steps', function(done) {
+    new Build().run(done);
+  });
   it('should emit the appropriate events when running a build step', function(done) {
     var build = new Build();
     var container = new Container({docker: null});
