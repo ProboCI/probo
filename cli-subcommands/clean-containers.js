@@ -138,8 +138,8 @@ function* start() {
     var latestShas = pullRequests.map(function(pr) { return pr.head.sha; });
 
     // find build containers not matching the latest sha
-    function contains(haystack, needle) { 
-      return haystack.indexOf(needle) >= 0; 
+    function contains(haystack, needle) {
+      return haystack.indexOf(needle) >= 0;
     }
     var oldBuilds = project.builds.filter(function(build) {
       return !contains(latestShas, build.ref);
