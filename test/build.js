@@ -25,7 +25,7 @@ describe('Build', function() {
     var build = new Build();
     var container = new Container({docker: null});
     build.setContainer(container);
-    var step = new Step();
+    var step = new Step(container);
     build.addStep(step);
     var callbacks = Resolver.resolver(5, {nonError: true}, done);
     build.on('taskStart', callbacks[0]);
@@ -36,7 +36,7 @@ describe('Build', function() {
   });
   it('should stream an event', function(done) {
     var build = new Build({id: 1});
-    var step = new Step();
+    var step = new Step(new Container());
     var streamData = [];
     build.addStep(step);
     var callbacks = Resolver.resolver(2, {nonError: true}, function() {
@@ -63,7 +63,7 @@ describe('Build', function() {
   });
   it('should emit an error if configured to on failure', function(done) {
     var build = new Build({emitErrors: true});
-    build.addStep(new Step({fail: true}));
+    build.addStep(new Step(new Container(), {fail: true}));
     build.on('error', function(error) {
       should.exist(error);
       done();
@@ -72,12 +72,13 @@ describe('Build', function() {
   });
   it('should stop running tasks when the first one fails by default', function(done) {
     var build = new Build();
-    build.setContainer = new Container({docker: null});
-    var step1 = new Step();
+    var container = new Container();
+    build.setContainer(container);
+    var step1 = new Step(container);
     build.addStep(step1);
-    var step2 = new Step({fail: true});
+    var step2 = new Step(container, {fail: true});
     build.addStep(step2);
-    var step3 = new Step();
+    var step3 = new Step(container);
     build.addStep(step3);
     build.run(function(error) {
       step1.state.should.equal('completed');
@@ -89,12 +90,13 @@ describe('Build', function() {
   });
   it('should continue running tasks when a failed task is marked continueOnFailure', function(done) {
     var build = new Build();
-    build.setContainer = new Container({docker: null});
-    var step1 = new Step();
+    var container = new Container();
+    build.setContainer(container);
+    var step1 = new Step(container);
     build.addStep(step1);
-    var step2 = new Step({fail: true, continueOnFailure: true});
+    var step2 = new Step(container, {fail: true, continueOnFailure: true});
     build.addStep(step2);
-    var step3 = new Step();
+    var step3 = new Step(container);
     build.addStep(step3);
     build.run(function(error) {
       should.exist(error);
@@ -107,12 +109,13 @@ describe('Build', function() {
   });
   it('should allow tasks marked as optional to fail without marking the build as a failure', function(done) {
     var build = new Build();
-    build.setContainer = new Container({docker: null});
-    var step1 = new Step();
+    var container = new Container();
+    build.setContainer(container);
+    var step1 = new Step(container);
     build.addStep(step1);
-    var step2 = new Step({fail: true, continueOnFailure: true, optional: true});
+    var step2 = new Step(container, {fail: true, continueOnFailure: true, optional: true});
     build.addStep(step2);
-    var step3 = new Step();
+    var step3 = new Step(container);
     build.addStep(step3);
     build.run(function(error) {
       should.not.exist(error);
