@@ -1,7 +1,7 @@
 'use strict';
 
 // NOCK CONFIGUATION
-// var defaultNockMode = "RECORD"
+// var default_nock_mode = "RECORD"
 var defaultNockMode = 'PLAY';
 
 var nock = require('nock');
@@ -50,7 +50,6 @@ function initNock(fixture, opts) {
   }
 
   return {
-    nock: nock,
     nocked: nocked,
     nocks: nocks,
     required: requiredNocks,
@@ -62,8 +61,8 @@ function initNock(fixture, opts) {
 
       // makesure all internal calls were made
       try {
-        for (let nockName in requiredNocks) {
-          if (requiredNocks.hasOwnProperty(nockName)) {
+        for (var nockName in requiredNocks) {
+          if (typeof nockName.done == 'function') {
             requiredNocks[nockName].done();
           }
         }
