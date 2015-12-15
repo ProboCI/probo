@@ -81,6 +81,8 @@ exports.run = function(probo) {
   var commandName = argv._[1];
 
   probo.cli.loadCommands(function(error, commands) {
+
+/* eslint no-undefined:0, no-use-before-define: 0*/
     if (commandName === undefined) {
       self.displayAllHelp(probo);
     }
