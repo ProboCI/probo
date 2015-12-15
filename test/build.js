@@ -28,8 +28,8 @@ describe('Build', function() {
     var step = new Step(container);
     build.addStep(step);
     var callbacks = Resolver.resolver(5, {nonError: true}, done);
-    build.on('taskStart', callbacks[0]);
-    build.on('taskEnd', callbacks[1]);
+    build.on('stepStart', callbacks[0]);
+    build.on('stepEnd', callbacks[1]);
     step.on('start', callbacks[2]);
     step.on('end', callbacks[3]);
     build.run(callbacks[4]);
@@ -70,7 +70,7 @@ describe('Build', function() {
     });
     build.run();
   });
-  it('should stop running tasks when the first one fails by default', function(done) {
+  it('should stop running steps when the first one fails by default', function(done) {
     var build = new Build();
     var container = new Container();
     build.setContainer(container);
@@ -88,7 +88,7 @@ describe('Build', function() {
       done(null);
     });
   });
-  it('should continue running tasks when a failed task is marked continueOnFailure', function(done) {
+  it('should continue running steps when a failed step is marked continueOnFailure', function(done) {
     var build = new Build();
     var container = new Container();
     build.setContainer(container);
@@ -107,7 +107,7 @@ describe('Build', function() {
       done(null);
     });
   });
-  it('should allow tasks marked as optional to fail without marking the build as a failure', function(done) {
+  it('should allow steps marked as optional to fail without marking the build as a failure', function(done) {
     var build = new Build();
     var container = new Container();
     build.setContainer(container);

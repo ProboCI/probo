@@ -28,7 +28,7 @@ describe('Shell', function() {
       id: task.id,
       name: 'Shell task',
       plugin: 'Shell',
-      timeout: 6000,
+      timeout: 1200000,
       options: {command: 'command'},
       result: {code: null, time: null},
     });
