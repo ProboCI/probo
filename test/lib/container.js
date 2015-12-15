@@ -1,3 +1,4 @@
+'use strict';
 // NOTE: run this test independently as
 // npm test test/lib/container.js
 
@@ -13,7 +14,7 @@ describe('Container', function() {
 
       var event = sinon.spy();
       var stateChange = function() {
-        event.called.should.be.ok;
+        event.called.should.eq('ok');
 
         var args = Array.prototype.slice.call(arguments);
         args.should.eql(['stopping']);
