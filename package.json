@@ -55,6 +55,7 @@
     "request-promise": "^1.0.2",
     "restify": "^2.8.5",
     "stream-combiner": "^0.2.2",
+    "split2": "^1.0.0",
     "superagent": "^1.1.0",
     "through2": "^0.6.3",
     "window-size": "^0.1.0",
