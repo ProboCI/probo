@@ -23,6 +23,7 @@ class Step extends AbstractPlugin {
     }
     done(error);
   }
+
 }
 
 module.exports = Step;

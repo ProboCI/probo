@@ -16,7 +16,7 @@ describe('Shell', function() {
     should.exist(task.id);
     task.id.should.be.type('string');
     task.plugin.should.eql('Shell');
-    task.name.should.eql('Shell task');
+    task.name.should.eql('Shell step');
     task.buildCommand().should.eql('bash -c command'.split(' '));
     task.description().should.eql('command');
 
@@ -26,11 +26,13 @@ describe('Shell', function() {
     // make sure JSON serializtion for a task has the desired properties
     JSON.parse(JSON.stringify(task)).should.eql({
       id: task.id,
-      name: 'Shell task',
+      name: 'Shell step',
       plugin: 'Shell',
       timeout: 1200000,
       options: {command: 'command'},
-      result: {code: null, time: null},
+      exitCode: null,
+      startTime: null,
+      endTime: null,
     });
   });
 
@@ -40,7 +42,7 @@ describe('Shell', function() {
 
     task.on('update', function(context, status, _task) {
       task.should.eql(_task);
-      context.should.eql('Shell/Shell task');
+      context.should.eql('Shell/Shell step');
       status.should.containEql({
         state: 'pending',
         description: 'command',
