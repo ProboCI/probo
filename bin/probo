@@ -26,10 +26,6 @@ loader.addAndNormalizeObject(process.env);
 
 var commandName = argv._[0];
 
-// Note: The title of a process (on linux) can be changed at any time and the
-// long-running subommands will override this later.
-process.title = 'probo';
-
 probo.cli.loadCommands(function(error, commands) {
   if (error) throw error;
 
