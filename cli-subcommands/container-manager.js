@@ -24,6 +24,7 @@ exports.run = function(amour) {
   var Server = amour.ContainerManager;
   var server = new Server();
   var config = amour.config;
+  process.title = 'probo-cm';
   server.configure(config, function(error) {
     if (error) throw error;
     server.run(amour, function(error) {
