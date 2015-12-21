@@ -25,35 +25,19 @@ describe('LAMP App', function() {
 
     app.script.should.containEql('mkdir -p $SRC_DIR; cd $SRC_DIR');
 
-    app.script.should.containEql(
-      'if [ -d "$SRC_DIR/docroot" ] ; then' + os.EOL +
-      '  echo \'Subdirectory docroot found within code directory, creating symlink.\'' + os.EOL +
-      '  ln -s "$SRC_DIR/docroot" /var/www/html'  + os.EOL +
-      'fi'  + os.EOL +
-      'if [ -a "$SRC_DIR/index.php" ] ; then'  + os.EOL +
-      '  echo \'Index.php found within the root of the codebase, creating symlink.\''  + os.EOL +
-      '  ln -s $SRC_DIR  /var/www/html'  + os.EOL +
-      'fi'
-    );
+    app.script.should.containEql('if [ -d "$SRC_DIR/docroot" ]');
+    app.script.should.containEql('if [ -a "$SRC_DIR/index.php" ]');
+    app.script.should.containEql('ln -s $SRC_DIR  /var/www/html');
+
+    app.script.should.containEql('mysql -e \'create database my-cool-db\'');
 
     app.script.should.containEql(
-      'mysql -e \'create database my-cool-db\'' + os.EOL +
-       'mysql -e \'grant all on my-cool-db.* to "root"@"localhost"\'' + os.EOL +
-       'mysql -e \'flush privileges\''
-    );
-
-    app.script.should.containEql(
-      'cat $ASSET_DIR/my-cool-db.sql | `drush --root=/var/www/html sql-connect`'  + os.EOL +
-      'rm $ASSET_DIR/my-cool-db.sql'
+      'cat $ASSET_DIR/my-cool-db.sql | `drush --root=/var/www/html sql-connect`'
     );
 
   });
 
   it('handles gzipped databases', function() {
-
-    console.log(appGZ.script);
-    appGZ.script.should.containEql('gunzip -c $ASSET_DIR/my-cool-db.sql | `drush --root=/var/www/html sql-connect`' + os.EOL +
-      'rm $ASSET_DIR/my-cool-db.sql');
-
+    appGZ.script.should.containEql('gunzip -c');
   });
 });
