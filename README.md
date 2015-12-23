@@ -20,4 +20,4 @@ easy to install compatible versions of all of the individual services.
 See the [Quickstart](QUICKSTART.md) guide for how to get up and running with your own instance of Probo
 
 ## Compatibility
-The code uses generators and requires node `io.js` or `node` 4.x+.
+The code uses ES6 features and requires node `io.js` or `node` 4.x+.
