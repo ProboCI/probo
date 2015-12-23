@@ -5,7 +5,7 @@ var Resolver = require('multiple-callback-resolver');
 
 var lib = require('..');
 var Build = lib.Build;
-var Container = lib.Container;
+var Container = require('./fixtures/MockContainer');
 var Step = require('./fixtures/TaskPlugin');
 
 /**

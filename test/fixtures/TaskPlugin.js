@@ -5,7 +5,12 @@ var AbstractPlugin = lib.plugins.TaskRunner.AbstractPlugin;
 
 class Step extends AbstractPlugin {
 
-  run(done) {
+  buildCommand() {
+    return [];
+  }
+
+  _run(done) {
+    var self = this;
     var error = null;
     this.state = 'running';
     this.emit('start');
@@ -20,6 +25,15 @@ class Step extends AbstractPlugin {
     if (this.options.fail) {
       this.state = 'errored';
       error = new Error('Task failed');
+    }
+    if (this.options.delay) {
+      setTimeout(function() {
+        // TODO: This sucks.
+        if (this.runCalledDone) {
+          done(self.error);
+        }
+      }, this.options.delay);
+      return;
     }
     done(error);
   }

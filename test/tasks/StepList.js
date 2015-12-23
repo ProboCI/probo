@@ -4,12 +4,13 @@ var should = require('should');
 
 var lib = require('../..');
 var StepList = lib.plugins.TaskRunner.StepList;
-var logger = require('../../lib/logger');
-var mockContainer = {log: logger.getLogger()};
+var MockContainer = require('../fixtures/MockContainer');
+var mockContainer = new MockContainer();
+mockContainer.log.logLevel = Number.POSITIVE_INFINITY;
 
 var Step = require('../fixtures/TaskPlugin');
 
-describe.only('StepList', function() {
+describe('StepList', function() {
   it('should run a set of steps passed to the constructor', function(done) {
     var step1 = new Step(mockContainer);
     var step2 = new Step(mockContainer);
