@@ -1,6 +1,5 @@
 'use strict';
 var LAMPApp = require('../../lib/plugins/TaskRunner/LAMPApp');
-var os = require('os');
 
 var mockContainer = {
   log: {child: function() {}},
@@ -22,10 +21,10 @@ describe('LAMP App', function() {
   var app = new LAMPApp(mockContainer, options);
 
   var optionsGZ = {
-      database: 'my-cool-db.sql',
-      databaseName: 'my-cool-db',
-      databaseGzipped: true,
-    };
+    database: 'my-cool-db.sql',
+    databaseName: 'my-cool-db',
+    databaseGzipped: true,
+  };
   var appGZ = new LAMPApp(mockContainer, optionsGZ);
 
   it('builds proper lamp script', function() {
