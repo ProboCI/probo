@@ -46,8 +46,18 @@ describe('Wordpress App', function() {
     app2.script.should.containEql('gunzip -c');
   });
 
-  it('cats the wp-config.php file', function() {
+  it('inserts the snippet into wp-config.php', function() {
+    app.script.should.containEql("sed -i '$(WP_CONFIG_LINE_NUMBER)i $(PHP_SNIPPET)' /var/www/html/wp-config.php");
     app.script.should.containEql("define(\"DB_USER\", \"strongpassword\");");
+  });
+
+  it('switches to the probo domain', function() {
+    app.script.should.containEql('export DEV_HOME=http://example.com/home');
+    app.script.should.containEql('export DEV_DOMAIN=http://example.com');
+    app.script.should.containEql('wp option update home $BUILD_DOMAIN')
+    app.script.should.containEql('wp search-replace \'$DEV_HOME\' \'$BUILD_DOMAIN\'')
+    app.script.should.containEql('wp option update siteurl $BUILD_DOMAIN')
+    app.script.should.containEql('wp search-replace \'$DEV_DOMAIN\' \'$BUILD_DOMAIN\'')
   });
 
   it('flushes the cache', function() {
