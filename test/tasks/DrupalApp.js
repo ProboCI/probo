@@ -1,6 +1,5 @@
 'use strict';
 var DrupalApp = require('../../lib/plugins/TaskRunner/Drupal');
-var os = require('os');
 
 var mockContainer = {
   log: {child: function() {}},
@@ -21,10 +20,10 @@ describe('Drupal App', function() {
   var app = new DrupalApp(mockContainer, options);
 
   var options2 = {
-      database: 'my-cool-db.sql',
-      databaseGzipped: true,
-      clearCaches: false,
-    };
+    database: 'my-cool-db.sql',
+    databaseGzipped: true,
+    clearCaches: false,
+  };
   var app2 = new DrupalApp(mockContainer, options2);
 
   it('builds proper lamp script', function() {
@@ -48,13 +47,13 @@ describe('Drupal App', function() {
   });
 
   it('cats the settings.php file', function() {
-    app.script.should.containEql("'database' => 'drupal'");
-    app.script.should.containEql("'username' => 'root'");
-    app.script.should.containEql("'password' => 'strongpassword'");
+    app.script.should.containEql('\'database\' => \'drupal\'');
+    app.script.should.containEql('\'username\' => \'root\'');
+    app.script.should.containEql('\'password\' => \'strongpassword\'');
   });
 
   it('clears the cache', function() {
-    app.script.should.containEql("drush --root=/var/www/html cache-clear all");
-    app2.script.should.not.containEql("drush --root=/var/www/html cache-clear all");
+    app.script.should.containEql('drush --root=/var/www/html cache-clear all');
+    app2.script.should.not.containEql('drush --root=/var/www/html cache-clear all');
   });
 });
