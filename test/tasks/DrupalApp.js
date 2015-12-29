@@ -4,6 +4,13 @@ var os = require('os');
 
 var mockContainer = {
   log: {child: function() {}},
+  containerConfig: {
+    build: {
+      links: {
+        build: 'http://abc123.probo.build',
+      },
+    },
+  },
 };
 
 describe('Drupal App', function() {

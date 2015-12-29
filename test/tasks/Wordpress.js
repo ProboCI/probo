@@ -3,17 +3,28 @@ var WordpressApp = require('../../lib/plugins/TaskRunner/Wordpress');
 
 var mockContainer = {
   log: {child: function() {}},
+  containerConfig: {
+    build: {
+      links: {
+        build: 'http://abc123.probo.build',
+      },
+    },
+  },
 };
 
 describe('Wordpress App', function() {
 
   var options = {
     database: 'my-cool-db.sql',
+    devDomain: 'http://example.com',
+    devHome: 'http://example.com/home',
   };
   var app = new WordpressApp(mockContainer, options);
 
   var options2 = {
       database: 'my-cool-db.sql',
+      devDomain: 'http://example.com',
+      devHome: 'http://example.com/home',
       databaseGzipped: true,
       flushCaches: false,
     };
