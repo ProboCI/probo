@@ -68,6 +68,7 @@ loom:
 # asset server (must NOT be localhost because it's called from within container)
 assets:
   url: "http://localhost:3070"
+  token: "API token here"
 
 # auth credentials service (i.e., for stash)
 auth:
