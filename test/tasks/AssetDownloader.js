@@ -5,11 +5,9 @@ var sinon = require('sinon');
 
 var mockContainer = {
   log: {child: function() {}},
-  containerConfig: {
-    build: {
-      links: {
-        build: 'http://abc123.probo.build',
-      },
+  build: {
+    links: {
+      build: 'http://abc123.probo.build',
     },
   },
 };
