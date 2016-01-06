@@ -3,21 +3,39 @@ var LAMPApp = require('../../lib/plugins/TaskRunner/LAMPApp');
 
 var mockContainer = {
   log: {child: function() {}},
-  containerConfig: {
-    build: {
-      links: {
-        build: 'http://abc123.probo.build',
-      },
+  build: {
+    links: {
+      build: 'http://abc123.probo.build',
     },
   },
 };
+
 
 describe('LAMP App', function() {
 
   var options = {
     database: 'my-cool-db.sql',
     databaseName: 'my-cool-db',
+    cliDefines: {
+      FOO: 'one\'s',
+      BAR: 2,
+    },
+    phpIniOptions: {
+      'opcache.max_file_size': 0,
+      'opcache.optimization_level': 0xffffffff,
+      'soap.wsdl_cache_dir': '/tmp',
+    },
+    apacheMods: ['dir', 'my-cool-apachemod',],
+    phpMods: ['mcrypt', 'my-cool-php5mod',],
+    installPackages: ['php5-mcrypt', 'my-cool-package',],
   };
+
+  /*
+  this.options.phpConstants = options.phpConstants || {};
+      this.options.installPackages = options.installPackages || {};
+      this.options.phpMods = options.phpMods || {};
+      this.options.apacheMods = options.apacheMods || {};
+      */
   var app = new LAMPApp(mockContainer, options);
 
   var optionsGZ = {
