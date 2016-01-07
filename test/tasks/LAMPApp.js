@@ -28,6 +28,7 @@ describe('LAMP App', function() {
     apacheMods: ['dir', 'my-cool-apachemod',],
     phpMods: ['mcrypt', 'my-cool-php5mod',],
     installPackages: ['php5-mcrypt', 'my-cool-package',],
+    phpConstants: {PI: 3.14, FUZZY_PI: '3.14ish',}
   };
 
   /*
@@ -60,8 +61,56 @@ describe('LAMP App', function() {
     );
 
   });
+  it('exports BUILD_DOMAIN', function() {
+    app.script.should.containEql('export BUILD_DOMAIN=http://abc123.probo.build');
+  });
 
   it('handles gzipped databases', function() {
+    app.script.should.not.containEql('gunzip -c');
     appGZ.script.should.containEql('gunzip -c');
   });
+
+  it('handles custom defines', function() {
+    app.script.should.containEql('export FOO=\'one\\\'s\'');
+    app.script.should.containEql('export BAR=2');
+  });
+
+  it('handles install packages', function() {
+    app.script.should.containEql('apt-get install -y php5-mcrypt my-cool-package');
+  });
+
+  it('handles custom php options', function() {
+    app.script.should.containEql('cat /etc/php5/apache2/php.ini << EOL >> opcache.max_file_size=0');
+    app.script.should.containEql('cat /etc/php5/apache2/php.ini << EOL >> opcache.optimization_level=4294967295');
+    app.script.should.containEql('cat /etc/php5/apache2/php.ini << EOL >> soap.wsdl_cache_dir=\'/tmp\'');
+  });
+
+  it('handles custom php defines', function() {
+    app.script.should.containEql('cat /etc/php5/apache2/php.ini << EOL >> auto_prepend_file=\'.proboPhpConstants.php\'');
+    app.script.should.containEql('echo "<?php define (\'PI\', 3.14); define (\'FUZZY_PI\', \'3.14ish\'); " > $(SRC_DIR).proboPhpConstants.php');
+  });
+
+  it('handles custom php mods', function() {
+    app.script.should.containEql('php5enmod mcrypt');
+    app.script.should.containEql('php5enmod my-cool-php5mod');
+  });
+
+  it('handles custom apache mods', function() {
+    app.script.should.containEql('a2enmod dir');
+    app.script.should.containEql('a2enmod my-cool-apachemod');
+  });
+
+  it('automatically restarts apache', function() {
+    // we didn't explicitly set the reset command, it should be added via the other options
+    app.script.should.containEql('sudo service apache2 restart');
+    appGZ.script.should.not.containEql('sudo service apache2 restart');
+
+  });
+
+  it('sanitizes strings for the command line and wraps them in single-quotes', function() {
+    var s = app.sanitizeValue("hi\'\"");
+    s.should.eql('\'hi\\\'\\\"\'');
+  });
+
+  console.log(appGZ.script);
 });
