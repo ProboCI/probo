@@ -111,6 +111,4 @@ describe('LAMP App', function() {
     var s = app.sanitizeValue("hi\'\"");
     s.should.eql('\'hi\\\'\\\"\'');
   });
-
-  console.log(appGZ.script);
 });
