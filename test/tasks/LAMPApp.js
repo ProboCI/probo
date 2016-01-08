@@ -61,9 +61,6 @@ describe('LAMP App', function() {
     );
 
   });
-  it('exports BUILD_DOMAIN', function() {
-    app.script.should.containEql('export BUILD_DOMAIN=http://abc123.probo.build');
-  });
 
   it('handles gzipped databases', function() {
     app.script.should.not.containEql('gunzip -c');

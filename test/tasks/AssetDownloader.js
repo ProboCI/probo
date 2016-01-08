@@ -46,7 +46,6 @@ describe('AssetDownloader', function() {
 export PS4='$ '
 set -uex
 mkdir -p $SRC_DIR; cd $SRC_DIR
-export BUILD_DOMAIN=http://abc123.probo.build
 mkdir -p $ASSET_DIR
 cd $ASSET_DIR
 wget -nv -O db.tgz  http://asset.server/asset/bucket-name/db.tgz
