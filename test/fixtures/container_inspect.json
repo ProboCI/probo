@@ -1,0 +1,233 @@
+{
+    "Id": "fb9c62a0e8a8b32ba7698de4b20dd16bb1d5b27f7bfc91722ca73f53f612f861",
+    "Created": "2015-12-11T06:45:01.302821753Z",
+    "Path": "penelope",
+    "Args": [
+        "-n",
+        "cleanapache",
+        "-c",
+        "rm /var/run/apache2/apache2.pid",
+        "-n",
+        "apache",
+        "-c",
+        "/usr/sbin/apache2ctl -D FOREGROUND",
+        "-n",
+        "mysql",
+        "-c",
+        "mysqld_safe",
+        "-n",
+        "redis",
+        "-c",
+        "redis-server",
+        "-n",
+        "php_log",
+        "-c",
+        "tail -F /var/log/php/error.log"
+    ],
+    "State": {
+        "Status": "running",
+        "Running": true,
+        "Paused": false,
+        "Restarting": false,
+        "OOMKilled": false,
+        "Dead": false,
+        "Pid": 31551,
+        "ExitCode": 0,
+        "Error": "",
+        "StartedAt": "2015-12-11T07:36:45.776725774Z",
+        "FinishedAt": "2015-12-11T07:21:29.452460481Z"
+    },
+    "Image": "3334e6250ce977cb7bd67676492fcbcbb76a5dd7791de095b9c19a4858d7fc89",
+    "ResolvConfPath": "/var/lib/docker/containers/fb9c62a0e8a8b32ba7698de4b20dd16bb1d5b27f7bfc91722ca73f53f612f861/resolv.conf",
+    "HostnamePath": "/var/lib/docker/containers/fb9c62a0e8a8b32ba7698de4b20dd16bb1d5b27f7bfc91722ca73f53f612f861/hostname",
+    "HostsPath": "/var/lib/docker/containers/fb9c62a0e8a8b32ba7698de4b20dd16bb1d5b27f7bfc91722ca73f53f612f861/hosts",
+    "LogPath": "/var/lib/docker/containers/fb9c62a0e8a8b32ba7698de4b20dd16bb1d5b27f7bfc91722ca73f53f612f861/fb9c62a0e8a8b32ba7698de4b20dd16bb1d5b27f7bfc91722ca73f53f612f861-json.log",
+    "Name": "/probo--zanchin.test-repo--c73024c3-9e93-4616-97a7-aeaaf334a42c--96a93d2f-9639-4b77-867c-0cb4787294be",
+    "RestartCount": 0,
+    "Driver": "aufs",
+    "ExecDriver": "native-0.2",
+    "MountLabel": "",
+    "ProcessLabel": "",
+    "AppArmorProfile": "",
+    "ExecIDs": null,
+    "HostConfig": {
+        "Binds": [],
+        "ContainerIDFile": "",
+        "LxcConf": null,
+        "Memory": 0,
+        "MemoryReservation": 0,
+        "MemorySwap": 0,
+        "KernelMemory": 0,
+        "CpuShares": 0,
+        "CpuPeriod": 0,
+        "CpusetCpus": "",
+        "CpusetMems": "",
+        "CpuQuota": 0,
+        "BlkioWeight": 0,
+        "OomKillDisable": false,
+        "MemorySwappiness": null,
+        "Privileged": false,
+        "PortBindings": {
+            "3306/tcp": [
+                {
+                    "HostIp": "",
+                    "HostPort": ""
+                }
+            ],
+            "6379/tcp": [
+                {
+                    "HostIp": "",
+                    "HostPort": ""
+                }
+            ],
+            "80/tcp": [
+                {
+                    "HostIp": "",
+                    "HostPort": ""
+                }
+            ]
+        },
+        "Links": null,
+        "PublishAllPorts": false,
+        "Dns": null,
+        "DnsOptions": null,
+        "DnsSearch": null,
+        "ExtraHosts": null,
+        "VolumesFrom": null,
+        "Devices": null,
+        "NetworkMode": "default",
+        "IpcMode": "",
+        "PidMode": "",
+        "UTSMode": "",
+        "CapAdd": null,
+        "CapDrop": null,
+        "GroupAdd": null,
+        "RestartPolicy": {
+            "Name": "",
+            "MaximumRetryCount": 0
+        },
+        "SecurityOpt": null,
+        "ReadonlyRootfs": false,
+        "Ulimits": null,
+        "LogConfig": {
+            "Type": "json-file",
+            "Config": {}
+        },
+        "CgroupParent": "",
+        "ConsoleSize": [
+            0,
+            0
+        ],
+        "VolumeDriver": ""
+    },
+    "GraphDriver": {
+        "Name": "aufs",
+        "Data": null
+    },
+    "SizeRw": 5257740,
+    "SizeRootFs": 1113815794,
+    "Mounts": [],
+    "Config": {
+        "Hostname": "fb9c62a0e8a8",
+        "Domainname": "",
+        "User": "",
+        "AttachStdin": false,
+        "AttachStdout": false,
+        "AttachStderr": false,
+        "ExposedPorts": {
+            "3306/tcp": {},
+            "6379/tcp": {},
+            "80/tcp": {}
+        },
+        "Tty": false,
+        "OpenStdin": false,
+        "StdinOnce": false,
+        "Env": [
+            "COMMIT_REF=266e89b4039e",
+            "BUILD_ID=96a93d2f-9639-4b77-867c-0cb4787294be",
+            "SRC_DIR=/src",
+            "ASSET_DIR=/assets",
+            "PWD=/src",
+            "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+        ],
+        "Cmd": [
+            "penelope",
+            "-n",
+            "cleanapache",
+            "-c",
+            "rm /var/run/apache2/apache2.pid",
+            "-n",
+            "apache",
+            "-c",
+            "/usr/sbin/apache2ctl -D FOREGROUND",
+            "-n",
+            "mysql",
+            "-c",
+            "mysqld_safe",
+            "-n",
+            "redis",
+            "-c",
+            "redis-server",
+            "-n",
+            "php_log",
+            "-c",
+            "tail -F /var/log/php/error.log"
+        ],
+        "Image": "proboci/ubuntu-14.04-lamp",
+        "Volumes": null,
+        "WorkingDir": "",
+        "Entrypoint": null,
+        "OnBuild": null,
+        "Labels": {}
+    },
+    "NetworkSettings": {
+        "Bridge": "",
+        "SandboxID": "7a9917d2edc0f6a32d4cd88bd8c4bd56714c39f0c07fef4c7f02947be6389f37",
+        "HairpinMode": false,
+        "LinkLocalIPv6Address": "",
+        "LinkLocalIPv6PrefixLen": 0,
+        "Ports": {
+            "3306/tcp": [
+                {
+                    "HostIp": "0.0.0.0",
+                    "HostPort": "32770"
+                }
+            ],
+            "6379/tcp": [
+                {
+                    "HostIp": "0.0.0.0",
+                    "HostPort": "32769"
+                }
+            ],
+            "80/tcp": [
+                {
+                    "HostIp": "0.0.0.0",
+                    "HostPort": "32771"
+                }
+            ]
+        },
+        "SandboxKey": "/var/run/docker/netns/7a9917d2edc0",
+        "SecondaryIPAddresses": null,
+        "SecondaryIPv6Addresses": null,
+        "EndpointID": "1c5b6f319741eed33579b8eff1e927cb813ac8599db4958ddcee641018dc2c7d",
+        "Gateway": "172.17.0.1",
+        "GlobalIPv6Address": "",
+        "GlobalIPv6PrefixLen": 0,
+        "IPAddress": "172.17.0.2",
+        "IPPrefixLen": 16,
+        "IPv6Gateway": "",
+        "MacAddress": "02:42:ac:11:00:02",
+        "Networks": {
+            "bridge": {
+                "EndpointID": "1c5b6f319741eed33579b8eff1e927cb813ac8599db4958ddcee641018dc2c7d",
+                "Gateway": "172.17.0.1",
+                "IPAddress": "172.17.0.2",
+                "IPPrefixLen": 16,
+                "IPv6Gateway": "",
+                "GlobalIPv6Address": "",
+                "GlobalIPv6PrefixLen": 0,
+                "MacAddress": "02:42:ac:11:00:02"
+            }
+        }
+    }
+}
