@@ -1,5 +1,5 @@
 'use strict';
-var WordpressApp = require('../../lib/plugins/TaskRunner/Wordpress');
+var WordpressApp = require('../../lib/plugins/TaskRunner/WordpressApp');
 
 var mockContainer = {
   log: {child: function() {}},
