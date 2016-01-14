@@ -26,16 +26,19 @@ class Step extends AbstractStep {
       this.state = 'errored';
       error = new Error('Task failed');
     }
+    var data = {
+      exitCode: self.error == null ? 0 : 1,
+    };
     if (this.options.delay) {
       setTimeout(function() {
         // TODO: This sucks.
         if (this.runCalledDone) {
-          done(self.error);
+          done(self.error, data);
         }
       }, this.options.delay);
       return;
     }
-    done(error);
+    done(error, data);
   }
 
 }
