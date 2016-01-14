@@ -8,7 +8,7 @@ var MockContainer = require('../fixtures/MockContainer');
 var mockContainer = new MockContainer();
 
 var lib = require('../..');
-var AbstractStep = lib.plugins.TaskRunner.AbstractPlugin;
+var AbstractStep = lib.plugins.TaskRunner.AbstractStep;
 var Step = require('../fixtures/TaskPlugin');
 
 describe('AbstractStep', function() {
@@ -18,7 +18,7 @@ describe('AbstractStep', function() {
       throw new Error('Instantiation should have failed.');
     }
     catch (error) {
-      error.message.should.containEql('Can\'t instantiate abstract class AbstractPlugin');
+      error.message.should.containEql('Can\'t instantiate abstract class AbstractStep');
       should.exist(error);
     }
   });
@@ -30,7 +30,7 @@ describe('AbstractStep', function() {
     }
     catch (error) {
       should.exist(error);
-      error.message.should.equal('AbstractPlugin.buildCommand must be implemented by a subclass');
+      error.message.should.equal('AbstractStep.buildCommand must be implemented by a subclass');
     }
   });
   it('should timeout if a step takes too long', function(done) {

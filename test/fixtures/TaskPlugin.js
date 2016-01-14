@@ -1,9 +1,9 @@
 'use strict';
 
 var lib = require('../..');
-var AbstractPlugin = lib.plugins.TaskRunner.AbstractPlugin;
+var AbstractStep = lib.plugins.TaskRunner.AbstractStep;
 
-class Step extends AbstractPlugin {
+class Step extends AbstractStep {
 
   buildCommand() {
     return [];
