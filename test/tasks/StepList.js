@@ -5,12 +5,12 @@ var should = require('should');
 var Resolver = require('multiple-callback-resolver');
 
 var lib = require('../..');
-var StepList = lib.plugins.TaskRunner.StepList;
+var StepList = lib.plugins.Step.StepList;
 var MockContainer = require('../fixtures/MockContainer');
 var mockContainer = new MockContainer();
 mockContainer.log.logLevel = Number.POSITIVE_INFINITY;
 
-var Step = require('../fixtures/TaskPlugin');
+var Step = require('../fixtures/TestStep');
 
 describe('StepList', function() {
   it('should run a set of steps passed to the constructor', function(done) {

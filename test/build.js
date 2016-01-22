@@ -6,7 +6,7 @@ var Resolver = require('multiple-callback-resolver');
 var lib = require('..');
 var Build = lib.Build;
 var Container = require('./fixtures/MockContainer');
-var Step = require('./fixtures/TaskPlugin');
+var Step = require('./fixtures/TestStep');
 
 /**
  * @param {string} name - The name of the event to emit.

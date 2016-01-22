@@ -1,5 +1,5 @@
 'use strict';
-var AssetDownloader = require('../../lib/plugins/TaskRunner/AssetDownloader');
+var AssetDownloader = require('../../lib/plugins/Step/AssetDownloader');
 
 var sinon = require('sinon');
 

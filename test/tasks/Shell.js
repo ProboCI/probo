@@ -1,5 +1,5 @@
 'use strict';
-var tasks = require('../../lib/plugins').TaskRunner;
+var tasks = require('../../lib/plugins').Step;
 var should = require('should');
 
 function createTask(Task, opts) {

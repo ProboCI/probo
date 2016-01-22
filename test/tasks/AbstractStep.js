@@ -8,8 +8,8 @@ var MockContainer = require('../fixtures/MockContainer');
 var mockContainer = new MockContainer();
 
 var lib = require('../..');
-var AbstractStep = lib.plugins.TaskRunner.AbstractStep;
-var Step = require('../fixtures/TaskPlugin');
+var AbstractStep = lib.plugins.Step.AbstractStep;
+var Step = require('../fixtures/TestStep');
 
 describe('AbstractStep', function() {
   it('should throw an exceoption if it is used directly', function() {
