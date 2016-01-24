@@ -55,8 +55,7 @@ describe('AbstractStep', function() {
       buildCommand() { return []; }
     }
     var step = new ConcreteStep(mockContainer);
-    step
-      .getStream()
+    step.stream
       .pipe(through2.obj(function(data, enc, cb) {
         stream.push(data);
         cb();
