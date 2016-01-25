@@ -64,8 +64,7 @@ describe('StepList', function() {
       streamData.push(data);
       cb();
     };
-    stepList
-      .getStream()
+    stepList.stream
       .pipe(through2.obj(chunkProcessor, callbacks[0]));
     stepList.run(callbacks[1]);
   });
