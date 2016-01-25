@@ -1,7 +1,7 @@
 'use strict';
 var through2 = require('through2');
 
-var Script = require('../../lib/plugins/TaskRunner/Script');
+var Script = require('../../lib/plugins/Step/Script');
 
 var mockContainer = {
   log: {child: function() {}},

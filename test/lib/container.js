@@ -4,6 +4,7 @@
 
 var sinon = require('sinon');
 var should = require('should');
+var Resolver = require('multiple-callback-resolver');
 
 var Container = require('../../lib/Container');
 
@@ -12,23 +13,26 @@ describe('Container', function() {
     it('fires a generic stateChange event', function(done) {
       var container = new Container({});
 
-      var event = sinon.spy();
-      var stateChange = function() {
-        event.called.should.eq('ok');
+      var resolver = new Resolver({nonError: true});
 
-        var args = Array.prototype.slice.call(arguments);
-        args.should.eql(['stopping']);
-
+      var history = [];
+      resolver.resolve(function(error, results) {
+        should.not.exist(error);
+        Object.keys(results).length.should.equal(3);
+        history[0][0].should.equal('stopping');
+        history[1][0].should.equal('stopped');
         done();
-      };
-
-      container.on('stopping', event);
-      container.on('stateChange', stateChange);
+      });
+      container.once('stopping', resolver.createCallback('stopping'));
+      container.once('stopped', resolver.createCallback('stopped'));
+      container.on('stateChange', function() {
+        history.push(arguments);
+      });
 
       // stub out stop method on internal container
-      container.container = {stop: sinon.spy()};
+      container.dockerContainer = {stop: function(done) { done(); }};
 
-      container.stop();
+      container.stop(resolver.createCallback('finished'));
     });
   });
 
@@ -41,7 +45,7 @@ describe('Container', function() {
       // mock out dockerode's container.modem.dial call,
       // to make sure our 'inspect' patch is working correctly
       // (and as are future dockerode versions)
-      sinon.stub(container.container.modem, 'dial', function(opts, cb) {
+      sinon.stub(container.dockerContainer.modem, 'dial', function(opts, cb) {
         opts.should.containEql({
           method: 'GET',
           options: {size: true},
