@@ -31,10 +31,7 @@ class Step extends AbstractStep {
     };
     if (this.options.delay) {
       setTimeout(function() {
-        // TODO: This sucks.
-        if (this.runCalledDone) {
-          done(self.error, data);
-        }
+        done(self.error, data);
       }, this.options.delay);
       return;
     }

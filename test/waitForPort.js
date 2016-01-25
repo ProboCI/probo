@@ -4,7 +4,7 @@ var net = require('net');
 var http = require('http');
 
 var should = require('should');
-var waitForPort = require('../../lib/waitForPort');
+var waitForPort = require('../lib/waitForPort');
 
 var waitOpts = {numRetries: 1, retryInterval: 100, debug: false};
 function extend() {

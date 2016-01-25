@@ -5,7 +5,6 @@ var should = require('should');
 var through2 = require('through2');
 
 var MockContainer = require('../fixtures/MockContainer');
-var mockContainer = new MockContainer();
 
 var lib = require('../..');
 var AbstractStep = lib.plugins.Step.AbstractStep;
@@ -13,6 +12,7 @@ var Step = require('../fixtures/TestStep');
 
 describe('AbstractStep', function() {
   it('should throw an exceoption if it is used directly', function() {
+    var mockContainer = new MockContainer();
     try {
       new AbstractStep(mockContainer);
       throw new Error('Instantiation should have failed.');
@@ -24,6 +24,7 @@ describe('AbstractStep', function() {
   });
   it('should throw an exception if a consuming class does not implement buildCommand', function() {
     class FailureClass extends AbstractStep {}
+    var mockContainer = new MockContainer();
     try {
       var item = new FailureClass(mockContainer);
       item.run();
@@ -34,22 +35,27 @@ describe('AbstractStep', function() {
     }
   });
   it('should timeout if a step takes too long', function(done) {
+    var mockContainer = new MockContainer({timeout: true});
     var options = {
       delay: 10,
       timeout: 2,
     };
     var step = new Step(mockContainer, options);
-    var callbacks = Resolver.resolver(2, function(error, data) {
+    var resolver = new Resolver();
+    resolver.resolve(function(error, results) {
       should.exist(error);
       // The data first callback should have been invoked with an error.
-      should.exist(data[0][0]);
-      data[0][0].should.be.instanceof(Error);
+      should.exist(results.timeout[0]);
+      results.timeout[0].message.should.equal('Step step exited due to timeout.');
+      results.timeout[0].should.be.instanceof(Error);
+      results.run[0].should.be.instanceof(Error);
       done();
     });
-    step.on('timeout', callbacks[0]);
-    step.run(callbacks[1]);
+    step.on('timeout', resolver.createCallback('timeout'));
+    step.run(resolver.createCallback('run'));
   });
   it('should construct the appropriate object stream', function(done) {
+    var mockContainer = new MockContainer();
     var stream = [];
     class ConcreteStep extends AbstractStep {
       buildCommand() { return []; }
@@ -70,11 +76,13 @@ describe('AbstractStep', function() {
     });
   });
   it('should serialize to json including the appropriate attributes', function() {
+    var mockContainer = new MockContainer();
     var step = new Step(mockContainer);
     var json = step.toJSON();
     Object.keys(json).length.should.equal(step._jsonAttributes.length);
   });
   it('should calculate the ellapsed time', function() {
+    var mockContainer = new MockContainer();
     var step = new Step(mockContainer);
     step.startTime = 5;
     step.endTime = 10;

@@ -3,6 +3,7 @@ var bunyan = require('bunyan');
 var through2 = require('through2');
 var Resolver = require('multiple-callback-resolver');
 
+
 var logger = bunyan.createLogger({
   name: 'probo',
   level: Number.POSITIVE_INFINITY,
@@ -17,6 +18,7 @@ var logger = bunyan.createLogger({
 class Container {
   constructor(options) {
     options = options || {};
+    this.timeout = options.timeout || false;
     this.log = options.log || logger;
   }
 
@@ -32,9 +34,10 @@ class Container {
     };
     setImmediate(this._simulateStream.bind(null, 'stdOut', streams.stdOut));
     setImmediate(this._simulateStream.bind(null, 'stdError', streams.stdError));
-    var callbacks = Resolver.resolver(2, done);
-    streams.stdOut.on('end', callbacks[0]);
-    streams.stdError.on('end', callbacks[1]);
+    var resolver = new Resolver();
+    resolver.resolve(done);
+    streams.stdOut.on('end', resolver.createCallback());
+    streams.stdError.on('end', resolver.createCallback());
     return streams;
   }
 
@@ -46,7 +49,9 @@ class Container {
   }
 
   stop(done) {
-    done();
+    if (done) {
+      done();
+    }
   }
 }
 
