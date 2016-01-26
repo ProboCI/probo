@@ -5,7 +5,7 @@ var path = require('path'),
 
 var Loader = require('yaml-config-loader');
 var yargs = require('yargs');
-var loader = new Loader();
+var loader = new Loader({allowedKeys: []});
 
 loader.on('error', function(error){
   if (error.name === 'YAMLException') {
@@ -21,7 +21,9 @@ var argv = yargs
   .alias('config', 'c')
   .argv;
 
-loader.add(path.resolve(path.join(__dirname, '..', 'defaults.yaml')));
+var filterOptions = {allowedKeys: true};
+
+loader.add(path.resolve(path.join(__dirname, '..', 'defaults.yaml')), filterOptions);
 loader.addAndNormalizeObject(process.env);
 
 var commandName = argv._[0];
@@ -45,7 +47,7 @@ probo.cli.loadCommands(function(error, commands) {
       argv.config = [ argv.config ];
     }
     for (var i in argv.config) {
-      loader.add(path.resolve(argv.config[i]));
+      loader.add(path.resolve(argv.config[i]), filterOptions);
     }
   }
 
@@ -60,7 +62,7 @@ probo.cli.loadCommands(function(error, commands) {
         setOptions[key] = yargs.argv[key];
       }
     }
-    loader.addAndNormalizeObject(setOptions);
+    loader.addAndNormalizeObject(setOptions, filterOptions);
   }
 
   loader.load(function(error, config) {
