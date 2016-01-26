@@ -1,5 +1,5 @@
 'use strict';
-var GithubDownloader = require('../../lib/plugins/Step/GithubDownloader');
+var GithubDownloader = require('../../lib/plugins/Step/CodeDownloader/GithubDownloader');
 
 var mockContainer = {
   log: {child: function() {}},
