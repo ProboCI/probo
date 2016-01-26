@@ -9,6 +9,11 @@ var Container = lib.Container;
 describe('Container', function() {
   it('should construct a container object', function() {
     var container = new Container();
+    var build = new lib.Build();
+    container.build = build;
+    container.build.should.equal(build);
+    container.containerId = 'foo';
+    container.id.should.equal('foo');
     should.exist(container);
   });
   it('should throw an exception if a non-existant image configuration is provided');
@@ -42,6 +47,7 @@ describe('Container', function() {
         Object.keys(results).length.should.equal(3);
         history[0][0].should.equal('stopping');
         history[1][0].should.equal('stopped');
+        container.state.should.equal('stopped');
         done();
       });
       container.once('stopping', resolver.createCallback('stopping'));

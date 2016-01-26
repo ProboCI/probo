@@ -30,7 +30,10 @@ describe('Build', function() {
     build.step.addStep(step);
     build.container = container;
     var resolver = new Resolver({nonError: true});
-    resolver.resolve(done);
+    resolver.resolve(function() {
+      build.state.should.equal('completed');
+      done();
+    });
     step.on('start', resolver.createCallback());
     step.on('end', resolver.createCallback());
     build.run(resolver.createCallback());
