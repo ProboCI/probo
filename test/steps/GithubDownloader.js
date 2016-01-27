@@ -26,6 +26,7 @@ mkdir -p $SRC_DIR; cd $SRC_DIR
 mkdir -p $SRC_DIR
 cd $SRC_DIR
 wget -q -O - --header "Authorization:token auth_token" https://api.github.com/repos/owner/repo/tarball/master | tar xzf - --strip-components=1
+exit
 `);
 
     gc.description().should.eql('GithubDownloader owner/repo @ master');

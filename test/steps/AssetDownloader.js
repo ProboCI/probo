@@ -45,6 +45,7 @@ mkdir -p $ASSET_DIR
 cd $ASSET_DIR
 wget -nv -O db.tgz  http://asset.server/asset/bucket-name/db.tgz
 wget -nv -O files.tgz  http://asset.server/asset/bucket-name/files
+exit
 `);
 
     ad.description().should.eql('AssetDownloader db.tgz, files');

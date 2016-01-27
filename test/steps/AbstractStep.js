@@ -37,6 +37,7 @@ describe('AbstractStep', function() {
   it('should timeout if a step takes too long', function(done) {
     var mockContainer = new MockContainer({timeout: true});
     var options = {
+      // In our test step delay retards our call to the done function.
       delay: 10,
       timeout: 2,
     };

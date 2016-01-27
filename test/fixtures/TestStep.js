@@ -14,12 +14,12 @@ class Step extends AbstractStep {
     var error = null;
     this.state = 'running';
     this.emit('start');
-    this.stdOutStream.write('stdout input line 1');
-    this.stdErrStream.write('stderr input line 1');
-    this.stdOutStream.write('stdout input line 2');
-    this.stdErrStream.write('stderr input line 2');
-    this.stdOutStream.end();
-    this.stdErrStream.end();
+    this.stdout.write('stdout input line 1');
+    this.stderr.write('stderr input line 1');
+    this.stdout.write('stdout input line 2');
+    this.stderr.write('stderr input line 2');
+    this.stdout.end();
+    this.stderr.end();
     this.emit('end');
     this.state = 'completed';
     if (this.options.fail) {

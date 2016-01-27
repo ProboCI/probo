@@ -16,7 +16,6 @@ describe('Container', function() {
     container.id.should.equal('foo');
     should.exist(container);
   });
-  it('should throw an exception if a non-existant image configuration is provided');
   it('should construct the appropriate penelope build options', function() {
     var imageOptions = {
       services: {
