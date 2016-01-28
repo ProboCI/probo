@@ -11,7 +11,7 @@ exports.configure = function(config) {
   this.config = config;
 };
 
-exports.run = function(amour) {
+exports.run = function(probo) {
   console.log(yaml.safeDump(this.config));
 };
 

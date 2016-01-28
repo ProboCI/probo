@@ -7,7 +7,7 @@ var exports = function() {
   this.run = this.run.bind(this);
 };
 
-exports.shortDescription = 'Provides the mongo backed REST API server that manages creating and tracking containers.';
+exports.shortDescription = 'Provides the REST API server that manages the lifecycle of environment containers.';
 
 exports.help = 'Runs the API server for creating docker containers.';
 
@@ -20,16 +20,16 @@ exports.options = function(yargs) {
   ;
 };
 
-exports.run = function(amour) {
-  var Server = amour.ContainerManager;
+exports.run = function(probo) {
+  var Server = probo.ContainerManager;
   var server = new Server();
-  var config = amour.config;
+  var config = probo.config;
   process.title = 'probo-cm';
   server.configure(config, function(error) {
     if (error) throw error;
-    server.run(amour, function(error) {
+    server.run(probo, function(error) {
       logger.getLogger('container-manager')
-        .info({config}, `Listening on ${config.port}`);
+        .debug({config}, `Listening on ${config.port}`);
     });
   });
 };

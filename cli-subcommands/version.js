@@ -4,7 +4,7 @@ var exports = function() {};
 
 exports.shortDescription = 'Displays version information.';
 
-exports.run = function(amour) {
+exports.run = function(probo) {
   console.log(require('../package').version);
 };
 

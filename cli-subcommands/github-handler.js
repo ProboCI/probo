@@ -13,7 +13,7 @@ var server = {};
 
 exports.shortDescription = 'Runs a webhook handler and sends updates to github status API.';
 
-exports.help = 'Useage: amour github-handler [args]';
+exports.help = 'Useage: probo github-handler [args]';
 exports.help += '\n';
 exports.help += 'Provides a github webhook endpoint.';
 
@@ -36,7 +36,7 @@ exports.configure = function(config) {
   server = new GithubHandler(config);
 };
 
-exports.run = function(amour) {
+exports.run = function(probo) {
   process.title = 'probo-ghh';
   server.start();
 };
