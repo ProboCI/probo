@@ -3,7 +3,7 @@
 var lib = require('../..');
 var AbstractStep = lib.plugins.Step.AbstractStep;
 
-class Step extends AbstractStep {
+class TestStep extends AbstractStep {
 
   buildCommand() {
     return [];
@@ -40,4 +40,4 @@ class Step extends AbstractStep {
 
 }
 
-module.exports = Step;
+module.exports = TestStep;

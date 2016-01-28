@@ -47,7 +47,7 @@ describe('AbstractStep', function() {
       should.exist(error);
       // The data first callback should have been invoked with an error.
       should.exist(results.timeout[0]);
-      results.timeout[0].message.should.equal('Step step exited due to timeout.');
+      results.timeout[0].message.should.equal('TestStep step exited due to timeout.');
       results.timeout[0].should.be.instanceof(Error);
       results.run[0].should.be.instanceof(Error);
       done();
