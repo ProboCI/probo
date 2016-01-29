@@ -5,6 +5,7 @@ var should = require('should');
 var Resolver = require('multiple-callback-resolver');
 
 var lib = require('../..');
+var Build = lib.Build;
 var StepList = lib.plugins.Step.StepList;
 var MockContainer = require('../fixtures/MockContainer');
 var mockContainer = new MockContainer();
@@ -35,13 +36,17 @@ describe('StepList', function() {
     stepList.addStep(new Step(container));
     var resolver = new Resolver({nonError: true});
     resolver.resolve(done);
+
+    /*
     stepList.on('stepStart', resolver.createCallback());
     stepList.on('stepEnd', resolver.createCallback());
     // stepList.on('start', resolver.createCallback());
     // stepList.on('end', resolver.createCallback());
-    stepList.run(resolver.createCallback());
+    */
+
+    build.run(resolver.createCallback());
   });
-  it('should stream an event', function(done) {
+  it('should stream output from a child step', function(done) {
     var container = new MockContainer();
     var step = new Step(container, {id: 1});
     var stepList = new StepList(container);
@@ -67,6 +72,87 @@ describe('StepList', function() {
     stepList.stream
       .pipe(through2.obj(chunkProcessor, callbacks[0]));
     stepList.run(callbacks[1]);
+  });
+  it('should stream output from multiple child steps', function(done) {
+    var container = new MockContainer();
+    var step1 = new Step(container, {id: 1, prefix: 'first '});
+    var step2 = new Step(container, {id: 2, prefix: 'second '});
+    var stepList = new StepList(container);
+    var streamData = [];
+    stepList.addStep(step1);
+    stepList.addStep(step2);
+    var callbacks = Resolver.resolver(2, {nonError: true}, function() {
+      streamData[0].stepId.should.equal(1);
+      streamData[0].data.should.equal('first stdout input line 1');
+      streamData[0].stream.should.equal('stdout');
+      streamData[1].data.should.equal('first stdout input line 2');
+      streamData[1].stream.should.equal('stdout');
+      streamData[2].data.should.equal('first stderr input line 1');
+      streamData[2].stream.should.equal('stderr');
+      streamData[3].data.should.equal('first stderr input line 2');
+      streamData[3].stream.should.equal('stderr');
+      streamData[4].data.should.equal('second stdout input line 1');
+      streamData[4].stream.should.equal('stdout');
+      streamData[5].data.should.equal('second stdout input line 2');
+      streamData[5].stream.should.equal('stdout');
+      streamData[6].data.should.equal('second stderr input line 1');
+      streamData[6].stream.should.equal('stderr');
+      streamData[7].data.should.equal('second stderr input line 2');
+      streamData[7].stream.should.equal('stderr');
+      done();
+    });
+    var chunkProcessor = function(data, enc, cb) {
+      data.data = data.data.toString();
+      streamData.push(data);
+      cb();
+    };
+    stepList.stream
+      .pipe(through2.obj(chunkProcessor, callbacks[0]));
+    stepList.run(callbacks[1]);
+  });
+  it.only('should stream output from nested step lists', function(done) {
+    var container = new MockContainer();
+    var stepList = new StepList(container);
+    var build = new Build({step: stepList, container});
+    build.step = stepList;
+    var streamData = [];
+    stepList.addStep(new Step(container, {id: 'top level step', prefix: 'top level first '}));
+    var nestedList = new StepList(container);
+    nestedList.addStep(new Step(container, {id: 'nested step 1', prefix: 'nested first '}));
+    nestedList.addStep(new Step(container, {id: 'nested step 2', prefix: 'nested second '}));
+    var doubleNested = new StepList(container);
+    doubleNested.addStep(new Step(container, {id: 'double nested step 1', prefix: 'double nested first '}));
+    nestedList.addStep(doubleNested);
+    stepList.addStep(nestedList);
+    var resolver = new Resolver({nonError: true});
+    resolver.resolve(function(error, result) {
+      console.log('raw step', result['raw step'][1]);
+      console.log('step', result['step'][1]);
+      console.log('build', result['build'][1]);
+      streamData.length.should.equal(16);
+      done();
+    });
+    var chunkProcessor = function(data, enc, cb) {
+      data.data = data.data.toString();
+      streamData.push(data);
+      cb();
+    };
+    function makeCounter(name) {
+      var finished = resolver.createCallback(name);
+      var count = 0;
+      return through2.obj(function(data, enc, cb) {
+        count++;
+        cb(null, data);
+      }, function() {
+        finished(null, count);
+      });
+    }
+    build.stream.pipe(makeCounter('build'));
+    build.step.stream.pipe(makeCounter('step'));
+    stepList.stream.pipe(makeCounter('raw step'));
+    build.stream
+      .pipe(through2.obj(chunkProcessor, resolver.createCallback()));
+    build.run(resolver.createCallback());
   });
   it('should emit an error if configured to on failure', function(done) {
     var container = new MockContainer();

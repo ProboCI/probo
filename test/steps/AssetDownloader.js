@@ -63,7 +63,7 @@ exit
       `wget -nv -O files.tgz --header='Authorization:Bearer tok' http://asset.server/asset/bucket-name/files`,
     ]);
 
-    ad.options.secrets.should.eql([
+    ad.secrets.should.eql([
       'bucket-name',
       'tok',
     ]);

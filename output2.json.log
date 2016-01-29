@@ -1,0 +1,128 @@
+{"name":"container","hostname":"dev","pid":16637,"level":30,"msg":"creating container","time":"2016-01-28T23:37:46.344Z","v":0}
+{"name":"container","hostname":"dev","pid":16637,"containerId":"d2b0dc057384834a1ac07a2185e83d16b8f086df6f192b264aa1cf54d18d3220","level":30,"msg":"container created, starting container d2b0dc057384834a1ac07a2185e83d16b8f086df6f192b264aa1cf54d18d3220","time":"2016-01-28T23:37:46.531Z","v":0}
+{"name":"container","hostname":"dev","pid":16637,"containerId":"d2b0dc057384834a1ac07a2185e83d16b8f086df6f192b264aa1cf54d18d3220","level":30,"msg":"exec running","time":"2016-01-28T23:37:47.278Z","v":0}
+{"name":"container","hostname":"dev","pid":19479,"level":30,"msg":"creating container","time":"2016-01-28T23:40:31.088Z","v":0}
+{"name":"container","hostname":"dev","pid":19479,"containerId":"688a2a4dc183043ade5bf08991475b46f69f4c83bd43c771321171abc0fbd14d","level":30,"msg":"container created, starting container 688a2a4dc183043ade5bf08991475b46f69f4c83bd43c771321171abc0fbd14d","time":"2016-01-28T23:40:31.640Z","v":0}
+{"name":"container","hostname":"dev","pid":19479,"containerId":"688a2a4dc183043ade5bf08991475b46f69f4c83bd43c771321171abc0fbd14d","level":30,"msg":"exec running","time":"2016-01-28T23:40:34.239Z","v":0}
+{"stream":"stderr","data":"$ mkdir -p /src","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024449680}
+{"stream":"stderr","data":"$ cd /src","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024449690}
+{"stream":"stderr","data":"$ echo '<*****> is a bad word but butt isn'\\''t so bad…'","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024451753}
+{"stream":"stderr","data":"$ sleep 2","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024451755}
+{"stream":"stdout","data":"<*****> is a bad word but butt isn't so bad…","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024451763}
+{"stream":"stderr","data":"$ echo '<*****> is a bad word but butt isn'\\''t so bad…'","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024453903}
+{"stream":"stderr","data":"$ sleep 2","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024453906}
+{"stream":"stdout","data":"<*****> is a bad word but butt isn't so bad…","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024453916}
+{"stream":"stdout","data":"<*****> is a bad word but butt isn't so bad…","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024456056}
+{"stream":"stderr","data":"$ echo '<*****> is a bad word but butt isn'\\''t so bad…'","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024456107}
+{"stream":"stderr","data":"$ sleep 2","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024456108}
+{"stream":"stdout","data":"<*****> is a bad word but butt isn't so bad…","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024458163}
+{"stream":"stderr","data":"$ echo '<*****> is a bad word but butt isn'\\''t so bad…'","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024458167}
+{"stream":"stderr","data":"$ sleep 2","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024458168}
+{"stream":"stdout","data":"<*****> is a bad word but butt isn't so bad…","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024460238}
+{"stream":"stderr","data":"$ echo '<*****> is a bad word but butt isn'\\''t so bad…'","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024460289}
+{"stream":"stderr","data":"$ sleep 2","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024460300}
+{"stream":"stdout","data":"<*****> is a bad word but butt isn't so bad…","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024462401}
+{"stream":"stderr","data":"$ echo '<*****> is a bad word but butt isn'\\''t so bad…'","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024462406}
+{"stream":"stderr","data":"$ sleep 2","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024462440}
+{"stream":"stderr","data":"$ echo '<*****> is a bad word but butt isn'\\''t so bad…'","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024464662}
+{"stream":"stderr","data":"$ sleep 2","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024464665}
+{"stream":"stdout","data":"<*****> is a bad word but butt isn't so bad…","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024464665}
+{"stream":"stdout","data":"<*****> is a bad word but butt isn't so bad…","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024464754}
+{"stream":"stderr","data":"$ echo '<*****> is a bad word but butt isn'\\''t so bad…'","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024464769}
+{"stream":"stderr","data":"$ exit","stepId":"d2606e14-c1f9-4c21-8805-afc79f16e9fa","time":1454024464769}
+{"name":"container","hostname":"dev","pid":19479,"containerId":"688a2a4dc183043ade5bf08991475b46f69f4c83bd43c771321171abc0fbd14d","level":30,"msg":"exec 8858bc993b6e on container 688a2a4dc183 completed with 0","time":"2016-01-28T23:41:04.912Z","v":0}
+{"name":"container","hostname":"dev","pid":19479,"component":"undefined [undefined]","level":30,"msg":"exec completed with 0","time":"2016-01-28T23:41:04.919Z","v":0}
+{"name":"container","hostname":"dev","pid":19479,"containerId":"688a2a4dc183043ade5bf08991475b46f69f4c83bd43c771321171abc0fbd14d","level":30,"msg":"exec running","time":"2016-01-28T23:41:05.305Z","v":0}
+{"stream":"stderr","data":"$ mkdir -p /src","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024467776}
+{"stream":"stdout","data":"hell is a bad word but butt isn't so bad…","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024468009}
+{"stream":"stderr","data":"$ cd /src","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024468017}
+{"stream":"stderr","data":"$ echo 'hell is a bad word but butt isn'\\''t so bad…'","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024468018}
+{"stream":"stderr","data":"$ sleep 2","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024468018}
+{"stream":"stderr","data":"$ echo 'hell is a bad word but butt isn'\\''t so bad…'","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024470192}
+{"stream":"stdout","data":"hell is a bad word but butt isn't so bad…","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024470202}
+{"stream":"stderr","data":"$ sleep 2","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024470202}
+{"stream":"stdout","data":"hell is a bad word but butt isn't so bad…","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024472306}
+{"stream":"stderr","data":"$ echo 'hell is a bad word but butt isn'\\''t so bad…'","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024472314}
+{"stream":"stderr","data":"$ sleep 2","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024472314}
+{"stream":"stderr","data":"$ echo 'hell is a bad word but butt isn'\\''t so bad…'","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024474431}
+{"stream":"stderr","data":"$ sleep 2","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024474483}
+{"stream":"stdout","data":"hell is a bad word but butt isn't so bad…","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024474538}
+{"stream":"stderr","data":"$ echo 'hell is a bad word but butt isn'\\''t so bad…'","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024476632}
+{"stream":"stdout","data":"hell is a bad word but butt isn't so bad…","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024476692}
+{"stream":"stderr","data":"$ sleep 2","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024476693}
+{"stream":"stderr","data":"$ echo 'hell is a bad word but butt isn'\\''t so bad…'","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024478704}
+{"stream":"stdout","data":"hell is a bad word but butt isn't so bad…","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024478722}
+{"stream":"stderr","data":"$ sleep 2","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024478742}
+{"stream":"stderr","data":"$ echo 'hell is a bad word but butt isn'\\''t so bad…'","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024480813}
+{"stream":"stdout","data":"hell is a bad word but butt isn't so bad…","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024480816}
+{"stream":"stderr","data":"$ sleep 2","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024480816}
+{"stream":"stdout","data":"hell is a bad word but butt isn't so bad…","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024482940}
+{"stream":"stderr","data":"$ echo 'hell is a bad word but butt isn'\\''t so bad…'","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024482955}
+{"stream":"stderr","data":"$ sleep 2","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024482955}
+{"stream":"stdout","data":"hell is a bad word but butt isn't so bad…","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024485071}
+{"stream":"stderr","data":"$ echo 'hell is a bad word but butt isn'\\''t so bad…'","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024485073}
+{"stream":"stderr","data":"$ exit","stepId":"39b48294-2d3a-436f-9964-1dfab77abb39","time":1454024485074}
+{"name":"container","hostname":"dev","pid":19479,"containerId":"688a2a4dc183043ade5bf08991475b46f69f4c83bd43c771321171abc0fbd14d","level":30,"msg":"exec 0a037dd926fd on container 688a2a4dc183 completed with 0","time":"2016-01-28T23:41:25.201Z","v":0}
+{"name":"container","hostname":"dev","pid":19479,"component":"undefined [undefined]","level":30,"msg":"exec completed with 0","time":"2016-01-28T23:41:25.222Z","v":0}
+{"name":"container","hostname":"dev","pid":19479,"containerId":"688a2a4dc183043ade5bf08991475b46f69f4c83bd43c771321171abc0fbd14d","level":30,"msg":"exec running","time":"2016-01-28T23:41:25.780Z","v":0}
+{"stream":"stderr","data":"$ mkdir -p /src","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454024488563}
+{"stream":"stderr","data":"$ cd /src","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454024488594}
+{"stream":"stderr","data":"$ echo '<*****> is a bad word but butt isn'\\''t so bad…'","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454028578494}
+{"stream":"stderr","data":"$ sleep 2","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454028578498}
+{"stream":"stdout","data":"<*****> is a bad word but butt isn't so bad…","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454028578550}
+{"stream":"stdout","data":"<*****> is a bad word but butt isn't so bad…","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454028580907}
+{"stream":"stderr","data":"$ echo '<*****> is a bad word but butt isn'\\''t so bad…'","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454028580944}
+{"stream":"stderr","data":"$ sleep 2","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454028581007}
+{"stream":"stderr","data":"$ echo '<*****> is a bad word but butt isn'\\''t so bad…'","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454028584116}
+{"stream":"stderr","data":"$ sleep 2","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454028584146}
+{"stream":"stdout","data":"<*****> is a bad word but butt isn't so bad…","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454028584183}
+{"stream":"stdout","data":"<*****> is a bad word but butt isn't so bad…","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454028586084}
+{"stream":"stderr","data":"$ echo '<*****> is a bad word but butt isn'\\''t so bad…'","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454028586087}
+{"stream":"stderr","data":"$ sleep 2","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454028586087}
+{"stream":"stdout","data":"<*****> is a bad word but butt isn't so bad…","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454028588211}
+{"stream":"stderr","data":"$ echo '<*****> is a bad word but butt isn'\\''t so bad…'","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454028588214}
+{"stream":"stderr","data":"$ sleep 2","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454028588214}
+{"stream":"stdout","data":"<*****> is a bad word but butt isn't so bad…","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454028590428}
+{"stream":"stderr","data":"$ echo '<*****> is a bad word but butt isn'\\''t so bad…'","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454028590452}
+{"stream":"stderr","data":"$ sleep 2","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454028590452}
+{"stream":"stdout","data":"<*****> is a bad word but butt isn't so bad…","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454028592573}
+{"stream":"stderr","data":"$ echo '<*****> is a bad word but butt isn'\\''t so bad…'","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454028592609}
+{"stream":"stderr","data":"$ sleep 2","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454028592614}
+{"stream":"stdout","data":"<*****> is a bad word but butt isn't so bad…","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454028592639}
+{"stream":"stderr","data":"$ echo '<*****> is a bad word but butt isn'\\''t so bad…'","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454028592640}
+{"stream":"stderr","data":"$ exit","stepId":"fd2cff85-6046-4171-92b2-58a860969b31","time":1454028592640}
+{"name":"container","hostname":"dev","pid":19479,"containerId":"688a2a4dc183043ade5bf08991475b46f69f4c83bd43c771321171abc0fbd14d","level":30,"msg":"exec fbdc3e6c6d01 on container 688a2a4dc183 completed with 0","time":"2016-01-29T00:49:52.808Z","v":0}
+{"name":"container","hostname":"dev","pid":19479,"component":"undefined [undefined]","level":30,"msg":"exec completed with 0","time":"2016-01-29T00:49:52.812Z","v":0}
+{"name":"container","hostname":"dev","pid":19479,"containerId":"688a2a4dc183043ade5bf08991475b46f69f4c83bd43c771321171abc0fbd14d","level":30,"msg":"exec running","time":"2016-01-29T00:49:53.189Z","v":0}
+{"stream":"stderr","data":"$ mkdir -p /src","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028595715}
+{"stream":"stderr","data":"$ cd /src","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028595726}
+{"stream":"stderr","data":"$ echo 'hell is a bad word but butt isn'\\''t so bad…'","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028595729}
+{"stream":"stdout","data":"hell is a bad word but butt isn't so bad…","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028595729}
+{"stream":"stderr","data":"$ sleep 2","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028595729}
+{"stream":"stderr","data":"$ echo 'hell is a bad word but butt isn'\\''t so bad…'","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028597848}
+{"stream":"stderr","data":"$ sleep 2","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028597855}
+{"stream":"stdout","data":"hell is a bad word but butt isn't so bad…","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028597855}
+{"stream":"stdout","data":"hell is a bad word but butt isn't so bad…","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028600017}
+{"stream":"stderr","data":"$ echo 'hell is a bad word but butt isn'\\''t so bad…'","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028600021}
+{"stream":"stderr","data":"$ sleep 2","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028600022}
+{"stream":"stderr","data":"$ echo 'hell is a bad word but butt isn'\\''t so bad…'","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028602154}
+{"stream":"stdout","data":"hell is a bad word but butt isn't so bad…","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028602173}
+{"stream":"stderr","data":"$ sleep 2","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028602181}
+{"stream":"stdout","data":"hell is a bad word but butt isn't so bad…","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028604269}
+{"stream":"stderr","data":"$ echo 'hell is a bad word but butt isn'\\''t so bad…'","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028604294}
+{"stream":"stderr","data":"$ sleep 2","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028604296}
+{"stream":"stdout","data":"hell is a bad word but butt isn't so bad…","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028606580}
+{"stream":"stderr","data":"$ echo 'hell is a bad word but butt isn'\\''t so bad…'","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028606583}
+{"stream":"stderr","data":"$ sleep 2","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028606583}
+{"stream":"stderr","data":"$ echo 'hell is a bad word but butt isn'\\''t so bad…'","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028608694}
+{"stream":"stderr","data":"$ sleep 2","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028608696}
+{"stream":"stdout","data":"hell is a bad word but butt isn't so bad…","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028608698}
+{"stream":"stdout","data":"hell is a bad word but butt isn't so bad…","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028610758}
+{"stream":"stderr","data":"$ echo 'hell is a bad word but butt isn'\\''t so bad…'","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028610791}
+{"stream":"stderr","data":"$ sleep 2","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028610794}
+{"stream":"stdout","data":"hell is a bad word but butt isn't so bad…","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028612900}
+{"stream":"stderr","data":"$ echo 'hell is a bad word but butt isn'\\''t so bad…'","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028612903}
+{"stream":"stderr","data":"$ exit","stepId":"e96033ad-7f61-4948-822c-094d7bdaafdc","time":1454028612913}
+{"name":"container","hostname":"dev","pid":19479,"containerId":"688a2a4dc183043ade5bf08991475b46f69f4c83bd43c771321171abc0fbd14d","level":30,"msg":"exec de8680bea714 on container 688a2a4dc183 completed with 0","time":"2016-01-29T00:50:13.102Z","v":0}
+{"name":"container","hostname":"dev","pid":19479,"component":"undefined [undefined]","level":30,"msg":"exec completed with 0","time":"2016-01-29T00:50:13.109Z","v":0}
+{"name":"probo","hostname":"dev","pid":19479,"level":30,"containerId":"688a2a4dc183043ade5bf08991475b46f69f4c83bd43c771321171abc0fbd14d","msg":"run complete, container cleaned up: 688a2a4dc183043ade5bf08991475b46f69f4c83bd43c771321171abc0fbd14d","time":"2016-01-29T00:50:13.657Z","src":{"file":"/opt/probo/testing.js","line":135},"v":0}

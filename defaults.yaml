@@ -28,7 +28,7 @@ prefix: ''
 defaultImage: 'proboci/ubuntu-14.04-lamp'
 # The default image used if none is specified.
 image: 'proboci/ubuntu-14.04-lamp'
-# The images used by the host manager
+# The images used by the container manager
 images:
   'proboci/ubuntu-14.04-lamp':
     services:
@@ -45,6 +45,20 @@ images:
         port: 6379
       php_log:
         command: 'tail -F /var/log/php/error.log'
+# The defautl
+preBuildSteps:
+  - name: 'Environment Provisioning'
+    plugin: 'StepList'
+    steps:
+      - name: 'Downlaod Code'
+        plugin: 'CodeDownloader'
+      - name: 'Download Assets'
+        plugin: 'AssetDownloader'
+        token: 'assetsDevToken'
+        url: 'http://10.0.2.15:3070'
+postBuildSteps:
+  - name: 'After Step'
+    command: 'echo "I ran after!"'
 dataDir: './container-manager-data'
 # Volumes to mount into created containers.
 binds: []
@@ -64,11 +78,6 @@ api:
 # loom (log aggregator server)
 loom:
   url: "http://localhost:3060"
-  token: "API token here"
-
-# asset server (must NOT be localhost because it's called from within container)
-assets:
-  url: "http://localhost:3070"
   token: "API token here"
 
 # auth credentials service (i.e., for stash)

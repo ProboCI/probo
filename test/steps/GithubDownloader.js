@@ -1,5 +1,7 @@
 'use strict';
-var GithubDownloader = require('../../lib/plugins/Step/CodeDownloader/GithubDownloader');
+var GithubDownloader = require('../../lib/plugins/Step/CodeDownloaders/GithubDownloader');
+var lib = require('../..');
+var Build = lib.Build;
 
 var mockContainer = {
   log: {child: function() {}},
@@ -7,17 +9,16 @@ var mockContainer = {
 
 describe('GithubDownloader', function() {
   it('builds proper task configuration', function() {
-    var build = {
-      commit: {
-        ref: 'master',
-      },
+    var commit = {
+      ref: 'master',
     };
     var project = {
       provider: {type: 'github'},
       slug: 'owner/repo',
       service_auth: {token: 'auth_token'},
     };
-    var gc = new GithubDownloader(mockContainer, {build, project});
+    var build = new Build({commit, project});
+    var gc = new GithubDownloader(mockContainer, {build});
 
     gc.script.should.eql(`unset HISTFILE
 export PS4='\$ '

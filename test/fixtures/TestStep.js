@@ -14,10 +14,11 @@ class TestStep extends AbstractStep {
     var error = null;
     this.state = 'running';
     this.emit('start');
-    this.stdout.write('stdout input line 1');
-    this.stderr.write('stderr input line 1');
-    this.stdout.write('stdout input line 2');
-    this.stderr.write('stderr input line 2');
+    var prefix = this.options.prefix || '';
+    for (let i = 1 ; i < 3 ; i++) {
+      this.stdout.write(prefix + 'stdout input line ' + i);
+      this.stderr.write(prefix + 'stderr input line ' + i);
+    }
     this.stdout.end();
     this.stderr.end();
     this.emit('end');
