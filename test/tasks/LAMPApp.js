@@ -25,10 +25,10 @@ describe('LAMP App', function() {
       'opcache.optimization_level': 0xffffffff,
       'soap.wsdl_cache_dir': '/tmp',
     },
-    apacheMods: ['dir', 'my-cool-apachemod',],
-    phpMods: ['mcrypt', 'my-cool-php5mod',],
-    installPackages: ['php5-mcrypt', 'my-cool-package',],
-    phpConstants: {PI: 3.14, FUZZY_PI: '3.14ish',}
+    apacheMods: ['dir', 'my-cool-apachemod'],
+    phpMods: ['mcrypt', 'my-cool-php5mod'],
+    installPackages: ['php5-mcrypt', 'my-cool-package'],
+    phpConstants: {PI: 3.14, FUZZY_PI: '3.14ish'},
   };
 
   /*
@@ -105,7 +105,7 @@ describe('LAMP App', function() {
   });
 
   it('sanitizes strings for the command line and wraps them in single-quotes', function() {
-    var s = app.sanitizeValue("hi\'\"");
+    var s = app.sanitizeValue('hi\'\"');
     s.should.eql('\'hi\\\'\\\"\'');
   });
 });
