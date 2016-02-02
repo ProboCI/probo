@@ -5,6 +5,11 @@ var sinon = require('sinon');
 
 var mockContainer = {
   log: {child: function() {}},
+  build: {
+    links: {
+      build: 'http://abc123.probo.build',
+    },
+  },
 };
 
 describe('AssetDownloader', function() {
