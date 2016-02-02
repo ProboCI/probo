@@ -9,6 +9,7 @@ var Container = lib.Container;
 var Build = lib.Build;
 var StepList = lib.plugins.Step.StepList;
 var Script = lib.plugins.Step.Script;
+var Shell = lib.plugins.Step.Shell;
 
 
 // TODO: Simplify this necessary config?
@@ -30,16 +31,13 @@ var containerOptions = {
         command: '/usr/sbin/apache2ctl -D FOREGROUND',
         port: 80,
       },
-      mysql: {
-        command: 'mysqld_safe',
-      },
     },
   },
   attachLogs: true,
 };
 
 var container = new Container(containerOptions);
-var build = new Build();
+var build = new Build({id: '🐝  build'});
 build.container = container;
 
 function getTestScript(stepName) {
@@ -48,11 +46,18 @@ function getTestScript(stepName) {
     script: [],
     timeout: false,
   };
-  for (let i = 1; i < 2; i++) {
+  for (let i = 1; i < 3; i++) {
     stepOptions.script.push(`echo "stdout for ${stepName} line ${i}"`);
     stepOptions.script.push('sleep 2');
   }
   return new Script(container, stepOptions);
+}
+
+function getSimpleShell() {
+  return new Shell(container, {
+    name: 'Last word',
+    command: `echo "step list last call"`,
+  });
 }
 
 function getStepList(listName) {
@@ -60,17 +65,18 @@ function getStepList(listName) {
   return stepList;
 }
 
-var buildStep = getStepList('buildStep 🐝  ');
+var buildStep = getStepList('list 🐙 ');
 build.step = buildStep;
 build.step.addStep(getTestScript('top script'));
-var nestedStep = getStepList('build child 🐙   ');
+build.step.addStep(getSimpleShell());
+var nestedStep = getStepList('list 🐙  🐙  ');
 nestedStep.addStep(getTestScript('octopus script'));
 build.step.addStep(nestedStep);
-var doubleNestedStep = getStepList('build child child 🐙 🐙 ');
+nestedStep.addStep(getSimpleShell());
+var doubleNestedStep = getStepList('list 🐙  🐙  🐙 ');
 doubleNestedStep.addStep(getTestScript('child of the octopus script'));
+doubleNestedStep.addStep(getSimpleShell());
 nestedStep.addStep(doubleNestedStep);
-//stepList.addStep(getShit('nested'));
-
 
 container.create(function(error, data) {
   if (error) logger.error('create error', error);
