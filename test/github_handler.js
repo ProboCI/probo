@@ -61,7 +61,6 @@ describe('GithubHandler', function() {
           'X-GitHub-Event': 'pull_request',
           'X-Hub-Signature': 'sha1=4636d00906034f52c099dfedae96095f8832994c',
         };
-
         http(config.githubWebhookPath)
         .post({body: payload, headers: headers}, function(err, res, body) {
           // handles push by returning OK and doing nothing else
