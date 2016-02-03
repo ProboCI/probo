@@ -1,5 +1,5 @@
 'use strict';
-var WordpressApp = require('../../lib/plugins/TaskRunner/WordpressApp');
+var WordPressApp = require('../../lib/plugins/TaskRunner/WordPressApp');
 
 var mockContainer = {
   log: {child: function() {}},
@@ -11,14 +11,14 @@ var mockContainer = {
 };
 
 
-describe('Wordpress App', function() {
+describe('WordPress App', function() {
 
   var options = {
     database: 'my-cool-db.sql',
     devDomain: 'http://example.com',
     devHome: 'http://example.com/home',
   };
-  var app = new WordpressApp(mockContainer, options);
+  var app = new WordPressApp(mockContainer, options);
 
   var options2 = {
     database: 'my-cool-db.sql',
@@ -27,7 +27,7 @@ describe('Wordpress App', function() {
     databaseGzipped: true,
     flushCaches: false,
   };
-  var app2 = new WordpressApp(mockContainer, options2);
+  var app2 = new WordPressApp(mockContainer, options2);
 
   it('builds proper lamp script', function() {
     app.script.should.containEql('mkdir -p $SRC_DIR; cd $SRC_DIR');
