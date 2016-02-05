@@ -39,10 +39,8 @@ images:
         port: 80
       mysql:
         command: 'mysqld_safe'
-        port: 3306
       redis:
         command: 'redis-server'
-        port: 6379
       php_log:
         command: 'tail -F /var/log/php/error.log'
 dataDir: './container-manager-data'
