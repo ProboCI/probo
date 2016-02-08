@@ -42,8 +42,8 @@ describe('WordPress App', function() {
   });
 
   it('inserts the snippet into wp-config.php', function() {
-    app.script.should.containEql('sed -i \'$(WP_CONFIG_LINE_NUMBER)i $(PHP_SNIPPET)\' /var/www/html/wp-config.php');
-    app.script.should.containEql('define(\"DB_USER\", \"strongpassword\");');
+    app.script.should.containEql('sed -i "1i <?php require(\'probo-config.php\'); ?>" /var/www/html/wp-config.php');
+    app.script.should.containEql('define(\'DB_PASSWORD\', \'strongpassword\');');
   });
 
   it('switches to the probo domain', function() {
