@@ -3,7 +3,7 @@ name: amour
 # Port for the server to listen on
 port: 3010
 # The host time bind to.
-bind: '0.0.0.0'
+host: '0.0.0.0'
 hostname: localhost
 # Can be any { socketPath: '/path' } or { host: 'somehost', port: 9999 }
 # See dockerode constructor for details: https://github.com/apocas/dockerode
