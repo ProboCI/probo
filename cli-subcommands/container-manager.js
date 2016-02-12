@@ -17,8 +17,8 @@ exports.options = function(yargs) {
     .alias('port', 'p')
     .describe('data-dir', 'The directory to store data in via leveldb.')
     .alias('data-dir', 'd')
-    .describe('json-web-token-public-key')
-    .alias('json-web-toke-public-key', 'k')
+    .describe('jwt-public-key', 'An RSA key in PEM format. This should be the contents of the key and NOT a path to the file.')
+    .alias('jwt-public-key', 'k')
   ;
 };
 
