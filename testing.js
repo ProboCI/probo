@@ -2,7 +2,6 @@
 
 var logger = require('./lib/logger').getLogger();
 var through2 = require('through2');
-through2();
 
 var lib = require('.');
 var Container = lib.Container;
