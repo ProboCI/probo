@@ -23,7 +23,7 @@
       "url": "http://www.ilyabraude.com/"
     }
   ],
-  "license": "ISC",
+  "license": "Apache-2.0",
   "dependencies": {
     "JSONStream": "^1.0.4",
     "async": "^0.9.2",
