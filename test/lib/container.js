@@ -1,3 +1,7 @@
+'use strict';
+
+/* eslint no-unused-expressions: 0 */
+
 // NOTE: run this test independently as
 // npm test test/lib/container.js
 
