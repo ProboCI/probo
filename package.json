@@ -6,6 +6,8 @@
   "main": "index.js",
   "repository": "https://github.com/ProboCI/probo.git",
   "scripts": {
+    "cm": "nodemon ./bin/probo container-manager -c cm.yml",
+    "ghh": "nodemon ./bin/probo github-handler -c ghh.yml",
     "test": "mocha --recursive --require should",
     "coverage": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha",
     "watch": "mocha -w --recursive --require should",
@@ -51,7 +53,7 @@
     "level": "^1.3.0",
     "lodash": "^3.10.1",
     "ms": "^0.7.1",
-    "probo-eventbus": "0.0.0",
+    "probo-eventbus": "^0.1.1",
     "redis": "^0.12.1",
     "request": "^2.53.0",
     "request-promise": "^1.0.2",

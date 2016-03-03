@@ -85,7 +85,7 @@ buildsEventStream:
 #   # config for kafaka; memory plugin doesn't need a config
 #   config:
 #     version: 1
-#     topic: builds
+#     topic: build_events
 
 #     # see https://github.com/SOHU-Co/kafka-node#clientconnectionstring-clientid-zkoptions-noackbatchoptions
 #     # for available options
