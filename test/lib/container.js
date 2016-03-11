@@ -56,8 +56,8 @@ describe('Container', function() {
       container.getDiskUsage(function(err, disk) {
         should.not.exist(err);
         disk.should.eql({
-          realSize: 5257740,
-          virtualSize: 1113815794,
+          realBytes: 5257740,
+          virtualBytes: 1113815794,
         });
 
         done();
