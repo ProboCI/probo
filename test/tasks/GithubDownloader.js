@@ -21,7 +21,7 @@ describe('GithubDownloader', function() {
 
     gc.script.should.eql(`unset HISTFILE
 export PS4='\$ '
-set -x
+set -uex
 mkdir -p $SRC_DIR; cd $SRC_DIR
 mkdir -p $SRC_DIR
 cd $SRC_DIR

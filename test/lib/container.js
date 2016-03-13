@@ -1,3 +1,7 @@
+'use strict';
+
+/* eslint no-unused-expressions: 0 */
+
 // NOTE: run this test independently as
 // npm test test/lib/container.js
 
@@ -52,8 +56,8 @@ describe('Container', function() {
       container.getDiskUsage(function(err, disk) {
         should.not.exist(err);
         disk.should.eql({
-          containerSize: 5257740,
-          imageSize: 1113815794,
+          realBytes: 5257740,
+          virtualBytes: 1113815794,
         });
 
         done();
