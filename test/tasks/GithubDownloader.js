@@ -3,7 +3,13 @@ var GithubDownloader = require('../../lib/plugins/TaskRunner/GithubDownloader');
 
 var mockContainer = {
   log: {child: function() {}},
+  build: {
+    links: {
+      build: 'http://abc123.probo.build',
+    },
+  },
 };
+
 
 describe('GithubDownloader', function() {
   it('builds proper task configuration', function() {

@@ -5,7 +5,13 @@ var should = require('should');
 function createTask(Task, opts) {
   var container = {
     log: {child: function() {}},
+    build: {
+      links: {
+        build: 'http://abc123.probo.build',
+      },
+    },
   };
+
   return new Task(container, opts);
 }
 
