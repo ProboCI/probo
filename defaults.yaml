@@ -43,6 +43,8 @@ images:
         command: 'mysqld_safe'
       redis:
         command: 'redis-server'
+      solr:
+        command: '/opt/solr/start.sh'
       php_log:
         command: 'tail -F /var/log/php/error.log'
 dataDir: './container-manager-data'
