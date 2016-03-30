@@ -99,8 +99,8 @@ describe('LAMP App', function() {
 
   it('automatically restarts apache', function() {
     // we didn't explicitly set the reset command, it should be added via the other options
-    app.script.should.containEql('sudo service apache2 restart');
-    appGZ.script.should.not.containEql('sudo service apache2 restart');
+    app.script.should.containEql('apache2ctl graceful');
+    appGZ.script.should.not.containEql('apache2ctl graceful');
 
   });
 

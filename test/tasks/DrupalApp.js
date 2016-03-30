@@ -36,7 +36,7 @@ describe('Drupal App', function() {
     app.script.should.containEql('mysql -e \'create database drupal\'');
 
     app.script.should.containEql(
-      'cat $ASSET_DIR/my-cool-db.sql | `drush --root=/var/www/html sql-connect`'
+      'cat $ASSET_DIR/my-cool-db.sql | $(mysql -u root --password=strongpassword drupal)'
     );
 
   });
