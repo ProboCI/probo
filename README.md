@@ -1,5 +1,7 @@
 Probo
 ===========
+
+[![Join the chat at https://gitter.im/ProboCI/probo](https://badges.gitter.im/ProboCI/probo.svg)](https://gitter.im/ProboCI/probo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/ProboCI/probo.svg?branch=master)](https://travis-ci.org/ProboCI/probo) [![Coverage Status](https://coveralls.io/repos/ProboCI/probo/badge.svg?branch=master&service=github)](https://coveralls.io/github/ProboCI/probo?branch=master)
 
 [Probo.ci](http://probo.ci) is an open source continuous integration and quality assurance tool
