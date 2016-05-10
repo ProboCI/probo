@@ -18,8 +18,7 @@ exports.options = function(yargs) {
     .describe('host', 'The host to listen on.')
     .alias('host', 'h')
     .describe('data-dir', 'The directory to store data in via leveldb.')
-    .alias('data-dir', 'd')
-  ;
+    .alias('data-dir', 'd');
 };
 
 exports.run = function(amour) {
@@ -28,7 +27,9 @@ exports.run = function(amour) {
   var config = amour.config;
   process.title = 'probo-cm';
   server.configure(config, function(error) {
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
     server.run(amour, function(error) {
       logger.getLogger('container-manager')
         .info({config}, `Listening on ${config.port}`);
