@@ -21,3 +21,18 @@ See the [Quickstart](QUICKSTART.md) guide for how to get up and running with you
 
 ## Compatibility
 The code uses generators and requires node `io.js` or `node` 4.x+.
+
+## Error Codes
+Errors are thrown when a build cannot be found however there are man reasons a
+build may not be found. These include:
+ - Build has been reaped
+ - Build is currently still building
+ - Build id is invalid or does not exist
+
+We return a 404 when a build cannot be found. However for the sake of
+integration with other services, the error response will be a JSON object
+with an errorCode:
+ - 404R: Build reaped
+ - 404P: Build in progress
+ - 404I: Build id invalid
+ - 404N: Build id not found
