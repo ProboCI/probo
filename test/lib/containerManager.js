@@ -12,9 +12,22 @@ var loader = new Loader();
 var db = level('/tmp/db', {db: require('memdown')});
 
 const port = 9876;
+
+// Build ids associated with the various tests. The `reapedBuildId` and
+// pendingBuildId are used in the test setup to provide real results upon
+// lookup.
 const reapedBuildId = 'a38c39ed-3bb9-44ba-9050-8a4337384d3b';
 const pendingBuildId = 'c65c469a-60a9-43bb-848c-e96242e6b610';
 const missingBuildId = 'fedcda29-cf3b-4ff3-83ce-308a632d477b';
+const badBuildId = '38c39ed-3bb9-44ba-9050-8a4337384d3b';
+
+const requestOptions = {
+  method: 'POST',
+  headers: {
+    accept: 'application/json',
+    authorization: 'Bearer testToken',
+  },
+};
 
 loader.add(path.resolve(path.join(__dirname, '../..', 'defaults.yaml')));
 
@@ -54,14 +67,10 @@ describe('Server', function() {
   });
 
   it('should return an error if the build id is invalid', function(done) {
-    const badBuildId = '38c39ed-3bb9-44ba-9050-8a4337384d3b';
-    var opts = {
+    const opts = Object.assign(requestOptions, {
       url: `http://localhost:${port}/container/proxy?build=${badBuildId}`,
-      method: 'POST',
-      headers: {
-        authorization: 'Bearer testToken',
-      },
-    };
+    });
+
     request(opts, function(error, response, body) {
       should.not.exist(error);
       response.statusCode.should.equal(404);
@@ -74,14 +83,10 @@ describe('Server', function() {
   });
 
   it('should return an error if the build has been reaped', function(done) {
-    var opts = {
+    const opts = Object.assign(requestOptions, {
       url: `http://localhost:${port}/container/proxy?build=${reapedBuildId}`,
-      method: 'POST',
-      headers: {
-        accept: 'application/json',
-        authorization: 'Bearer testToken',
-      },
-    };
+    });
+
     request(opts, function(error, response, body) {
       should.not.exist(error);
       response.statusCode.should.equal(404);
@@ -94,14 +99,10 @@ describe('Server', function() {
   });
 
   it('should return an error if the build is still in progress', function(done) {
-    var opts = {
+    const opts = Object.assign(requestOptions, {
       url: `http://localhost:${port}/container/proxy?build=${pendingBuildId}`,
-      method: 'POST',
-      headers: {
-        accept: 'application/json',
-        authorization: 'Bearer testToken',
-      },
-    };
+    });
+
     request(opts, function(error, response, body) {
       should.not.exist(error);
       response.statusCode.should.equal(404);
@@ -114,14 +115,10 @@ describe('Server', function() {
   });
 
   it('should return an error if the build id cannot be found', function(done) {
-    var opts = {
+    const opts = Object.assign(requestOptions, {
       url: `http://localhost:${port}/container/proxy?build=${missingBuildId}`,
-      method: 'POST',
-      headers: {
-        accept: 'application/json',
-        authorization: 'Bearer testToken',
-      },
-    };
+    });
+
     request(opts, function(error, response, body) {
       should.not.exist(error);
       response.statusCode.should.equal(404);
