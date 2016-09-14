@@ -64,6 +64,6 @@ describe('Drupal App', function() {
 
   it('handles multisite configuration', function() {
     app2.script.should.containEql("$sites[http://siteone.abc123.probo.build] = site1.com;");
-    app2.script.should.containEql("$config['database_prefix'] = 'prefix';");
+    app2.script.should.containEql("$db_prefix = 'prefix';");
   });
 });
