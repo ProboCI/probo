@@ -22,6 +22,10 @@ describe('Drupal App', function() {
     database: 'my-cool-db.sql',
     databaseGzipped: true,
     clearCaches: false,
+    databaseName: 'cooldb',
+    databasePrefix: 'prefix',
+    alias: 'site1.com',
+    aliasSubdomain: 'siteone',
   };
   var app2 = new DrupalApp(mockContainer, options2);
 
@@ -34,6 +38,7 @@ describe('Drupal App', function() {
     app.script.should.containEql('ln -s $SRC_DIR  /var/www/html');
 
     app.script.should.containEql('mysql -e \'create database drupal\'');
+    app2.script.should.containEql('mysql -e \'create database cooldb\'');
 
     app.script.should.containEql(
       'cat $ASSET_DIR/my-cool-db.sql | $(mysql -u root --password=strongpassword drupal)'
@@ -47,6 +52,7 @@ describe('Drupal App', function() {
 
   it('cats the settings.php file', function() {
     app.script.should.containEql('\'database\' => \'drupal\'');
+    app2.script.should.containEql('\'database\' => \'cooldb\'');
     app.script.should.containEql('\'username\' => \'root\'');
     app.script.should.containEql('\'password\' => \'strongpassword\'');
   });
@@ -54,5 +60,10 @@ describe('Drupal App', function() {
   it('clears the cache', function() {
     app.script.should.containEql('drush --root=/var/www/html cache-clear all');
     app2.script.should.not.containEql('drush --root=/var/www/html cache-clear all');
+  });
+
+  it('handles multisite configuration', function() {
+    app2.script.should.containEql("$sites[http://siteone.abc123.probo.build] = site1.com;");
+    app2.script.should.containEql("$config['database_prefix'] = 'prefix';");
   });
 });
