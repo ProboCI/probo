@@ -32,7 +32,7 @@ build may not be found. These include:
 We return a 404 when a build cannot be found. However for the sake of
 integration with other services, the error response will be a JSON object
 with an errorCode:
- - 404R: Build reaped
- - 404P: Build in progress
- - 404I: Build id invalid
+ - 410R: Build reaped
+ - 423P: Build in progress
+ - 400I: Build id invalid
  - 404N: Build id not found
