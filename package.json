@@ -70,8 +70,9 @@
   "devDependencies": {
     "co-mocha": "^1.1.2",
     "coveralls": "^2.11.4",
-    "istanbul": "^0.4.0",
     "eslint": "^1.7.3",
+    "istanbul": "^0.4.0",
+    "memdown": "^1.1.2",
     "mocha": "^2.2.4",
     "nock": "^1.6.0",
     "shell-quote": "^1.4.3",
