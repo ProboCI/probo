@@ -73,10 +73,10 @@ describe('Server', function() {
 
     request(opts, function(error, response, body) {
       should.not.exist(error);
-      response.statusCode.should.equal(404);
+      response.statusCode.should.equal(400);
       var jsonResponse = JSON.parse(body);
       jsonResponse.should.have.property('errorCode');
-      jsonResponse.errorCode.should.equal('404I');
+      jsonResponse.errorCode.should.equal('400I');
       jsonResponse.message.should.equal('Build id is invalid');
       done();
     });
@@ -89,10 +89,10 @@ describe('Server', function() {
 
     request(opts, function(error, response, body) {
       should.not.exist(error);
-      response.statusCode.should.equal(404);
+      response.statusCode.should.equal(410);
       var jsonResponse = JSON.parse(body);
       jsonResponse.should.have.property('errorCode');
-      jsonResponse.errorCode.should.equal('404R');
+      jsonResponse.errorCode.should.equal('410R');
       jsonResponse.message.should.equal('Build has been reaped');
       done();
     });
@@ -105,10 +105,10 @@ describe('Server', function() {
 
     request(opts, function(error, response, body) {
       should.not.exist(error);
-      response.statusCode.should.equal(404);
+      response.statusCode.should.equal(423);
       var jsonResponse = JSON.parse(body);
       jsonResponse.should.have.property('errorCode');
-      jsonResponse.errorCode.should.equal('404P');
+      jsonResponse.errorCode.should.equal('423P');
       jsonResponse.message.should.equal('Build is still in progress');
       done();
     });
