@@ -1,9 +1,10 @@
 # Run this faster because it can run on container based infra.
 language: node_js
+sudo: true
 node_js:
-  - "iojs"
   - "4.0"
   - "4.1"
+  - "5.0"
 script:
   - npm run coverage
 after_script:
