@@ -6,8 +6,8 @@ var should = require('should');
 var level = require('level');
 
 var Loader = require('yaml-config-loader');
-var CM = require('../../lib/ContainerManager');
-var server = new CM();
+var ContainerManager = require('../../lib/ContainerManager');
+var server = new ContainerManager();
 var loader = new Loader();
 var db = level('/tmp/db', {db: require('memdown')});
 
@@ -46,7 +46,8 @@ describe('Server', function() {
       config.api.token = 'testToken';
 
       db.put(`builds!${reapedBuildId}`, JSON.stringify({container: true, reaped: true}));
-      db.put(`builds!${pendingBuildId}`, JSON.stringify({container: false, reaped: false}));
+      db.put(`builds!${pendingBuildId}`, JSON.stringify({container: false, reaped: false, status: 'running'}));
+      config.logLevel = Number.POSITIVE_INFINITY;
       server.configure(config, function(err) {
         if (err) {
           return done(err);
