@@ -1,5 +1,7 @@
 'use strict';
 var DrupalApp = require('../../lib/plugins/TaskRunner/Drupal');
+var constants = require('../../lib/plugins/TaskRunner/constants');
+
 
 var mockContainer = {
   log: {child: function() {}},
@@ -33,10 +35,10 @@ describe('Drupal App', function() {
     app.script.should.containEql('if [ -a "$SRC_DIR/index.php" ]');
     app.script.should.containEql('ln -s $SRC_DIR  /var/www/html');
 
-    app.script.should.containEql('mysql -e \'create database drupal\'');
+    app.script.should.containEql(`mysql -e 'create database ${constants.DRUPAL_DATABASE_NAME}'`);
 
     app.script.should.containEql(
-      'cat $ASSET_DIR/my-cool-db.sql | $(mysql -u root --password=strongpassword drupal)'
+      `cat $ASSET_DIR/my-cool-db.sql | $(mysql -u ${constants.DATABASE_USER} --password=${constants.DATABASE_PASSWORD} ${constants.DRUPAL_DATABASE_NAME})`
     );
 
   });
@@ -46,9 +48,9 @@ describe('Drupal App', function() {
   });
 
   it('cats the settings.php file', function() {
-    app.script.should.containEql('\'database\' => \'drupal\'');
-    app.script.should.containEql('\'username\' => \'root\'');
-    app.script.should.containEql('\'password\' => \'strongpassword\'');
+    app.script.should.containEql(`'database' => '${constants.DRUPAL_DATABASE_NAME}'`);
+    app.script.should.containEql(`'username' => '${constants.DATABASE_USER}'`);
+    app.script.should.containEql(`'password' => '${constants.DATABASE_PASSWORD}'`);
   });
 
   it('clears the cache', function() {

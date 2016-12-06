@@ -1,5 +1,6 @@
 'use strict';
 var WordPressApp = require('../../lib/plugins/TaskRunner/WordPressApp');
+var constants = require('../../lib/plugins/TaskRunner/constants');
 
 var mockContainer = {
   log: {child: function() {}},
@@ -34,7 +35,7 @@ describe('WordPress App', function() {
     app.script.should.containEql('if [ -d "$SRC_DIR/docroot" ]');
     app.script.should.containEql('if [ -a "$SRC_DIR/index.php" ]');
     app.script.should.containEql('ln -s $SRC_DIR  /var/www/html');
-    app.script.should.containEql('mysql -e \'create database wordpress\'');
+    app.script.should.containEql(`mysql -e 'create database ${constants.WORDPRESS_DATABASE_NAME}'`);
   });
 
   it('handles gzipped databases', function() {
@@ -43,7 +44,7 @@ describe('WordPress App', function() {
 
   it('inserts the snippet into wp-config.php', function() {
     app.script.should.containEql('sed -i "1i <?php require(\'probo-config.php\'); ?>" /var/www/html/wp-config.php');
-    app.script.should.containEql('define(\'DB_PASSWORD\', \'strongpassword\');');
+    app.script.should.containEql(`define('DB_PASSWORD', '${constants.DATABASE_PASSWORD}');`);
   });
 
   it('switches to the probo domain', function() {

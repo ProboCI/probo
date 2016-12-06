@@ -1,5 +1,6 @@
 'use strict';
 var LAMPApp = require('../../lib/plugins/TaskRunner/LAMPApp');
+var constants = require('../../lib/plugins/TaskRunner/constants');
 
 var mockContainer = {
   log: {child: function() {}},
@@ -57,7 +58,7 @@ describe('LAMP App', function() {
     app.script.should.containEql('mysql -e \'create database my-cool-db\'');
 
     app.script.should.containEql(
-      'cat $ASSET_DIR/my-cool-db.sql | $(mysql -u root --password=strongpassword my-cool-db)'
+      `cat $ASSET_DIR/my-cool-db.sql | $(mysql -u ${constants.DATABASE_USER} --password=${constants.DATABASE_PASSWORD} my-cool-db)`
     );
 
   });
