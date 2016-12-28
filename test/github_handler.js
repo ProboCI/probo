@@ -87,7 +87,6 @@ describe('GithubHandler', function() {
         };
         ghhServer.pullRequestHandler(event, function(err, build) {
           should.not.exist(err);
-          build.should.be.a.object;
           build.id.should.eql('build1');
           build.projectId.should.eql('1234');
           build.commit.should.be.a.object;
