@@ -24,8 +24,6 @@ describe('WordPress plugin', function() {
       database: 'my-cool-db.sql',
       wpDomain: 'http://example.com',
       wpHome: 'http://example.com/home',
-      updatePlugins: false,
-      flushCaches: true,
     };
 
     options2 = {
@@ -62,7 +60,7 @@ describe('WordPress plugin', function() {
     app.should.have.property('options').which.is.a.Object;
     app.options.should.have.property('siteFolder').which.eql('default');
     app.options.should.have.property('profileName').which.eql('standard');
-    app.options.should.have.property('flushCaches').which.eql(options.flushCaches);
+    app.options.should.have.property('flushCaches').which.eql(true);
     app.options.should.have.property('wpHome').which.eql(options.wpHome);
     app.options.should.have.property('wpDomain').which.eql(options.wpDomain);
     app.options.should.have.property('updatePlugins').which.eql(false);
