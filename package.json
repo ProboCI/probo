@@ -9,12 +9,10 @@
     "url": "git+https://github.com/ProboCI/probo.git"
   },
   "scripts": {
-    "ghh": "nodemon ./bin/probo github-handler -c ghh.yml",
-    "cm": "nodemon ./bin/probo container-manager -c cm.yml",
-    "coverage": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha",
+    "coverage": "./node_modules/.bin/istanbul cover -- ./node_modules/.bin/_mocha --recursive",
     "standards": "./node_modules/.bin/eslint lib cli-subcommands test",
-    "test": "mocha --recursive --require should",
-    "test:watch": "mocha -w --recursive --require should"
+    "test": "mocha --recursive",
+    "test:watch": "mocha -w --recursive"
   },
   "contributors": [
     "Howard Tyson <howard@howardtyson.com> (http://howardtyson.com)",
