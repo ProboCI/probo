@@ -70,6 +70,7 @@ wget -nv -O files.tgz  http://asset.server/asset/bucket-name/files
     ad.options.secrets.should.eql([
       'bucket-name',
       'tok',
+      'http://asset.server',
     ]);
 
     ad.description().should.eql('AssetDownloader db.tgz, files');
