@@ -23,7 +23,7 @@ var argv = yargs
 
 var filterOptions = {allowedKeys: true};
 
-loader.add(path.resolve(path.join(__dirname, '..', 'defaults.yaml')), filterOptions);
+loader.add(path.resolve(path.join(__dirname, '..', 'defaults.yaml')));
 loader.addAndNormalizeObject(process.env);
 
 var commandName = argv._[0];
@@ -47,7 +47,7 @@ probo.cli.loadCommands(function(error, commands) {
       argv.config = [ argv.config ];
     }
     for (var i in argv.config) {
-      loader.add(path.resolve(argv.config[i]), filterOptions);
+      loader.add(path.resolve(argv.config[i]));
     }
   }
 
@@ -62,7 +62,7 @@ probo.cli.loadCommands(function(error, commands) {
         setOptions[key] = yargs.argv[key];
       }
     }
-    loader.addAndNormalizeObject(setOptions, filterOptions);
+    loader.addAndNormalizeObject(setOptions);
   }
 
   loader.load(function(error, config) {
