@@ -25,6 +25,7 @@ describe('Drupal App', function() {
     };
     options2 = {
       database: 'my-cool-db.sql',
+      databaseName: 'drupal2',
       databaseGzipped: true,
       clearCaches: false,
     };
@@ -46,7 +47,7 @@ describe('Drupal App', function() {
   });
 
   it('should correctly instantiate', function(done) {
-    app.should.have.property('databaseName').which.eql(constants.DRUPAL_DATABASE_NAME);
+    app.should.have.property('databaseName').which.is.a.String;
     app.should.have.property('options').which.is.a.Object;
     app.options.should.have.property('siteFolder').which.eql('default');
     app.options.should.have.property('profileName').which.eql('standard');
@@ -188,8 +189,12 @@ describe('Drupal App', function() {
     app.script.should.containEql('if [ -a "$SRC_DIR/index.php" ]');
     app.script.should.containEql('ln -s $SRC_DIR  /var/www/html');
     app.script.should.containEql(`mysql -e 'create database ${constants.DRUPAL_DATABASE_NAME}'`);
+    app2.script.should.containEql(`mysql -e 'create database drupal2'`);
     app.script.should.containEql(
       `cat $ASSET_DIR/my-cool-db.sql | $(mysql -u ${constants.DATABASE_USER} --password=${constants.DATABASE_PASSWORD} ${constants.DRUPAL_DATABASE_NAME})`
+    );
+    app2.script.should.containEql(
+      `cat $ASSET_DIR/my-cool-db.sql | $(mysql -u ${constants.DATABASE_USER} --password=${constants.DATABASE_PASSWORD} drupal2)`
     );
     done();
   });
@@ -201,6 +206,7 @@ describe('Drupal App', function() {
 
   it('cats the settings.php file', function(done) {
     app.script.should.containEql(`'database' => '${constants.DRUPAL_DATABASE_NAME}'`);
+    app2.script.should.containEql(`'database' => 'drupal2'`);
     app.script.should.containEql(`'username' => '${constants.DATABASE_USER}'`);
     app.script.should.containEql(`'password' => '${constants.DATABASE_PASSWORD}'`);
     done();
