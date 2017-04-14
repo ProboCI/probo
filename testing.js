@@ -2,10 +2,12 @@
 
 var logger = require('./lib/logger').getLogger();
 var through2 = require('through2');
+const MagicThrough = require('./lib/MagicThrough');
 
 var lib = require('.');
 var Container = lib.Container;
 var Build = lib.Build;
+
 var StepList = lib.plugins.Step.StepList;
 var Script = lib.plugins.Step.Script;
 var Shell = lib.plugins.Step.Shell;
@@ -102,7 +104,7 @@ build.step.stream.pipe(getCountStream('actual step stream'));
 build.stream
   .pipe(through2.obj(function(data, enc, cb) {
     logger.info('Command output: ' + data.data);
-    cb(null, data);
+    cb(null);
   }, function() {
     logger.warn('THIS IS WHERE THE STREAM ENDS');
   }));
@@ -113,7 +115,7 @@ function getCountStream(title) {
   var count = 0;
   return through2.obj(function(data, enc, cb) {
     count++;
-    cb(null, data);
+    cb(null);
   }, function() {
     logger.error(`${name} total: ${count}`);
   });

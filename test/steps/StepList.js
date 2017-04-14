@@ -110,7 +110,7 @@ describe('StepList', function() {
       .pipe(through2.obj(chunkProcessor, callbacks[0]));
     stepList.run(callbacks[1]);
   });
-  it.only('should stream output from nested step lists', function(done) {
+  it('should stream output from nested step lists', function(done) {
     var container = new MockContainer();
     var stepList = new StepList(container);
     var build = new Build({step: stepList, container});
