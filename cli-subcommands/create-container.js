@@ -5,6 +5,13 @@ var fs = require('fs');
 var yaml = require('js-yaml');
 var request = require('request');
 var Container = require('../lib/Container');
+var stepPlugins = require('../lib/plugins/Step');
+var Build = require('../lib/Build');
+var StepList = stepPlugins.StepList;
+var path = require('flavored-path');
+var StepFactory = require('../lib/StepFactory');
+
+var through2 = require('through2');
 
 var exports = function() {
   this.configure = this.configure.bind(this);
@@ -18,86 +25,82 @@ exports.config = function() {
 
 exports.options = function(yargs) {
   return yargs
+    .describe('asset-directory', 'The asset directory to mount.')
+    .alias('asset-directory', 'a')
+    .describe('source-directory', 'The asset directory to mount.')
+    .alias('source-directory', 's')
     .describe('build-file', 'The .probo.yml file to build from.')
     .alias('build-file', 'b')
     .demand('build-file')
-    .describe('container-name', 'The name to give the docker container')
-    .alias('container-name', 'n')
-    .demand('container-name')
-    .describe('container-manager-url', 'If specified, the running container manager URL to start the container from.')
-    .alias('container-manager-url', 'u')
-    .describe('commit-ref', 'The commit to in for use in build steps.')
-    .alias('commit-ref', 'r')
-    .describe('provider-slug', 'The identifying string used in this provider. With Github this would be `organization/repository`.')
-    .alias('provider-slug', 'R')
-    .demand('provider-slug')
-    .describe('provider-type', 'The provider to fetch code from (defaults to `github`.')
-    .default('provider-type', 'github')
-    .describe('provider-api-token', 'The personal API token for the provider.')
-    .alias('provider-api-token', 'A')
-    .demand('provider-api-token')
+    .describe('interactive', 'Connect to this environment interactively after creating the container.')
+    .alias('interactive', 'i')
   ;
 };
 
 exports.run = function(probo) {
-  var config = probo.config;
-  var jobConfig = yaml.safeLoad(fs.readFileSync(probo.config.buildFile));
-  // Defaults should move into the CM.
-  var image = jobConfig.image || config.image;
-  var imageConfig = config.images[image];
-  if (!imageConfig) return exitWithError('Invalid image ' + image + ' selected.');
-  var options = {
-    containerName: probo.config.containerName,
-    docker: config.docker,
-    imageConfig: imageConfig,
-    config: jobConfig,
-    // TODO: We seem to treat this differently in Container from ContainerManager.
-    // This structure needs to be audited/cleaned up.
-    jobConfig: jobConfig,
-    binds: config.binds,
+
+  const config = probo.config;
+  const jobConfig = yaml.safeLoad(fs.readFileSync(path.get(probo.config.buildFile)));
+
+  const image = jobConfig.image || 'proboci/ubuntu-14.04-lamp';
+
+  var containerOptions = {
+    containerName: 'local-build-test-' + Date.now(),
+    image,
+    build: {id: 'stuff-' + Date.now()},
+    imageConfig: {
+      services: {
+        cleanapache: {
+          command: 'rm /var/run/apache2/apache2.pid',
+        },
+        apache: {
+          command: '/usr/sbin/apache2ctl -D FOREGROUND',
+          port: 80,
+        },
+      },
+    },
     attachLogs: true,
-    build: {
-      config: {
-        image: image,
-      },
-    },
-    project: {
-      // TODO: What should we do about the expectation that we pass in project ID?
-      id: 123,
-      slug: config.providerSlug,
-      provider: {
-        type: config.providerType,
-      },
-      service_auth: {
-        token: config.providerApiToken,
-      },
-    },
   };
-  if (config.commitRef) {
-    options.build.ref = config.commitRef;
+  if (config.assetDirectory) {
+    // TODO: use a constant
+    containerOptions.binds = [`${config.assetDirectory}:/assets`];
   }
-  if (config.containerManagerUrl) {
-    var requestOptions = {
-      method: 'post',
-      uri: 'http://' + config.containerManagerUrl + '/startbuild',
-      body: options,
-      json: true,
-    };
-    console.log(requestOptions);
-    request(requestOptions, function(error, response, body) {
-      console.log(error, body);
+  if (config.sourceDirectory) {
+    // TODO: use a constant
+    containerOptions.binds = [`${config.sourceDirectory}:/src`];
+  }
+
+  var container = new Container(containerOptions);
+  var stepList = new StepList(container);
+  var build = new Build({container, step: stepList});
+  var stepFactory = new StepFactory({build, container, stepPlugins});
+  let stepConfig = jobConfig.steps || [];
+  for (let step of stepFactory.createStepsFromConfig(stepConfig)) {
+    stepList.addStep(step);
+  }
+  stepList.stream.pipe(through2.obj(JSON.stringify)).pipe(process.stdout);
+  build.stream.pipe(through2.obj(function(data, enc ,cb) {
+    console.log(data);
+    cb();
+  }));
+
+  container.create(function(error, data) {
+    //if (error) logger.error('create error', error);
+    build.run(function(error) {
+      if (config.interactive) {
+        var exec = container.exec(['bash'], {tty: true}, function(error, data) {
+          if (error) {
+            console.error(error);
+            process.exit(1);
+          }
+        });
+        process.stdin.pipe(exec.stdin);
+        exec.stdout.pipe(process.stdout);
+        exec.stderr.pipe(process.stderr);
+      }
+      console.log('RUNNING!');
     });
-  }
-  else {
-    var container = new Container(options);
-    container.runBuild()
-      .then(function(data) {
-        console.log('Created', data.Id);
-      })
-      .catch(function(error) {
-        console.error('ERROR', error);
-      });
-  }
+  });
 };
 
 function exitWithError(message) {
