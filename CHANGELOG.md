@@ -1,6 +1,6 @@
 # Probo Changelog
 
-## 3.8.1
+## 3.8.2
  - Add branch link & name, PR link & name, and commit link to ENV. These are now accessible in ENV calls (including from within .probo.yaml)
 
 ## 3.8.0
