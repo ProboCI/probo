@@ -1,7 +1,8 @@
 # Probo Changelog
 
-## 3.8.2
- - Add branch link & name, PR link & name, and commit link to ENV. These are now accessible in ENV calls (including from within .probo.yaml)
+## 3.9.0
+ - Add branch link & name, PR link & name, and commit link to ENV. These are now accessible in ENV variables. (including from within .probo.yaml)
+ - See the docs for more info on ENV variables: https://docs.probo.ci/build/steps
 
 ## 3.8.0
  - Use constants to define status / state of builds and build steps
