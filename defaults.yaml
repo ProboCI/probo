@@ -47,6 +47,66 @@ images:
         command: '/opt/solr/start.sh'
       php_log:
         command: 'tail -F /var/log/php/error.log'
+  'proboci/ubuntu-14.04-lamp:beta':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      solr:
+        command: '/opt/solr/start.sh'
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
+  'proboci/ubuntu-14.04-lamp:5.6-beta':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      solr:
+        command: '/opt/solr/start.sh'
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
+  'proboci/ubuntu-14.04-lamp:7.0-beta':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      solr:
+        command: '/opt/solr/start.sh'
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
+  'proboci/ubuntu-14.04-lamp:7.1-beta':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      solr:
+        command: '/opt/solr/start.sh'
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
 dataDir: './container-manager-data'
 # Volumes to mount into created containers.
 binds: []
