@@ -1,5 +1,9 @@
 # Probo Changelog
 
+## 3.10.0
+ - Applies a fix that caused the container manager to crash in some scenarios.
+ - Adds new allowed docker images to the default configuration.
+
 ## 3.9.0
  - Add branch link & name, PR link & name, and commit link to ENV. These are now accessible in ENV variables. (including from within .probo.yaml)
  - See the docs for more info on ENV variables: https://docs.probo.ci/build/steps
