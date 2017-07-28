@@ -16,8 +16,12 @@ const mockContainer = {
 describe('Drupal App', function() {
   let options;
   let options2;
+  let options4;
+  let options5;
   let app;
   let app2;
+  let app4;
+  let app5;
 
   before(function(done) {
     options = {
@@ -27,6 +31,33 @@ describe('Drupal App', function() {
       database: 'my-cool-db.sql',
       databaseGzipped: true,
       clearCaches: false,
+    };
+    options4 = {
+      database: 'my-cool-db.sql',
+      sites: {
+        site1: {
+          databasePrefix: 'meow_',
+          databaseGzipped: true,
+          clearCaches: true,
+        },
+        site2: {
+          databasePrefix: 'woof_',
+          databaseGzipped: false,
+          clearCaches: false,
+        },
+      },
+    };
+    options5 = {
+      sites: {
+        site1: {
+          database: 'my-cool-db1.sql',
+          databaseName: 'site1db',
+        },
+        site2: {
+          database: 'my-cool-db2.sql',
+          databaseName: 'site2db',
+        },
+      },
     };
     done();
   });
@@ -42,6 +73,15 @@ describe('Drupal App', function() {
     app2.should.have.property('id').which.is.a.String;
     app2.id.should.match(/[0-9a-z]{16}/g);
 
+    app4 = new DrupalApp(mockContainer, options4);
+    app4.should.be.ok;
+    app4.should.have.property('id').which.is.a.String;
+    app4.id.should.match(/[0-9a-z]{16}/g);
+
+    app5 = new DrupalApp(mockContainer, options5);
+    app5.should.be.ok;
+    app5.should.have.property('id').which.is.a.String;
+    app5.id.should.match(/[0-9a-z]{16}/g);
     done();
   });
 
@@ -67,14 +107,14 @@ describe('Drupal App', function() {
   });
 
   it('should correctly test supported Drupal versions', function(done) {
-    let support = app.drupalVersionSupported();
+    let support = app.drupalVersionSupported(app.sitesOptions['default']);
     support.should.be.ok;
 
     const app3 = new DrupalApp(mockContainer, Object.assign({}, options, {drupalVersion: 1}));
     app3.script = [];
-    app3.addScriptUnsupportedDrupalVersion();
+    app3.addScriptUnsupportedDrupalVersion(app3.sitesOptions['default']);
     app3.script.should.have.length(2);
-    support = app3.drupalVersionSupported();
+    support = app3.drupalVersionSupported(app3.sitesOptions['default']);
     support.should.not.be.ok;
     done();
   });
@@ -82,16 +122,16 @@ describe('Drupal App', function() {
   it('should add correct cache clearing script', function(done) {
     // testing D7 (default)
     app.script = [];
-    app.addScriptClearCaches();
+    app.addScriptClearCaches(app.sitesOptions['default']);
     app.script.should.have.length(1);
-    app.script.should.eql(['drush --root=/var/www/html cache-clear all']);
+    app.script.should.eql(['drush --root=/var/www/html/sites/default cache-clear all']);
 
     // testing D8
     const app3 = new DrupalApp(mockContainer, Object.assign({}, options, {drupalVersion: 8}));
     app3.script = [];
-    app3.addScriptClearCaches();
+    app3.addScriptClearCaches(app3.sitesOptions['default']);
     app3.script.should.have.length(1);
-    app3.script.should.eql(['drush --root=/var/www/html cache-rebuild']);
+    app3.script.should.eql(['drush --root=/var/www/html/sites/default cache-rebuild']);
     done();
   });
 
@@ -108,23 +148,23 @@ describe('Drupal App', function() {
 
   it('should add script to revert features', function(done) {
     app.script = [];
-    app.addScriptRevertFeatures();
+    app.addScriptRevertFeatures(app.sitesOptions['default']);
     app.script.should.have.length(1);
-    app.script.should.eql(['drush --root=/var/www/html fra']);
+    app.script.should.eql(['drush --root=/var/www/html/sites/default fra']);
     done();
   });
 
   it('should add script to run db updates', function(done) {
     app.script = [];
-    app.addScriptDatabaseUpdates();
+    app.addScriptDatabaseUpdates(app.sitesOptions['default']);
     app.script.should.have.length(1);
-    app.script.should.eql(['drush --root=/var/www/html updb']);
+    app.script.should.eql(['drush --root=/var/www/html/sites/default updb']);
     done();
   });
 
   it('should add script to run a site-install', function(done) {
     app.script = [];
-    app.addScriptRunInstall();
+    app.addScriptRunInstall(app.sitesOptions['default']);
     app.script.should.have.length(1);
     app.script.should.eql(['drush site-install --root=/var/www/html standard ']);
     done();
@@ -132,7 +172,7 @@ describe('Drupal App', function() {
 
   it('should add set the public files directory', function(done) {
     app.script = [];
-    app.addScriptPublicFilesDirectory();
+    app.addScriptPublicFilesDirectory(app.sitesOptions['default']);
     app.script.should.have.length(2);
     app.script.should.eql([
       'mkdir -p /var/www/html/sites/default/files',
@@ -144,7 +184,7 @@ describe('Drupal App', function() {
   it('should append custom settings to script', function(done) {
     const app3 = new DrupalApp(mockContainer, Object.assign({}, options, {settingsRequireFile: 'dummy.php', settingsAppend: 'dummy'}));
     app3.script = [];
-    app3.appendCustomSettings();
+    app3.appendCustomSettings(app3.sitesOptions['default']);
     app3.script.should.have.length(2);
     app3.script.should.eql([
       'echo "require_once(\'dummy.php\');" >> /var/www/html/sites/default/settings.php',
@@ -155,15 +195,15 @@ describe('Drupal App', function() {
 
   it('should add D8 settings', function(done) {
     app.script = [];
-    app.addD8PHPSettings();
-    app.script.should.have.length(23);
+    app.addD8PHPSettings(app.sitesOptions['default']);
+    app.script.should.have.length(24);
     done();
   });
 
   it('should add D7 settings', function(done) {
     app.script = [];
-    app.addD7PHPSettings();
-    app.script.should.have.length(18);
+    app.addD7PHPSettings(app.sitesOptions['default']);
+    app.script.should.have.length(19);
     done();
   });
 
@@ -171,14 +211,14 @@ describe('Drupal App', function() {
   it('should add Drupal settings and any custom settings', function(done) {
     // testing D7 (default)
     app.script = [];
-    app.addScriptAppendSettingsPHPSettings();
-    app.script.should.have.length(18);
+    app.addScriptAppendSettingsPHPSettings(app.sitesOptions['default']);
+    app.script.should.have.length(19);
 
     // testing D8
     const app3 = new DrupalApp(mockContainer, Object.assign({}, options, {drupalVersion: 8}));
     app3.script = [];
-    app3.addScriptAppendSettingsPHPSettings();
-    app3.script.should.have.length(23);
+    app3.addScriptAppendSettingsPHPSettings(app3.sitesOptions['default']);
+    app3.script.should.have.length(24);
     done();
   });
 
@@ -207,8 +247,29 @@ describe('Drupal App', function() {
   });
 
   it('clears the cache', function(done) {
-    app.script.should.containEql('drush --root=/var/www/html cache-clear all');
-    app2.script.should.not.containEql('drush --root=/var/www/html cache-clear all');
+    app.script.should.containEql('drush --root=/var/www/html/sites/default cache-clear all');
+    app2.script.should.not.containEql('drush --root=/var/www/html/sites/default cache-clear all');
+    done();
+  });
+
+  it('handles multisite with a shared database', function(done) {
+    var count;
+    var dbString = `mysql -e 'create database ${constants.DRUPAL_DATABASE_NAME}'`;
+    app4.script.should.containEql('\$db_prefix = \'meow_\'');
+    app4.script.should.containEql('\$db_prefix = \'woof_\'');
+    app4.script.should.containEql(dbString);
+
+    // Ensure that shared db is only imported once
+    count = (app4.script.match(new RegExp(dbString, 'g')) || []).length;
+    count.should.equal(1);
+    done();
+  });
+
+  it('handles multisite with unique databases', function(done) {
+    var count;
+    console.log(app5.sitesOptions);
+    app5.script.should.containEql(`mysql -e 'create database site1db'`);
+    app5.script.should.containEql(`mysql -e 'create database site2db'`);
     done();
   });
 });
