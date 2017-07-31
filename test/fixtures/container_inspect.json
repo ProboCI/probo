@@ -1,7 +1,7 @@
 {
     "Id": "fb9c62a0e8a8b32ba7698de4b20dd16bb1d5b27f7bfc91722ca73f53f612f861",
     "Created": "2015-12-11T06:45:01.302821753Z",
-    "Path": "penelope",
+    "Path": "proboscis",
     "Args": [
         "-n",
         "cleanapache",
@@ -151,7 +151,7 @@
             "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
         ],
         "Cmd": [
-            "penelope",
+            "proboscis",
             "-n",
             "cleanapache",
             "-c",
