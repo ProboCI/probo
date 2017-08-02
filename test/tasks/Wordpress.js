@@ -136,7 +136,7 @@ describe('WordPress plugin', function() {
 
     app.script = [];
     app.populateScriptArray();
-    app.script.should.have.length(35);
+    app.script.should.have.length(36);
 
     done();
   });

@@ -77,15 +77,19 @@ describe('LAMP App', function() {
     app.script.should.containEql('apt-get install -y php5-mcrypt my-cool-package');
   });
 
+  it('exports an variable for apache config directory', function() {
+    app.script.should.containEql(`PHPINI_PATH="$(php -i | grep php.ini | head -1 | sed \'s/\\/cli//g\' | sed \'s/.* //g\')"`);
+  });
+
   it('handles custom php options', function() {
-    app.script.should.containEql('cat /etc/php5/apache2/php.ini << EOL >> opcache.max_file_size=0');
-    app.script.should.containEql('cat /etc/php5/apache2/php.ini << EOL >> opcache.optimization_level=4294967295');
-    app.script.should.containEql('cat /etc/php5/apache2/php.ini << EOL >> soap.wsdl_cache_dir=\'/tmp\'');
+    app.script.should.containEql('echo "opcache.max_file_size=0" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');
+    app.script.should.containEql('echo "opcache.optimization_level=4294967295" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');
+    app.script.should.containEql('echo "soap.wsdl_cache_dir=\'/tmp\'" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');
   });
 
   it('handles custom php defines', function() {
-    app.script.should.containEql('cat /etc/php5/apache2/php.ini << EOL >> auto_prepend_file=\'.proboPhpConstants.php\'');
-    app.script.should.containEql('echo "<?php define (\'PI\', 3.14); define (\'FUZZY_PI\', \'3.14ish\'); " > $(SRC_DIR).proboPhpConstants.php');
+    app.script.should.containEql('echo "auto_prepend_file=\'$SRC_DIR/.proboPhpConstants.php\'" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');
+    app.script.should.containEql('echo "<?php define (\'PI\', 3.14); define (\'FUZZY_PI\', \'3.14ish\'); " > $SRC_DIR/.proboPhpConstants.php');
   });
 
   it('handles custom php mods', function() {
