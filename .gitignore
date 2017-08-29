@@ -5,3 +5,4 @@ container-manager-data
 out
 *.sw*
 coverage
+.DS_Store
