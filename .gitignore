@@ -3,6 +3,7 @@
 node_modules
 container-manager-data
 out
+.DS_Store
 *.sw*
 coverage
 .DS_Store
