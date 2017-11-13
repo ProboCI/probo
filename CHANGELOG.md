@@ -1,5 +1,8 @@
 # Probo Changelog
 
+## 3.11.1
+ - Add option to provide Drupal with a database prefix (see: https://github.com/ProboCI/probo/pull/126)
+
 ## 3.11.0
  - Remove `-e` from bash args for build plugins to allow bash runs to continue if something failes (see: https://github.com/ProboCI/probo/pull/77)
  - Address incompatible buildId and Container stop (see: https://github.com/ProboCI/probo/pull/124)
