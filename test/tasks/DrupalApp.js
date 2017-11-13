@@ -27,6 +27,7 @@ describe('Drupal App', function() {
       database: 'my-cool-db.sql',
       databaseGzipped: true,
       clearCaches: false,
+      databasePrefix: 'my_custom_prefix',
     };
     done();
   });
@@ -196,6 +197,11 @@ describe('Drupal App', function() {
 
   it('handles gzipped databases', function(done) {
     app2.script.should.containEql('gunzip -c');
+    done();
+  });
+
+  it('should add a database prefix', function(done) {
+    app2.script.should.containEql('my_custom_prefix');
     done();
   });
 
