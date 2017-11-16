@@ -109,4 +109,9 @@ describe('LAMP App', function() {
     var s = app.sanitizeValue('hi\'\"');
     s.should.eql('\'hi\\\'\\\"\'');
   });
+
+  it('should have default values for any options that are output as strings', function(done) {
+    app.script.should.not.containEql('undefined');
+    done();
+  });
 });
