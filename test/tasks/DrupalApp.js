@@ -217,4 +217,10 @@ describe('Drupal App', function() {
     app2.script.should.not.containEql('drush --root=/var/www/html cache-clear all');
     done();
   });
+
+  it('should have default values for any options that are output as strings', function(done) {
+    app.script.should.not.containEql('undefined');
+    app2.script.should.not.containEql('undefined');
+    done();
+  });
 });

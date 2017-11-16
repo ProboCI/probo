@@ -178,7 +178,12 @@ describe('WordPress plugin', function() {
   it('flushes the cache', function(done) {
     app.script.should.containEql('wp cache flush');
     app2.script.should.not.containEql('wp cache flush');
+    done();
+  });
 
+  it('should have default values for any options that are output as strings', function(done) {
+    app.script.should.not.containEql('undefined');
+    app2.script.should.not.containEql('undefined');
     done();
   });
 });
