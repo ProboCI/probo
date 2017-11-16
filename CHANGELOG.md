@@ -1,5 +1,10 @@
 # Probo Changelog
 
+## 3.11.2
+ - Linting code to keep up standards
+ - Adding nightly images to our whitelist of docker images allowed for builds (see: https://github.com/ProboCI/probo/pull/129)
+ - Update tests to prevent undefined probo yaml options (see: https://github.com/ProboCI/probo/pull/128)
+
 ## 3.11.1
  - Add option to provide Drupal with a database prefix (see: https://github.com/ProboCI/probo/pull/126)
 
