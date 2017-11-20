@@ -44,7 +44,7 @@ describe('AssetDownloader', function() {
 
     ad.script.should.eql(`unset HISTFILE
 export PS4='$ '
-set -uex
+set -ux
 mkdir -p $SRC_DIR; cd $SRC_DIR
 mkdir -p $ASSET_DIR
 cd $ASSET_DIR

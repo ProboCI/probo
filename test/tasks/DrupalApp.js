@@ -27,6 +27,7 @@ describe('Drupal App', function() {
       database: 'my-cool-db.sql',
       databaseGzipped: true,
       clearCaches: false,
+      databasePrefix: 'my_custom_prefix',
     };
     done();
   });
@@ -156,14 +157,14 @@ describe('Drupal App', function() {
   it('should add D8 settings', function(done) {
     app.script = [];
     app.addD8PHPSettings();
-    app.script.should.have.length(23);
+    app.script.should.have.length(24);
     done();
   });
 
   it('should add D7 settings', function(done) {
     app.script = [];
     app.addD7PHPSettings();
-    app.script.should.have.length(18);
+    app.script.should.have.length(19);
     done();
   });
 
@@ -172,13 +173,13 @@ describe('Drupal App', function() {
     // testing D7 (default)
     app.script = [];
     app.addScriptAppendSettingsPHPSettings();
-    app.script.should.have.length(18);
+    app.script.should.have.length(19);
 
     // testing D8
     const app3 = new DrupalApp(mockContainer, Object.assign({}, options, {drupalVersion: 8}));
     app3.script = [];
     app3.addScriptAppendSettingsPHPSettings();
-    app3.script.should.have.length(23);
+    app3.script.should.have.length(24);
     done();
   });
 
@@ -199,6 +200,11 @@ describe('Drupal App', function() {
     done();
   });
 
+  it('should add a database prefix', function(done) {
+    app2.script.should.containEql('my_custom_prefix');
+    done();
+  });
+
   it('cats the settings.php file', function(done) {
     app.script.should.containEql(`'database' => '${constants.DRUPAL_DATABASE_NAME}'`);
     app.script.should.containEql(`'username' => '${constants.DATABASE_USER}'`);
@@ -209,6 +215,12 @@ describe('Drupal App', function() {
   it('clears the cache', function(done) {
     app.script.should.containEql('drush --root=/var/www/html cache-clear all');
     app2.script.should.not.containEql('drush --root=/var/www/html cache-clear all');
+    done();
+  });
+
+  it('should have default values for any options that are output as strings', function(done) {
+    app.script.should.not.containEql('undefined');
+    app2.script.should.not.containEql('undefined');
     done();
   });
 });
