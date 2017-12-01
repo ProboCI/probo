@@ -99,7 +99,7 @@ describe('WordPress plugin', function() {
     app.script.should.have.length(11);
     app.script.should.eql([
       'if [ ! -a "/var/www/html/wp-config.php" ] ; then',
-      '  echo "<?php\ndefine(\'DB_NAME\', \'database_name_here\');\ndefine(\'DB_USER\', \'username_here\');\ndefine(\'DB_PASSWORD\', \'password_here\');\ndefine(\'DB_HOST\', \'localhost\');\ndefine(\'DB_CHARSET\', \'utf8\');\ndefine(\'DB_COLLATE\', \'\');\ndefine(\'AUTH_KEY\',         \'put your unique phrase here\');\ndefine(\'SECURE_AUTH_KEY\',  \'put your unique phrase here\');\ndefine(\'LOGGED_IN_KEY\',    \'put your unique phrase here\');\ndefine(\'NONCE_KEY\',        \'put your unique phrase here\');\ndefine(\'AUTH_SALT\',        \'put your unique phrase here\');\ndefine(\'SECURE_AUTH_SALT\', \'put your unique phrase here\');\ndefine(\'LOGGED_IN_SALT\',   \'put your unique phrase here\');\ndefine(\'NONCE_SALT\',       \'put your unique phrase here\');\n\\$table_prefix = \'wp_\';\ndefine(\'WP_DEBUG\', false);\nif ( !defined(\'ABSPATH\') )\n\tdefine(\'ABSPATH\', dirname(__FILE__) . \'/\');\nrequire_once(ABSPATH . \'wp-settings.php\');\n" > /var/www/html/wp-config.php',
+      '  echo "<?php\ndefine(\'DB_NAME\', \'database_name_here\');\ndefine(\'DB_USER\', \'username_here\');\ndefine(\'DB_PASSWORD\', \'password_here\');\ndefine(\'DB_HOST\', \'localhost\');\ndefine(\'DB_CHARSET\', \'utf8\');\ndefine(\'DB_COLLATE\', \'\');\ndefine(\'AUTH_KEY\',         \'put your unique phrase here\');\ndefine(\'SECURE_AUTH_KEY\',  \'put your unique phrase here\');\ndefine(\'LOGGED_IN_KEY\',    \'put your unique phrase here\');\ndefine(\'NONCE_KEY\',        \'put your unique phrase here\');\ndefine(\'AUTH_SALT\',        \'put your unique phrase here\');\ndefine(\'SECURE_AUTH_SALT\', \'put your unique phrase here\');\ndefine(\'LOGGED_IN_SALT\',   \'put your unique phrase here\');\ndefine(\'NONCE_SALT\',       \'put your unique phrase here\');\ndefine(\'WP_DEBUG\', false);\nif ( !defined(\'ABSPATH\') )\n\tdefine(\'ABSPATH\', dirname(__FILE__) . \'/\');\nrequire_once(ABSPATH . \'wp-settings.php\');\n" > /var/www/html/wp-config.php',
       'fi',
       'sed -i "1i <?php require(\'probo-config.php\'); ?>" /var/www/html/wp-config.php',
       'echo "<?php',
@@ -107,7 +107,7 @@ describe('WordPress plugin', function() {
       'define(\'DB_USER\', \'root\');',
       'define(\'DB_PASSWORD\', \'strongpassword\');',
       'define(\'DB_HOST\', \'localhost\');',
-      '$table_prefix = \'wp_\'',
+      '\\$table_prefix = \'wp_\'',
       '?>" >> /var/www/html/probo-config.php;',
     ]);
 
