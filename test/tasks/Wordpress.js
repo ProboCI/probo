@@ -152,18 +152,9 @@ describe('WordPress plugin', function() {
     done();
   });
 
-  it('inserts the snippet into wp-config.php', function(done) {
+  it('inserts the settings into wp-config for builds without wp-config in repo', function(done) {
     var boilerplate = app.wordpressConfigBoilerplate();
-    var override = app.wordpressConfigOverride();
-
-    // Override tests
-    app.script.should.containEql(`sed -i "1i${override}" /var/www/html/wp-config.php`);
-    app.script.should.containEql(`sed -i "$(echo $WP_CONFIG_WPSETTINGS_LINE_NUMBER)i\\$table_prefix = '${app.options.databasePrefix}';" /var/www/html/wp-config.php`);
-    app.script.should.containEql(`echo "${boilerplate}" > /var/www/html/wp-config.php`);
-    override.should.containEql(`define(\'DB_NAME\', \'wordpress\')`);
-    override.should.containEql('define(\'DB_USER\', \'root\'');
-    override.should.containEql('define(\'DB_PASSWORD\', \'strongpassword\'');
-    override.should.containEql('define(\'DB_HOST\', \'localhost\')');
+    var boilerplateWithDbPrefix = app2.wordpressConfigBoilerplate();
 
     // Boilerplate tests
     boilerplate.should.containEql(`define(\'DB_NAME\', \'wordpress\')`);
@@ -180,6 +171,22 @@ describe('WordPress plugin', function() {
     boilerplate.should.containEql('define(\'WP_DEBUG\', false)');
     boilerplate.should.containEql(`require_once(ABSPATH . 'wp-settings.php'`);
     boilerplate.should.containEql(`\\$table_prefix = 'wp_';`);
+
+    boilerplateWithDbPrefix.should.containEql('\\$table_prefix = \'coool_\'');
+
+    done();
+  });
+
+  it('should override wp-config settings for builds with wp-config in repo', function(done) {
+    var override = app.wordpressConfigOverride();
+    var overrideWithDbPrefix = app2.wordpressConfigOverride();
+
+    override.should.containEql(`define(\'DB_NAME\', \'wordpress\')`);
+    override.should.containEql('define(\'DB_USER\', \'root\'');
+    override.should.containEql('define(\'DB_PASSWORD\', \'strongpassword\'');
+    override.should.containEql('define(\'DB_HOST\', \'localhost\')');
+
+    overrideWithDbPrefix.should.containEql('\\$table_prefix = \'coool_\'');
 
     done();
   });
