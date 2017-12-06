@@ -1,5 +1,9 @@
 # Probo Changelog
 
+## 3.11.4
+ - Dec 6 2017
+ - Provide db prefix settings to the Wordpress plugin (see: https://github.com/ProboCI/probo/pull/133)
+
 ## 3.11.3
  - Nov 20 2017
  - Update list of docker images to be allowed for builds (see: https://github.com/ProboCI/probo/pull/130)

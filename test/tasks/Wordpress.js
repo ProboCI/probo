@@ -156,6 +156,8 @@ describe('WordPress plugin', function() {
     var boilerplate = app.wordpressConfigBoilerplate();
     var boilerplateWithDbPrefix = app2.wordpressConfigBoilerplate();
 
+    app.script.should.containEql(`echo "${boilerplate}" > /var/www/html/wp-config.php`);
+
     // Boilerplate tests
     boilerplate.should.containEql(`define(\'DB_NAME\', \'wordpress\')`);
     boilerplate.should.containEql('define(\'DB_USER\', \'root\'');
@@ -180,6 +182,9 @@ describe('WordPress plugin', function() {
   it('should override wp-config settings for builds with wp-config in repo', function(done) {
     var override = app.wordpressConfigOverride();
     var overrideWithDbPrefix = app2.wordpressConfigOverride();
+
+    app.script.should.containEql(`sed -i "1i${override}" /var/www/html/wp-config.php`);
+    app.script.should.containEql(`sed -i "$(echo $WP_CONFIG_WPSETTINGS_LINE_NUMBER)i\\$table_prefix = '${app.options.databasePrefix}';" /var/www/html/wp-config.php`);
 
     override.should.containEql(`define(\'DB_NAME\', \'wordpress\')`);
     override.should.containEql('define(\'DB_USER\', \'root\'');
