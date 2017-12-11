@@ -30,6 +30,7 @@ describe('LAMP App', function() {
     phpMods: ['mcrypt', 'my-cool-php5mod'],
     installPackages: ['php5-mcrypt', 'my-cool-package'],
     phpConstants: {PI: 3.14, FUZZY_PI: '3.14ish'},
+    varnish: true,
   };
 
   /*
@@ -100,6 +101,18 @@ describe('LAMP App', function() {
   it('handles custom apache mods', function() {
     app.script.should.containEql('a2enmod dir');
     app.script.should.containEql('a2enmod my-cool-apachemod');
+  });
+
+  it('enables varnish vhost', function() {
+    app.script.should.containEql('a2enmod listen_8080');
+    app.script.should.containEql('a2dissite 000-default.conf');
+    app.script.should.containEql('a2ensite 000-default-varnish.conf');
+    app.script.should.containEql('service varnish restart');
+
+    appGZ.script.should.not.containEql('a2enmod listen_8080');
+    appGZ.script.should.not.containEql('a2dissite 000-default.conf');
+    appGZ.script.should.not.containEql('a2ensite 000-default-varnish.conf');
+    appGZ.script.should.not.containEql('service varnish restart');
   });
 
   it('automatically restarts apache', function() {
