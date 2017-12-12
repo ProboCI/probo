@@ -104,12 +104,12 @@ describe('LAMP App', function() {
   });
 
   it('enables varnish vhost', function() {
-    app.script.should.containEql('a2enmod listen_8080');
+    app.script.should.containEql('a2enconf listen_8080');
     app.script.should.containEql('a2dissite 000-default.conf');
     app.script.should.containEql('a2ensite 000-default-varnish.conf');
     app.script.should.containEql('service varnish restart');
 
-    appGZ.script.should.not.containEql('a2enmod listen_8080');
+    appGZ.script.should.not.containEql('a2enconf listen_8080');
     appGZ.script.should.not.containEql('a2dissite 000-default.conf');
     appGZ.script.should.not.containEql('a2ensite 000-default-varnish.conf');
     appGZ.script.should.not.containEql('service varnish restart');
