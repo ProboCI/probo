@@ -1,6 +1,6 @@
 {
   "name": "probo",
-  "version": "3.11.2",
+  "version": "3.11.5",
   "description": "The main repository for the probo project.",
   "homepage": "http://probo.ci",
   "main": "index.js",
@@ -10,9 +10,17 @@
   },
   "scripts": {
     "coverage": "./node_modules/.bin/istanbul cover -- ./node_modules/.bin/_mocha --recursive",
+    "precommit": "lint-staged",
+    "prepush": "npm run test",
     "standards": "./node_modules/.bin/eslint lib cli-subcommands test",
     "test": "mocha --recursive",
     "test:watch": "mocha -w --recursive"
+  },
+  "lint-staged": {
+    "lib/*.js": [
+      "./node_modules/.bin/eslint lib cli-subcommands test --fix",
+      "git add"
+    ]
   },
   "contributors": [
     "Howard Tyson <howard@howardtyson.com> (http://howardtyson.com)",
@@ -68,7 +76,9 @@
     "co-mocha": "^1.1.2",
     "coveralls": "^2.11.4",
     "eslint": "^1.7.3",
+    "husky": "^0.14.3",
     "istanbul": "^0.4.0",
+    "lint-staged": "^5.0.0",
     "memdown": "^1.1.2",
     "mocha": "^2.2.4",
     "nock": "^1.6.0",
