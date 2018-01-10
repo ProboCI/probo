@@ -44,7 +44,7 @@ images:
       redis:
         command: 'redis-server'
       solr:
-        command: '/opt/solr/start.sh'
+        command: 'service solr start'
       php_log:
         command: 'tail -F /var/log/php/error.log'
   'proboci/ubuntu-14.04-lamp:beta':
@@ -59,7 +59,7 @@ images:
       redis:
         command: 'redis-server'
       solr:
-        command: '/opt/solr/start.sh'
+        command: 'service solr start'
       php_log:
         command: 'tail -F /var/log/php/error.log'
   'proboci/ubuntu-14.04-lamp:5.6-beta':
@@ -74,7 +74,7 @@ images:
       redis:
         command: 'redis-server'
       solr:
-        command: '/opt/solr/start.sh'
+        command: 'service solr start'
       php_log:
         command: 'tail -F /var/log/php/error.log'
   'proboci/ubuntu-14.04-lamp:7.0-beta':
@@ -89,7 +89,7 @@ images:
       redis:
         command: 'redis-server'
       solr:
-        command: '/opt/solr/start.sh'
+        command: 'service solr start'
       php_log:
         command: 'tail -F /var/log/php/error.log'
   'proboci/ubuntu-14.04-lamp:7.1-beta':
@@ -104,7 +104,7 @@ images:
       redis:
         command: 'redis-server'
       solr:
-        command: '/opt/solr/start.sh'
+        command: 'service solr start'
       php_log:
         command: 'tail -F /var/log/php/error.log'
   'proboci/ubuntu-14.04-lamp:php-5.6':
@@ -119,7 +119,7 @@ images:
       redis:
         command: 'redis-server'
       solr:
-        command: '/opt/solr/start.sh'
+        command: 'service solr start'
       php_log:
         command: 'tail -F /var/log/php/error.log'
   'proboci/ubuntu-14.04-lamp:php-7.0':
@@ -134,7 +134,7 @@ images:
       redis:
         command: 'redis-server'
       solr:
-        command: '/opt/solr/start.sh'
+        command: 'service solr start'
       php_log:
         command: 'tail -F /var/log/php/error.log'
   'proboci/ubuntu-14.04-lamp:php-7.1':
@@ -149,7 +149,7 @@ images:
       redis:
         command: 'redis-server'
       solr:
-        command: '/opt/solr/start.sh'
+        command: 'service solr start'
       php_log:
         command: 'tail -F /var/log/php/error.log'
   'proboci/ubuntu-14.04-lamp:php5.6-nightly':
@@ -257,6 +257,17 @@ images:
         command: 'service solr start'
       php_log:
         command: 'tail -F /var/log/php/error.log'
+  'proboci/ubuntu-16.04-dotnet:sdk1.0.1-nightly':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      redis:
+        command: 'redis-server'
+      solr:
+        command: 'service solr start'
 dataDir: './container-manager-data'
 # Volumes to mount into created containers.
 binds: []
