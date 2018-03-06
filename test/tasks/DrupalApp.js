@@ -22,6 +22,7 @@ describe('Drupal App', function() {
   before(function(done) {
     options = {
       database: 'my-cool-db.sql',
+      fileProxy: 'https://example.com',
     };
     options2 = {
       database: 'my-cool-db.sql',
@@ -215,6 +216,14 @@ describe('Drupal App', function() {
   it('clears the cache', function(done) {
     app.script.should.containEql('drush --root=/var/www/html cache-clear all');
     app2.script.should.not.containEql('drush --root=/var/www/html cache-clear all');
+    done();
+  });
+
+  it('should enable stage_file_proxy', function(done) {
+    app2.script.should.not.containEql('stage_file_proxy');
+    app.script.should.containEql('en stage_file_proxy');
+    app.script.should.containEql('vset stage_file_proxy_hotlink 1');
+    app.script.should.containEql('vset stage_file_proxy_origin \'https://example.com\'');
     done();
   });
 
