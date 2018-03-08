@@ -44,7 +44,7 @@ images:
       redis:
         command: 'redis-server'
       solr:
-        command: '/opt/solr/bin/solr start -f -force'
+        command: '/opt/solr/start.sh'
       php_log:
         command: 'tail -F /var/log/php/error.log'
   'proboci/ubuntu-14.04-lamp:beta':
@@ -59,7 +59,7 @@ images:
       redis:
         command: 'redis-server'
       solr:
-        command: '/opt/solr/bin/solr start -f -force'
+        command: '/opt/solr/start.sh'
       php_log:
         command: 'tail -F /var/log/php/error.log'
   'proboci/ubuntu-14.04-lamp:5.6-beta':
@@ -74,7 +74,7 @@ images:
       redis:
         command: 'redis-server'
       solr:
-        command: '/opt/solr/bin/solr start -f -force'
+        command: '/opt/solr/start.sh'
       php_log:
         command: 'tail -F /var/log/php/error.log'
   'proboci/ubuntu-14.04-lamp:7.0-beta':
@@ -89,7 +89,7 @@ images:
       redis:
         command: 'redis-server'
       solr:
-        command: '/opt/solr/bin/solr start -f -force'
+        command: '/opt/solr/start.sh'
       php_log:
         command: 'tail -F /var/log/php/error.log'
   'proboci/ubuntu-14.04-lamp:7.1-beta':
@@ -104,7 +104,7 @@ images:
       redis:
         command: 'redis-server'
       solr:
-        command: '/opt/solr/bin/solr start -f -force'
+        command: '/opt/solr/start.sh'
       php_log:
         command: 'tail -F /var/log/php/error.log'
   'proboci/ubuntu-14.04-lamp:php-5.6':
@@ -209,7 +209,7 @@ images:
       redis:
         command: 'redis-server'
       solr:
-        command: '/opt/solr/bin/solr start -f -force'
+        command: '/opt/solr/start.sh'
       php_log:
         command: 'tail -F /var/log/php/error.log'
   'proboci/ubuntu-16.04-lamp:php7.0-nightly':
