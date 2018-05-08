@@ -108,6 +108,22 @@ describe('Drupal App', function() {
     done();
   });
 
+  it('should add scripts to run makefiles with custom arguments', function(done) {
+    app.script = [];
+    app.options.makeForceComplete = false;
+    app.options.makeArgs = [
+      '--arg1="argument 1"',
+      '--arg2',
+    ];
+    app.addScriptRunMakeFile();
+    app.script.should.have.length(2);
+    app.script.should.eql([
+      'cd $SRC_DIR ; drush make undefined /var/www/html --arg1="argument 1" --arg2',
+      'rsync -a $SRC_DIR/ /var/www/html/profiles/standard',
+    ]);
+    done();
+  });
+
   it('should add script to revert features', function(done) {
     app.script = [];
     app.addScriptRevertFeatures();
