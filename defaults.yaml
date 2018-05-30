@@ -27,9 +27,9 @@ containerIdleTimeout: 30m # can use time units here. no units = ms
 # Prefixes all routes so that the app can be namespaced.
 prefix: ''
 # If a cotnainer is not specified in the repository's configuration, use this one.
-defaultImage: 'proboci/ubuntu-14.04-lamp'
+defaultImage: 'proboci/ubuntu-14.04-lamp:php-5.6'
 # The default image used if none is specified.
-image: 'proboci/ubuntu-14.04-lamp'
+image: 'proboci/ubuntu-14.04-lamp:php-5.6'
 # The images used by the host manager
 images:
   'proboci/ubuntu-14.04-lamp':
