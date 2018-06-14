@@ -93,9 +93,10 @@ describe('LAMP App', function() {
   });
   
   it('handles custom mysql options', function() {
-    app.script.should.containEql('echo "key_buffer_size=true" >> $MYSQL_PATH/probo-settings.cnf\n');
-    app.script.should.containEql('echo "innodb_file_format=barracuda" >> $MYSQL_PATH/probo-settings.cnf\n');
-    app.script.should.containEql('echo "innodb_file_per_table=true" >> $MYSQL_PATH/probo-settings.cnf\n');
+    app.script.should.containEql('echo "[mysqld]" >> /etc/mysql/probo-settings.cnf');
+    app.script.should.containEql('echo "innodb_large_prefix=true" >> /etc/mysql/probo-settings.cnf\n');
+    app.script.should.containEql('echo "innodb_file_format=\'barracuda\'" >> /etc/mysql/probo-settings.cnf\n');
+    app.script.should.containEql('echo "innodb_file_per_table=true" >> /etc/mysql/probo-settings.cnf\n');
   });
 
   it('handles custom php defines', function() {
