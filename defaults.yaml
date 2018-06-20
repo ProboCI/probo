@@ -27,12 +27,12 @@ containerIdleTimeout: 30m # can use time units here. no units = ms
 # Prefixes all routes so that the app can be namespaced.
 prefix: ''
 # If a cotnainer is not specified in the repository's configuration, use this one.
-defaultImage: 'proboci/ubuntu-14.04-lamp'
+defaultImage: 'proboci/ubuntu-14.04-lamp:php-5.6'
 # The default image used if none is specified.
-image: 'proboci/ubuntu-14.04-lamp'
+image: 'proboci/ubuntu-14.04-lamp:php-5.6'
 # The images used by the host manager
 images:
-  'proboci/ubuntu-14.04-lamp':
+  'proboci/ubuntu-14.04-lamp:php-5.5':
     services:
       cleanapache:
         command: 'rm /var/run/apache2/apache2.pid'
@@ -44,67 +44,7 @@ images:
       redis:
         command: 'redis-server'
       solr:
-        command: '/opt/solr/start.sh'
-      php_log:
-        command: 'tail -F /var/log/php/error.log'
-  'proboci/ubuntu-14.04-lamp:beta':
-    services:
-      cleanapache:
-        command: 'rm /var/run/apache2/apache2.pid'
-      apache:
-        command: '/usr/sbin/apache2ctl -D FOREGROUND'
-        port: 80
-      mysql:
-        command: 'mysqld_safe'
-      redis:
-        command: 'redis-server'
-      solr:
-        command: '/opt/solr/start.sh'
-      php_log:
-        command: 'tail -F /var/log/php/error.log'
-  'proboci/ubuntu-14.04-lamp:5.6-beta':
-    services:
-      cleanapache:
-        command: 'rm /var/run/apache2/apache2.pid'
-      apache:
-        command: '/usr/sbin/apache2ctl -D FOREGROUND'
-        port: 80
-      mysql:
-        command: 'mysqld_safe'
-      redis:
-        command: 'redis-server'
-      solr:
-        command: '/opt/solr/start.sh'
-      php_log:
-        command: 'tail -F /var/log/php/error.log'
-  'proboci/ubuntu-14.04-lamp:7.0-beta':
-    services:
-      cleanapache:
-        command: 'rm /var/run/apache2/apache2.pid'
-      apache:
-        command: '/usr/sbin/apache2ctl -D FOREGROUND'
-        port: 80
-      mysql:
-        command: 'mysqld_safe'
-      redis:
-        command: 'redis-server'
-      solr:
-        command: '/opt/solr/start.sh'
-      php_log:
-        command: 'tail -F /var/log/php/error.log'
-  'proboci/ubuntu-14.04-lamp:7.1-beta':
-    services:
-      cleanapache:
-        command: 'rm /var/run/apache2/apache2.pid'
-      apache:
-        command: '/usr/sbin/apache2ctl -D FOREGROUND'
-        port: 80
-      mysql:
-        command: 'mysqld_safe'
-      redis:
-        command: 'redis-server'
-      solr:
-        command: '/opt/solr/start.sh'
+        command: '/opt/solr/bin/solr start -f -force'
       php_log:
         command: 'tail -F /var/log/php/error.log'
   'proboci/ubuntu-14.04-lamp:php-5.6':
@@ -119,7 +59,7 @@ images:
       redis:
         command: 'redis-server'
       solr:
-        command: '/opt/solr/start.sh'
+        command: '/opt/solr/bin/solr start -f -force'
       php_log:
         command: 'tail -F /var/log/php/error.log'
   'proboci/ubuntu-14.04-lamp:php-7.0':
@@ -134,7 +74,7 @@ images:
       redis:
         command: 'redis-server'
       solr:
-        command: '/opt/solr/start.sh'
+        command: '/opt/solr/bin/solr start -f -force'
       php_log:
         command: 'tail -F /var/log/php/error.log'
   'proboci/ubuntu-14.04-lamp:php-7.1':
@@ -149,10 +89,10 @@ images:
       redis:
         command: 'redis-server'
       solr:
-        command: '/opt/solr/start.sh'
+        command: '/opt/solr/bin/solr start -f -force'
       php_log:
         command: 'tail -F /var/log/php/error.log'
-  'proboci/ubuntu-14.04-lamp:php5.6-nightly':
+  'proboci/ubuntu-16.04-lamp:php-7.0':
     services:
       cleanapache:
         command: 'rm /var/run/apache2/apache2.pid'
@@ -164,10 +104,10 @@ images:
       redis:
         command: 'redis-server'
       solr:
-        command: 'service solr start'
+        command: '/opt/solr/bin/solr start -f -force'
       php_log:
         command: 'tail -F /var/log/php/error.log'
-  'proboci/ubuntu-14.04-lamp:php7.0-nightly':
+  'proboci/ubuntu-16.04-lamp:php-7.1':
     services:
       cleanapache:
         command: 'rm /var/run/apache2/apache2.pid'
@@ -179,10 +119,10 @@ images:
       redis:
         command: 'redis-server'
       solr:
-        command: 'service solr start'
+        command: '/opt/solr/bin/solr start -f -force'
       php_log:
         command: 'tail -F /var/log/php/error.log'
-  'proboci/ubuntu-14.04-lamp:php7.1-nightly':
+  'proboci/ubuntu-16.04-lamp:php-7.2':
     services:
       cleanapache:
         command: 'rm /var/run/apache2/apache2.pid'
@@ -194,67 +134,7 @@ images:
       redis:
         command: 'redis-server'
       solr:
-        command: 'service solr start'
-      php_log:
-        command: 'tail -F /var/log/php/error.log'
-  'proboci/ubuntu-14.04-lamp:latest':
-    services:
-      cleanapache:
-        command: 'rm /var/run/apache2/apache2.pid'
-      apache:
-        command: '/usr/sbin/apache2ctl -D FOREGROUND'
-        port: 80
-      mysql:
-        command: 'mysqld_safe'
-      redis:
-        command: 'redis-server'
-      solr:
-        command: 'service solr start'
-      php_log:
-        command: 'tail -F /var/log/php/error.log'
-  'proboci/ubuntu-16.04-lamp:php7.0-nightly':
-    services:
-      cleanapache:
-        command: 'rm /var/run/apache2/apache2.pid'
-      apache:
-        command: '/usr/sbin/apache2ctl -D FOREGROUND'
-        port: 80
-      mysql:
-        command: 'mysqld_safe'
-      redis:
-        command: 'redis-server'
-      solr:
-        command: 'service solr start'
-      php_log:
-        command: 'tail -F /var/log/php/error.log'
-  'proboci/ubuntu-16.04-lamp:php7.1-nightly':
-    services:
-      cleanapache:
-        command: 'rm /var/run/apache2/apache2.pid'
-      apache:
-        command: '/usr/sbin/apache2ctl -D FOREGROUND'
-        port: 80
-      mysql:
-        command: 'mysqld_safe'
-      redis:
-        command: 'redis-server'
-      solr:
-        command: 'service solr start'
-      php_log:
-        command: 'tail -F /var/log/php/error.log'
-  'proboci/ubuntu-16.04-lamp:php7.2-nightly':
-    services:
-      cleanapache:
-        command: 'rm /var/run/apache2/apache2.pid'
-      apache:
-        command: '/usr/sbin/apache2ctl -D FOREGROUND'
-        port: 80
-      mysql:
-        command: 'mysqld_safe'
-      redis:
-        command: 'redis-server'
-      solr:
-        command: 'service solr start'
+        command: '/opt/solr/bin/solr start -f -force'
       php_log:
         command: 'tail -F /var/log/php/error.log'
 dataDir: './container-manager-data'
