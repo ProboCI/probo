@@ -1,6 +1,6 @@
 {
   "name": "probo",
-  "version": "3.11.5",
+  "version": "4.1.0",
   "description": "The main repository for the probo project.",
   "homepage": "http://probo.ci",
   "main": "index.js",
