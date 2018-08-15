@@ -112,7 +112,7 @@ images:
       redis:
         command: 'redis-server'
       solr:
-        command: 'service solr start'
+        command: '/opt/solr/bin/solr start -f -force'
       varnish:
         command: 'service varnish start'
       php_log:
@@ -129,7 +129,7 @@ images:
       redis:
         command: 'redis-server'
       solr:
-        command: 'service solr start'
+        command: '/opt/solr/bin/solr start -f -force'
       varnish:
         command: 'service varnish start'
       php_log:
