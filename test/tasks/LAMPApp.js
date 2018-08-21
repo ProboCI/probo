@@ -26,6 +26,11 @@ describe('LAMP App', function() {
       'opcache.optimization_level': 0xffffffff,
       'soap.wsdl_cache_dir': '/tmp',
     },
+    mysqlCnfOptions: {
+      'innodb_large_prefix': true,
+      'innodb_file_format': 'barracuda',
+      'innodb_file_per_table': true,
+    },
     apacheMods: ['dir', 'my-cool-apachemod'],
     phpMods: ['mcrypt', 'my-cool-php5mod'],
     installPackages: ['php5-mcrypt', 'my-cool-package'],
@@ -85,6 +90,13 @@ describe('LAMP App', function() {
     app.script.should.containEql('echo "opcache.max_file_size=0" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');
     app.script.should.containEql('echo "opcache.optimization_level=4294967295" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');
     app.script.should.containEql('echo "soap.wsdl_cache_dir=\'/tmp\'" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');
+  });
+  
+  it('handles custom mysql options', function() {
+    app.script.should.containEql('echo "[mysqld]" >> /etc/mysql/probo-settings.cnf');
+    app.script.should.containEql('echo "innodb_large_prefix=true" >> /etc/mysql/probo-settings.cnf\n');
+    app.script.should.containEql('echo "innodb_file_format=\'barracuda\'" >> /etc/mysql/probo-settings.cnf\n');
+    app.script.should.containEql('echo "innodb_file_per_table=true" >> /etc/mysql/probo-settings.cnf\n');
   });
 
   it('handles custom php defines', function() {
