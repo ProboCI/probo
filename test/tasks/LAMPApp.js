@@ -30,7 +30,7 @@ describe('LAMP App', function() {
     phpMods: ['mcrypt', 'my-cool-php5mod'],
     installPackages: ['php5-mcrypt', 'my-cool-package'],
     phpConstants: {PI: 3.14, FUZZY_PI: '3.14ish'},
-    varnish: true,
+    varnish: { enable: true },
   };
 
   /*
