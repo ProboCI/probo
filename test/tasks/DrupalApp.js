@@ -29,6 +29,7 @@ describe('Drupal App', function() {
       databaseGzipped: true,
       clearCaches: false,
       databasePrefix: 'my_custom_prefix',
+      varnish: true,
     };
     done();
   });
@@ -246,6 +247,12 @@ describe('Drupal App', function() {
   it('should have default values for any options that are output as strings', function(done) {
     app.script.should.not.containEql('undefined');
     app2.script.should.not.containEql('undefined');
+    done();
+  });
+
+  it('adds varnish default.vcl for drupal', function(done) {
+    app2.script.should.containEql('cp /etc/varnish/drupal-default.vcl /etc/varnish/default.vcl');
+    app.script.should.not.containEql('cp /etc/varnish/drupal-default.vcl /etc/varnish/default.vcl');
     done();
   });
 });
