@@ -1,5 +1,9 @@
 # Probo Changelog
 
+## 4.2.0
+  - Aug 21 2018
+  - Add mysql options to lamp plugin (see: https://github.com/ProboCI/probo/pull/131)
+  - Add varnish options to lamp plugin (see: https://github.com/ProboCI/probo/pull/145)
 
 ## 4.1.0
   - July 2 2018
