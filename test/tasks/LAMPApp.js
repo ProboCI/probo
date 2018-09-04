@@ -32,10 +32,16 @@ describe('LAMP App', function() {
         'post_max_size': '20M',
       }
     },
+    mysqlCnfOptions: {
+      'innodb_large_prefix': true,
+      'innodb_file_format': 'barracuda',
+      'innodb_file_per_table': true,
+    },
     apacheMods: ['dir', 'my-cool-apachemod'],
     phpMods: ['mcrypt', 'my-cool-php5mod'],
     installPackages: ['php5-mcrypt', 'my-cool-package'],
     phpConstants: {PI: 3.14, FUZZY_PI: '3.14ish'},
+    varnish: { enable: true },
   };
 
   /*
@@ -97,6 +103,13 @@ describe('LAMP App', function() {
     app.script.should.containEql('echo "post_max_size=\'20M\'" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');
     app.script.should.not.containEql('echo "memory_limit=\'256M\'" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');
   });
+  
+  it('handles custom mysql options', function() {
+    app.script.should.containEql('echo "[mysqld]" >> /etc/mysql/probo-settings.cnf');
+    app.script.should.containEql('echo "innodb_large_prefix=true" >> /etc/mysql/probo-settings.cnf\n');
+    app.script.should.containEql('echo "innodb_file_format=\'barracuda\'" >> /etc/mysql/probo-settings.cnf\n');
+    app.script.should.containEql('echo "innodb_file_per_table=true" >> /etc/mysql/probo-settings.cnf\n');
+  });
 
   it('handles custom php defines', function() {
     app.script.should.containEql('echo "auto_prepend_file=\'$SRC_DIR/.proboPhpConstants.php\'" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');
@@ -111,6 +124,18 @@ describe('LAMP App', function() {
   it('handles custom apache mods', function() {
     app.script.should.containEql('a2enmod dir');
     app.script.should.containEql('a2enmod my-cool-apachemod');
+  });
+
+  it('enables varnish vhost', function() {
+    app.script.should.containEql('a2enconf listen_8080');
+    app.script.should.containEql('a2dissite 000-default.conf');
+    app.script.should.containEql('a2ensite 000-default-varnish.conf');
+    app.script.should.containEql('service varnish restart');
+
+    appGZ.script.should.not.containEql('a2enconf listen_8080');
+    appGZ.script.should.not.containEql('a2dissite 000-default.conf');
+    appGZ.script.should.not.containEql('a2ensite 000-default-varnish.conf');
+    appGZ.script.should.not.containEql('service varnish restart');
   });
 
   it('automatically restarts apache', function() {

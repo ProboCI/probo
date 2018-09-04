@@ -1,5 +1,26 @@
 # Probo Changelog
 
+## 4.2.0
+  - Aug 21 2018
+  - Add mysql options to lamp plugin (see: https://github.com/ProboCI/probo/pull/131)
+  - Add varnish options to lamp plugin (see: https://github.com/ProboCI/probo/pull/145)
+
+## 4.1.0
+  - July 2 2018
+  - Add support for GitLab (see: https://github.com/ProboCI/probo/pull/141)
+
+## 4.0.0
+ - June 20 2018
+ - Support for new docker images and dropping the old ones (see: https://github.com/ProboCI/probo/pull/135)
+
+## 3.11.6
+ - May 9 2018
+ - Add Drupal for arguments for drush make (see: https://github.com/ProboCI/probo/pull/140)
+
+## 3.11.5
+ - Dec 7 2017
+ - Add some tests for the wordpress plugin
+
 ## 3.11.4
  - Dec 6 2017
  - Provide db prefix settings to the Wordpress plugin (see: https://github.com/ProboCI/probo/pull/133)
