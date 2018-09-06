@@ -25,6 +25,12 @@ describe('LAMP App', function() {
       'opcache.max_file_size': 0,
       'opcache.optimization_level': 0xffffffff,
       'soap.wsdl_cache_dir': '/tmp',
+      'cli': {
+        'memory_limit': '256M',
+      },
+      'all': {
+        'post_max_size': '20M',
+      }
     },
     mysqlCnfOptions: {
       'innodb_large_prefix': true,
@@ -91,6 +97,11 @@ describe('LAMP App', function() {
     app.script.should.containEql('echo "opcache.max_file_size=0" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');
     app.script.should.containEql('echo "opcache.optimization_level=4294967295" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');
     app.script.should.containEql('echo "soap.wsdl_cache_dir=\'/tmp\'" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');
+    app.script.should.containEql('echo "soap.wsdl_cache_dir=\'/tmp\'" >> $PHPINI_PATH/cli/conf.d/99-probo-settings.ini\n');
+    app.script.should.containEql('echo "memory_limit=\'256M\'" >> $PHPINI_PATH/cli/conf.d/99-probo-settings.ini\n');
+    app.script.should.containEql('echo "post_max_size=\'20M\'" >> $PHPINI_PATH/cli/conf.d/99-probo-settings.ini\n');
+    app.script.should.containEql('echo "post_max_size=\'20M\'" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');
+    app.script.should.not.containEql('echo "memory_limit=\'256M\'" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');
   });
   
   it('handles custom mysql options', function() {
