@@ -1,5 +1,9 @@
 # Probo Changelog
 
+## 4.3.0
+  - Sep 6 2018
+  - Add php ini options separately to cli and apache2 (see: https://github.com/ProboCI/probo/pull/144)
+
 ## 4.2.0
   - Aug 21 2018
   - Add mysql options to lamp plugin (see: https://github.com/ProboCI/probo/pull/131)
