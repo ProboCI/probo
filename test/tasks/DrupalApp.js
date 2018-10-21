@@ -201,14 +201,14 @@ describe('Drupal App', function() {
     done();
   });
 
-  it('builds proper lamp script', function(done) {
+  it('builds proper LAMP script', function(done) {
     app.script.should.containEql('mkdir -p $SRC_DIR; cd $SRC_DIR');
     app.script.should.containEql('if [ -d "$SRC_DIR/docroot" ]');
     app.script.should.containEql('if [ -a "$SRC_DIR/index.php" ]');
     app.script.should.containEql('ln -s $SRC_DIR  /var/www/html');
-    app.script.should.containEql(`mysql -e 'create database ${constants.DRUPAL_DATABASE_NAME}'`);
+    app.script.should.containEql(`mysql -e 'create database $DATABASE_NAME'`);
     app.script.should.containEql(
-      `cat $ASSET_DIR/my-cool-db.sql | $(mysql -u ${constants.DATABASE_USER} --password=${constants.DATABASE_PASSWORD} ${constants.DRUPAL_DATABASE_NAME})`
+      `cat $ASSET_DIR/my-cool-db.sql | $(mysql -u $DATABASE_USER --password=$DATABASE_PASS $DATABASE_NAME)`
     );
     done();
   });

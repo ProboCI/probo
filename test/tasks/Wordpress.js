@@ -136,12 +136,12 @@ describe('WordPress plugin', function() {
     done();
   });
 
-  it('builds proper lamp script', function(done) {
+  it('builds proper LAMP script', function(done) {
     app.script.should.containEql('mkdir -p $SRC_DIR; cd $SRC_DIR');
     app.script.should.containEql('if [ -d "$SRC_DIR/docroot" ]');
     app.script.should.containEql('if [ -a "$SRC_DIR/index.php" ]');
     app.script.should.containEql('ln -s $SRC_DIR  /var/www/html');
-    app.script.should.containEql(`mysql -e 'create database ${constants.WORDPRESS_DATABASE_NAME}'`);
+    app.script.should.containEql(`mysql -e 'create database $DATABASE_NAME'`);
 
     done();
   });
