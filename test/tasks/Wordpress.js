@@ -141,7 +141,7 @@ describe('WordPress plugin', function() {
     app.script.should.containEql('if [ -d "$SRC_DIR/docroot" ]');
     app.script.should.containEql('if [ -a "$SRC_DIR/index.php" ]');
     app.script.should.containEql('ln -s $SRC_DIR  /var/www/html');
-    app.script.should.containEql(`mysql -e 'create database $DATABASE_NAME'`);
+    app.script.should.containEql(`mysql -e 'create database '$DATABASE_NAME`);
 
     done();
   });
