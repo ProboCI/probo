@@ -49,7 +49,7 @@ describe('Drupal App', function() {
   });
 
   it('should correctly instantiate', function(done) {
-    app.should.have.property('databaseName').which.eql(constants.DRUPAL_DATABASE_NAME);
+    app.should.have.property('databaseName').which.eql('drupal');
     app.should.have.property('options').which.is.a.Object;
     app.options.should.have.property('siteFolder').which.eql('default');
     app.options.should.have.property('profileName').which.eql('standard');
@@ -224,9 +224,9 @@ describe('Drupal App', function() {
   });
 
   it('cats the settings.php file', function(done) {
-    app.script.should.containEql(`'database' => '${constants.DRUPAL_DATABASE_NAME}'`);
-    app.script.should.containEql(`'username' => '${constants.DATABASE_USER}'`);
-    app.script.should.containEql(`'password' => '${constants.DATABASE_PASSWORD}'`);
+    app.script.should.containEql(`'database' => '$DATABASE_NAME'`);
+    app.script.should.containEql(`'username' => '$DATABASE_USER'`);
+    app.script.should.containEql(`'password' => '$DATABASE_PASS'`);
     done();
   });
 
