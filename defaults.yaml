@@ -41,6 +41,8 @@ images:
         port: 80
       mysql:
         command: 'mysqld_safe'
+      postgresql:
+        command: 'sudo -u postgres /usr/lib/postgresql/9.3/bin/postgres -D /var/lib/postgresql/9.3/main --config_file=/etc/postgresql/9.3/main/postgresql.conf'
       redis:
         command: 'redis-server'
       solr:
@@ -75,6 +77,8 @@ images:
         port: 80
       mysql:
         command: 'mysqld_safe'
+      postgresql:
+        command: 'sudo -u postgres /usr/lib/postgresql/9.3/bin/postgres -D /var/lib/postgresql/9.3/main --config_file=/etc/postgresql/9.3/main/postgresql.conf'
       redis:
         command: 'redis-server'
       solr:
@@ -92,6 +96,8 @@ images:
         port: 80
       mysql:
         command: 'mysqld_safe'
+      postgresql:
+        command: 'sudo -u postgres /usr/lib/postgresql/9.3/bin/postgres -D /var/lib/postgresql/9.3/main --config_file=/etc/postgresql/9.3/main/postgresql.conf'
       redis:
         command: 'redis-server'
       solr:
@@ -109,6 +115,8 @@ images:
         port: 80
       mysql:
         command: 'mysqld_safe'
+      postgresql:
+        command: 'sudo -u postgres /usr/lib/postgresql/9.5/bin/postgres -D /var/lib/postgresql/9.5/main --config_file=/etc/postgresql/9.5/main/postgresql.conf'
       redis:
         command: 'redis-server'
       solr:
@@ -126,6 +134,8 @@ images:
         port: 80
       mysql:
         command: 'mysqld_safe'
+      postgresql:
+        command: 'sudo -u postgres /usr/lib/postgresql/9.5/bin/postgres -D /var/lib/postgresql/9.5/main --config_file=/etc/postgresql/9.5/main/postgresql.conf'
       redis:
         command: 'redis-server'
       solr:
@@ -143,6 +153,8 @@ images:
         port: 80
       mysql:
         command: 'mysqld_safe'
+      postgresql:
+        command: 'sudo -u postgres /usr/lib/postgresql/9.5/bin/postgres -D /var/lib/postgresql/9.5/main --config_file=/etc/postgresql/9.5/main/postgresql.conf'
       redis:
         command: 'redis-server'
       solr:
