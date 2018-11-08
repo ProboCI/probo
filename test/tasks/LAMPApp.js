@@ -41,7 +41,7 @@ describe('LAMP App', function() {
     phpMods: ['mcrypt', 'my-cool-php5mod'],
     installPackages: ['php5-mcrypt', 'my-cool-package'],
     phpConstants: {PI: 3.14, FUZZY_PI: '3.14ish'},
-    varnish: { enable: true },
+    varnish: {enable: true},
   };
 
   /*
@@ -103,7 +103,7 @@ describe('LAMP App', function() {
     app.script.should.containEql('echo "post_max_size=\'20M\'" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');
     app.script.should.not.containEql('echo "memory_limit=\'256M\'" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');
   });
-  
+
   it('handles custom mysql options', function() {
     app.script.should.containEql('echo "[mysqld]" >> /etc/mysql/probo-settings.cnf');
     app.script.should.containEql('echo "innodb_large_prefix=true" >> /etc/mysql/probo-settings.cnf\n');

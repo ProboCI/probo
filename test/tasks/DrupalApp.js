@@ -29,7 +29,7 @@ describe('Drupal App', function() {
       databaseGzipped: true,
       clearCaches: false,
       databasePrefix: 'my_custom_prefix',
-      varnish: { enable: true },
+      varnish: {enable: true},
     };
     done();
   });
