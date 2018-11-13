@@ -59,6 +59,14 @@ describe('LAMP App', function() {
   };
   var appGZ = new LAMPApp(mockContainer, optionsGZ);
 
+  var optionsPgsql = {
+    database: 'my-cool-db.sql',
+    databaseEngine: 'pgsql',
+    databaseName: 'my-cool-db',
+    databaseGzipped: false,
+  };
+  var appPgsql = new LAMPApp(mockContainer, optionsPgsql);
+
   it('builds proper lamp script', function() {
 
     app.script.should.containEql('mkdir -p $SRC_DIR; cd $SRC_DIR');
@@ -73,6 +81,10 @@ describe('LAMP App', function() {
       `cat $ASSET_DIR/my-cool-db.sql | $(mysql -u ${constants.DATABASE_USER} --password=${constants.DATABASE_PASSWORD} my-cool-db)`
     );
 
+    appPgsql.script.should.not.containEql('mysql -e \'create database my-cool-db\'');
+    appPgsql.script.should.containEql(
+      `sudo -u postgres cat $ASSET_DIR/my-cool-db.sql | $(psql my-cool-db);`
+    );
   });
 
   it('handles gzipped databases', function() {
