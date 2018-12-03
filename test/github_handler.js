@@ -87,14 +87,14 @@ describe('GithubHandler', function() {
         };
         ghhServer.pullRequestHandler(event, function(err, build) {
           should.not.exist(err);
-          build.should.be.a.object;
+          build.should.be.an.instanceOf(Object);
           build.id.should.eql('build1');
           build.projectId.should.eql('1234');
-          build.commit.should.be.a.object;
+          build.commit.should.be.an.instanceOf(Object);
           build.commit.ref.should.eql('9dd7d8b3ccf6cdecc86920535e52c4d50da7bd64');
-          build.pullRequest.should.be.a.object;
+          build.pullRequest.should.be.an.instanceOf(Object);
           build.pullRequest.number.should.eql('1');
-          build.branch.should.be.a.object;
+          build.branch.should.be.an.instanceOf(Object);
           build.branch.name.should.eql('feature');
 
           build.config.should.eql({
