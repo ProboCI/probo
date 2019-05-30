@@ -361,18 +361,19 @@ function initNock() {
       nocks[nocks.length - 1].name = 'project_search';
 
       nocks.push(nock(config.api.url)
+        .defaultReplyHeaders({
+          'Content-Type': 'application/json',
+        })
         .post('/startbuild')
         .reply(200, function(uri, requestBody) {
           // start build sets id and project id on build
           // and puts project inside build, returning build
-          var body = JSON.parse(requestBody);
+          var body = requestBody;
           body.build.id = buildId;
           body.build.projectId = body.project.id;
           body.build.project = body.project;
           delete body.project;
           return body.build;
-        }, {
-          'content-type': 'application/json',
         }));
       nocks[nocks.length - 1].name = 'startbuild';
 
