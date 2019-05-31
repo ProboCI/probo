@@ -1,12 +1,12 @@
 'use strict';
 
 /* eslint no-unused-expressions: 0 */
-var util = require('util');
+var nock = require('nock');
 var request = require('request');
 var should = require('should');
-
 var sinon = require('sinon');
-var nock = require('nock');
+var util = require('util');
+
 var nockout = require('./__nockout');
 
 var GithubHandler = require('../lib/GithubHandler');
@@ -62,16 +62,16 @@ describe('GithubHandler', function() {
           'X-Hub-Signature': 'sha1=4636d00906034f52c099dfedae96095f8832994c',
         };
         http(config.githubWebhookPath)
-        .post({body: payload, headers: headers}, function(err, res, body) {
+          .post({body: payload, headers: headers}, function(err, res, body) {
           // handles push by returning OK and doing nothing else
-          body.should.eql({ok: true});
-          should.not.exist(err);
+            body.should.eql({ok: true});
+            should.not.exist(err);
 
-          // TODO: WAT? why isn't this a set of async callbacks so we actually know when it's done?!
-          // pause for a little before finishing to allow push processing to run
-          // and hit all the GH nocked endpoints
-          setTimeout(done, 1000);
-        });
+            // TODO: WAT? why isn't this a set of async callbacks so we actually know when it's done?!
+            // pause for a little before finishing to allow push processing to run
+            // and hit all the GH nocked endpoints
+            setTimeout(done, 1000);
+          });
       });
 
 
@@ -112,7 +112,7 @@ describe('GithubHandler', function() {
 
           build.project.should.eql({
             id: '1234',
-              // provider_id: 33704441,
+            // provider_id: 33704441,
             owner: 'zanchin',
             repo: 'testrepo',
             service: 'github',
@@ -179,8 +179,11 @@ describe('GithubHandler', function() {
       mocked = sinon.stub(ghh, 'postStatusToGithub').yields();
     });
 
-    after('clear mocks', function() {
+    after('clear mocks', function(done) {
       mocked.reset();
+
+      // Stops the second GitHubHandler server.
+      ghh.stop(done);
     });
 
     it('accepts /update', function(done) {
@@ -356,8 +359,8 @@ function initNock() {
     processor: function(nocks) {
       // nock out API URLs
       nocks.push(nock(config.api.url)
-                 .get('/projects?service=github&slug=zanchin%2Ftestrepo&single=true')
-                 .reply(200, project));
+        .get('/projects?service=github&slug=zanchin%2Ftestrepo&single=true')
+        .reply(200, project));
       nocks[nocks.length - 1].name = 'project_search';
 
       nocks.push(nock(config.api.url)

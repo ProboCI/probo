@@ -1,4 +1,7 @@
 'use strict';
+
+require('should');
+
 var through2 = require('through2');
 
 var Script = require('../../lib/plugins/TaskRunner/Script');
@@ -21,7 +24,7 @@ describe('Script', function() {
     filtered.on('data', function(chunk) {
       data += chunk.toString();
     }).on('end', function() {
-      data.should.eql('hello <*****> world');
+      data.should.equal('hello <*****> world');
       done();
     });
   });
