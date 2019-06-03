@@ -44,7 +44,8 @@ describe('Container', function() {
       // mock out dockerode's container.modem.dial call,
       // to make sure our 'inspect' patch is working correctly
       // (and as are future dockerode versions)
-      sinon.stub(container.container.modem, 'dial', function(opts, cb) {
+      sinon.stub(container.container.modem, 'dial')
+      .callsFake(function(opts, cb) {
         opts.should.containEql({
           method: 'GET',
           options: {size: true},
