@@ -10,11 +10,15 @@
   },
   "scripts": {
     "coverage": "./node_modules/.bin/istanbul cover -- ./node_modules/.bin/_mocha --recursive",
-    "precommit": "lint-staged",
-    "prepush": "npm run test",
     "standards": "./node_modules/.bin/eslint lib cli-subcommands test",
     "test": "mocha --recursive",
     "test:watch": "mocha -w --recursive"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm test"
+    }
   },
   "lint-staged": {
     "lib/*.js": [
