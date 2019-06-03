@@ -18,15 +18,17 @@ describe('Script', function() {
 
     var stream = through2();
     var filtered = script.filterSecrets(['blah'], stream);
-    stream.end('hello blah world');
 
     var data = '';
     filtered.on('data', function(chunk) {
       data += chunk.toString();
-    }).on('end', function() {
+    })
+    .on('end', function() {
       data.should.equal('hello <*****> world');
       done();
     });
+
+    stream.end('hello blah world');
   });
 });
 

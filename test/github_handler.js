@@ -292,7 +292,7 @@ describe('GithubHandler', function() {
               return Promise.resolve({
                 path: '.probo.yaml',
                 data: {
-                  content: new Buffer(`steps:
+                  content: new Buffer.from(`steps:
   - name: task
   command: 'bad command'`).toString('base64')
                 }
