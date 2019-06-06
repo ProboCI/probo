@@ -23,10 +23,10 @@ describe('Script', function() {
     filtered.on('data', function(chunk) {
       data += chunk.toString();
     })
-    .on('end', function() {
-      data.should.equal('hello <*****> world');
-      done();
-    });
+      .on('end', function() {
+        data.should.equal('hello <*****> world');
+        done();
+      });
 
     stream.end('hello blah world');
   });

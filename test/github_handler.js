@@ -284,7 +284,7 @@ describe('GithubHandler', function() {
             if (opts.path === '') {
               // listing of files
               return Promise.resolve({
-                data: [{name: '.probo.yaml'}]
+                data: [{name: '.probo.yaml'}],
               });
             }
             else {
@@ -294,9 +294,9 @@ describe('GithubHandler', function() {
                 data: {
                   content: new Buffer.from(`steps:
   - name: task
-  command: 'bad command'`).toString('base64')
-                }
-              })
+  command: 'bad command'`).toString('base64'),
+                },
+              });
             }
           },
         },
