@@ -1,5 +1,12 @@
 # Probo Changelog
 
+## 4.4.0
+ - Nov 20 2018
+ - Add lighthouse integration plugin (https://github.com/ProboCI/probo/pull/146)
+ - Run memcache when starting containers (https://github.com/ProboCI/probo/pull/154)
+ - Do not unnecessarily restart apache in LAMP plugin (https://github.com/ProboCI/probo/pull/153)
+ - Fix issues with mysql db connections in LAMP plugin (https://github.com/ProboCI/probo/pull/150)
+
 ## 4.3.0
   - Sep 6 2018
   - Add php ini options separately to cli and apache2 (see: https://github.com/ProboCI/probo/pull/144)
