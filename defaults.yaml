@@ -56,6 +56,8 @@ images:
       apache:
         command: '/usr/sbin/apache2ctl -D FOREGROUND'
         port: 80
+      memcached:
+        command: memcached -u memcache
       mysql:
         command: 'mysqld_safe'
       redis:
@@ -73,6 +75,8 @@ images:
       apache:
         command: '/usr/sbin/apache2ctl -D FOREGROUND'
         port: 80
+      memcached:
+        command: memcached -u memcache
       mysql:
         command: 'mysqld_safe'
       redis:
@@ -90,6 +94,8 @@ images:
       apache:
         command: '/usr/sbin/apache2ctl -D FOREGROUND'
         port: 80
+      memcached:
+        command: memcached -u memcache
       mysql:
         command: 'mysqld_safe'
       redis:
@@ -107,6 +113,8 @@ images:
       apache:
         command: '/usr/sbin/apache2ctl -D FOREGROUND'
         port: 80
+      memcached:
+        command: memcached -u memcache
       mysql:
         command: 'mysqld_safe'
       redis:
@@ -124,6 +132,8 @@ images:
       apache:
         command: '/usr/sbin/apache2ctl -D FOREGROUND'
         port: 80
+      memcached:
+        command: memcached -u memcache
       mysql:
         command: 'mysqld_safe'
       redis:
@@ -141,6 +151,8 @@ images:
       apache:
         command: '/usr/sbin/apache2ctl -D FOREGROUND'
         port: 80
+      memcached:
+        command: memcached -u memcache
       mysql:
         command: 'mysqld_safe'
       redis:
@@ -158,6 +170,8 @@ images:
       apache:
         command: '/usr/sbin/apache2ctl -D FOREGROUND'
         port: 80
+      memcached:
+        command: memcached -u memcache
       mysql:
         command: 'mysqld_safe'
       redis:

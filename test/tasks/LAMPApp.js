@@ -24,9 +24,11 @@ describe('LAMP App', function() {
     phpIniOptions: {
       'opcache.max_file_size': 0,
       'opcache.optimization_level': 0xffffffff,
-      'soap.wsdl_cache_dir': '/tmp',
       'cli': {
         'memory_limit': '256M',
+      },
+      'apache2': {
+        'soap.wsdl_cache_dir': '/tmp',
       },
       'all': {
         'post_max_size': '20M',
@@ -59,7 +61,7 @@ describe('LAMP App', function() {
   };
   var appGZ = new LAMPApp(mockContainer, optionsGZ);
 
-  it('builds proper lamp script', function() {
+  it('builds proper LAMP script', function() {
 
     app.script.should.containEql('mkdir -p $SRC_DIR; cd $SRC_DIR');
 
@@ -67,10 +69,10 @@ describe('LAMP App', function() {
     app.script.should.containEql('if [ -a "$SRC_DIR/index.php" ]');
     app.script.should.containEql('ln -s $SRC_DIR  /var/www/html');
 
-    app.script.should.containEql('mysql -e \'create database my-cool-db\'');
+    app.script.should.containEql('mysql -e \'create database \'$DATABASE_NAME');
 
     app.script.should.containEql(
-      `cat $ASSET_DIR/my-cool-db.sql | $(mysql -u ${constants.DATABASE_USER} --password=${constants.DATABASE_PASSWORD} my-cool-db)`
+      `cat $ASSET_DIR/my-cool-db.sql | $(mysql -u $DATABASE_USER --password=$DATABASE_PASS $DATABASE_NAME)`
     );
 
   });
@@ -96,8 +98,8 @@ describe('LAMP App', function() {
   it('handles custom php options', function() {
     app.script.should.containEql('echo "opcache.max_file_size=0" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');
     app.script.should.containEql('echo "opcache.optimization_level=4294967295" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');
+    app.script.should.containEql('echo "opcache.optimization_level=4294967295" >> $PHPINI_PATH/cli/conf.d/99-probo-settings.ini\n');
     app.script.should.containEql('echo "soap.wsdl_cache_dir=\'/tmp\'" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');
-    app.script.should.containEql('echo "soap.wsdl_cache_dir=\'/tmp\'" >> $PHPINI_PATH/cli/conf.d/99-probo-settings.ini\n');
     app.script.should.containEql('echo "memory_limit=\'256M\'" >> $PHPINI_PATH/cli/conf.d/99-probo-settings.ini\n');
     app.script.should.containEql('echo "post_max_size=\'20M\'" >> $PHPINI_PATH/cli/conf.d/99-probo-settings.ini\n');
     app.script.should.containEql('echo "post_max_size=\'20M\'" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');

@@ -57,7 +57,7 @@ describe('WordPress plugin', function() {
     var appDescription = app.description();
     appDescription.should.be.a.String.which.eql('WordPressApp \'Provisioning WordPress!\'');
 
-    app.should.have.property('databaseName').which.eql(constants.WORDPRESS_DATABASE_NAME);
+    app.should.have.property('databaseName').which.eql('wordpress');
     app.should.have.property('options').which.is.a.Object;
     app.options.should.have.property('siteFolder').which.eql('default');
     app.options.should.have.property('profileName').which.eql('standard');
@@ -100,7 +100,7 @@ describe('WordPress plugin', function() {
     // Only test that the boilerplate and overrides are added, not that they're
     // correct; this is tested later.
     app.script[2].should.containEql(`sed -i "1idefine(\'DB_NAME`);
-    app.script[6].should.containEql(`echo "<?php\ndefine(\'DB_NAME`);
+    app.script[7].should.containEql(`echo "<?php\ndefine(\'DB_NAME`);
 
     app.script = [];
     app.addScriptUpdatePlugins();
@@ -136,12 +136,12 @@ describe('WordPress plugin', function() {
     done();
   });
 
-  it('builds proper lamp script', function(done) {
+  it('builds proper LAMP script', function(done) {
     app.script.should.containEql('mkdir -p $SRC_DIR; cd $SRC_DIR');
     app.script.should.containEql('if [ -d "$SRC_DIR/docroot" ]');
     app.script.should.containEql('if [ -a "$SRC_DIR/index.php" ]');
     app.script.should.containEql('ln -s $SRC_DIR  /var/www/html');
-    app.script.should.containEql(`mysql -e 'create database ${constants.WORDPRESS_DATABASE_NAME}'`);
+    app.script.should.containEql(`mysql -e 'create database '$DATABASE_NAME`);
 
     done();
   });
@@ -159,9 +159,9 @@ describe('WordPress plugin', function() {
     app.script.should.containEql(`echo "${boilerplate}" > /var/www/html/wp-config.php`);
 
     // Boilerplate tests
-    boilerplate.should.containEql(`define(\'DB_NAME\', \'wordpress\')`);
-    boilerplate.should.containEql('define(\'DB_USER\', \'root\'');
-    boilerplate.should.containEql('define(\'DB_PASSWORD\', \'strongpassword\'');
+    boilerplate.should.containEql(`define(\'DB_NAME\', \'$DATABASE_NAME\')`);
+    boilerplate.should.containEql('define(\'DB_USER\', \'$DATABASE_USER\'');
+    boilerplate.should.containEql('define(\'DB_PASSWORD\', \'$DATABASE_PASS\'');
     boilerplate.should.containEql('define(\'DB_HOST\', \'localhost\')');
     boilerplate.should.containEql('define(\'DB_CHARSET\', \'utf8\')');
     boilerplate.should.containEql('define(\'DB_COLLATE\', \'\')');
@@ -186,9 +186,9 @@ describe('WordPress plugin', function() {
     app.script.should.containEql(`sed -i "1i${override}" /var/www/html/wp-config.php`);
     app.script.should.containEql(`sed -i "$(echo $WP_CONFIG_WPSETTINGS_LINE_NUMBER)i\\$table_prefix = '${app.options.databasePrefix}';" /var/www/html/wp-config.php`);
 
-    override.should.containEql(`define(\'DB_NAME\', \'wordpress\')`);
-    override.should.containEql('define(\'DB_USER\', \'root\'');
-    override.should.containEql('define(\'DB_PASSWORD\', \'strongpassword\'');
+    override.should.containEql(`define(\'DB_NAME\', \'$DATABASE_NAME\')`);
+    override.should.containEql('define(\'DB_USER\', \'$DATABASE_USER\'');
+    override.should.containEql('define(\'DB_PASSWORD\', \'$DATABASE_PASS\'');
     override.should.containEql('define(\'DB_HOST\', \'localhost\')');
 
     overrideWithDbPrefix.should.containEql('\\$table_prefix = \'coool_\'');
