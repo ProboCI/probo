@@ -56,7 +56,7 @@
     "level": "^1.3.0",
     "lodash": "^3.10.1",
     "ms": "^0.7.1",
-    "node-gyp": "^5.0.0",
+    "node-gyp": "^5.0.1",
     "probo-eventbus": "^0.1.1",
     "probo-request-logger": "^1.0.1",
     "redis": "^0.12.1",
