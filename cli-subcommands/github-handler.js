@@ -32,7 +32,6 @@ exports.options = function(yargs) {
 };
 
 exports.configure = function(config) {
-  config = config;
   server = new GithubHandler(config);
 };
 
