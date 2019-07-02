@@ -117,9 +117,9 @@ describe('GithubHandler', () => {
           build.branch.name.should.equal('feature');
 
           build.config.should.eql({
-            "steps": [{
-              "name": "Probo site setup",
-              "plugin": "LAMPApp",
+            steps: [{
+              name: 'Probo site setup',
+              plugin: 'LAMPApp',
             }],
           });
 
