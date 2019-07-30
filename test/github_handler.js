@@ -320,7 +320,7 @@ describe('GithubHandler', () => {
     });
 
     it('sends status update for bad yaml', done => {
-      ghh.processPullRequest({sha: 'sha1'}, () => {
+      ghh.processWebhookEvent({sha: 'sha1'}, () => {
         let param1 = {
           state: 'failure',
           description: errorMessage,
