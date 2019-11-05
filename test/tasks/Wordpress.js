@@ -1,6 +1,8 @@
 'use strict';
+
+require('should');
+
 var WordPressApp = require('../../lib/plugins/TaskRunner/WordPressApp');
-var constants = require('../../lib/plugins/TaskRunner/constants');
 
 var mockContainer = {
   log: {child: function() {}},
@@ -55,34 +57,34 @@ describe('WordPress plugin', function() {
 
   it('should correctly instantiate', function(done) {
     var appDescription = app.description();
-    appDescription.should.be.a.String.which.eql('WordPressApp \'Provisioning WordPress!\'');
+    appDescription.should.equal('WordPressApp \'Provisioning WordPress!\'');
 
-    app.should.have.property('databaseName').which.eql('wordpress');
-    app.should.have.property('options').which.is.a.Object;
-    app.options.should.have.property('siteFolder').which.eql('default');
-    app.options.should.have.property('profileName').which.eql('standard');
-    app.options.should.have.property('flushCaches').which.eql(true);
-    app.options.should.have.property('wpHome').which.eql(options.wpHome);
-    app.options.should.have.property('wpDomain').which.eql(options.wpDomain);
-    app.options.should.have.property('updatePlugins').which.eql(false);
-    app.options.should.have.property('secrets').which.is.a.Array;
+    app.should.have.property('databaseName').which.equal('wordpress');
+    app.should.have.property('options').which.is.a.Object();
+    app.options.should.have.property('siteFolder').which.equal('default');
+    app.options.should.have.property('profileName').which.equal('standard');
+    app.options.should.have.property('flushCaches').which.equal(true);
+    app.options.should.have.property('wpHome').which.equal(options.wpHome);
+    app.options.should.have.property('wpDomain').which.equal(options.wpDomain);
+    app.options.should.have.property('updatePlugins').which.equal(false);
+    app.options.should.have.property('secrets').which.is.a.Array();
     app.options.secrets.should.have.length(0);
-    app.should.have.property('subDirectory').which.eql('docroot');
-    app.should.have.property('script').which.is.a.String;
+    app.should.have.property('subDirectory').which.equal('docroot');
+    app.should.have.property('script').which.is.a.String();
 
     done();
   });
 
   it('should correctly build a command to replace WP options', function(done) {
     var replaceCommand = app.replaceOption('old', 'new');
-    replaceCommand.should.be.a.String.which.eql('cd /var/www/html/ ; wp option update old new --allow-root');
+    replaceCommand.should.equal('cd /var/www/html/ ; wp option update old new --allow-root');
 
     done();
   });
 
   it('should correctly build a command to search and replace database text', function(done) {
     var replaceCommand = app.replaceTextDb('old', 'new');
-    replaceCommand.should.be.a.String.which.eql('cd /var/www/html/ ; wp search-replace \'old\' \'new\' --skip-columns=guid --allow-root');
+    replaceCommand.should.equal('cd /var/www/html/ ; wp search-replace \'old\' \'new\' --skip-columns=guid --allow-root');
 
     done();
   });
@@ -99,8 +101,8 @@ describe('WordPress plugin', function() {
 
     // Only test that the boilerplate and overrides are added, not that they're
     // correct; this is tested later.
-    app.script[2].should.containEql(`sed -i "1idefine(\'DB_NAME`);
-    app.script[7].should.containEql(`echo "<?php\ndefine(\'DB_NAME`);
+    app.script[2].should.containEql('sed -i "1idefine(\'DB_NAME');
+    app.script[7].should.containEql('echo "<?php\ndefine(\'DB_NAME');
 
     app.script = [];
     app.addScriptUpdatePlugins();
@@ -141,7 +143,7 @@ describe('WordPress plugin', function() {
     app.script.should.containEql('if [ -d "$SRC_DIR/docroot" ]');
     app.script.should.containEql('if [ -a "$SRC_DIR/index.php" ]');
     app.script.should.containEql('ln -s $SRC_DIR  /var/www/html');
-    app.script.should.containEql(`mysql -e 'create database '$DATABASE_NAME`);
+    app.script.should.containEql('mysql -e \'create database \'$DATABASE_NAME');
 
     done();
   });
@@ -159,7 +161,7 @@ describe('WordPress plugin', function() {
     app.script.should.containEql(`echo "${boilerplate}" > /var/www/html/wp-config.php`);
 
     // Boilerplate tests
-    boilerplate.should.containEql(`define(\'DB_NAME\', \'$DATABASE_NAME\')`);
+    boilerplate.should.containEql('define(\'DB_NAME\', \'$DATABASE_NAME\')');
     boilerplate.should.containEql('define(\'DB_USER\', \'$DATABASE_USER\'');
     boilerplate.should.containEql('define(\'DB_PASSWORD\', \'$DATABASE_PASS\'');
     boilerplate.should.containEql('define(\'DB_HOST\', \'localhost\')');
@@ -171,8 +173,8 @@ describe('WordPress plugin', function() {
     boilerplate.should.containEql('define(\'NONCE_KEY\',        \'put your unique phrase here\')');
     boilerplate.should.containEql('define(\'WP_DEBUG\', false)');
     boilerplate.should.containEql('define(\'WP_DEBUG\', false)');
-    boilerplate.should.containEql(`require_once(ABSPATH . 'wp-settings.php'`);
-    boilerplate.should.containEql(`\\$table_prefix = 'wp_';`);
+    boilerplate.should.containEql('require_once(ABSPATH . \'wp-settings.php\'');
+    boilerplate.should.containEql('\\$table_prefix = \'wp_\';');
 
     boilerplateWithDbPrefix.should.containEql('\\$table_prefix = \'coool_\'');
 
@@ -186,7 +188,7 @@ describe('WordPress plugin', function() {
     app.script.should.containEql(`sed -i "1i${override}" /var/www/html/wp-config.php`);
     app.script.should.containEql(`sed -i "$(echo $WP_CONFIG_WPSETTINGS_LINE_NUMBER)i\\$table_prefix = '${app.options.databasePrefix}';" /var/www/html/wp-config.php`);
 
-    override.should.containEql(`define(\'DB_NAME\', \'$DATABASE_NAME\')`);
+    override.should.containEql('define(\'DB_NAME\', \'$DATABASE_NAME\')');
     override.should.containEql('define(\'DB_USER\', \'$DATABASE_USER\'');
     override.should.containEql('define(\'DB_PASSWORD\', \'$DATABASE_PASS\'');
     override.should.containEql('define(\'DB_HOST\', \'localhost\')');
