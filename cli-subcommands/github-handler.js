@@ -1,6 +1,6 @@
 'use strict';
 
-var GithubHandler = require('../lib/GithubHandler');
+var GitHubHandler = require('../lib/GitHubHandler');
 
 var exports = function() {
   this.configure = this.configure.bind(this);
@@ -32,8 +32,7 @@ exports.options = function(yargs) {
 };
 
 exports.configure = function(config) {
-  config = config;
-  server = new GithubHandler(config);
+  server = new GitHubHandler(config);
 };
 
 exports.run = function(amour) {
