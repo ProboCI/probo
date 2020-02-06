@@ -1,13 +1,21 @@
 # Probo Changelog
 
-## 4.5.0
- - Feb 5 2020
- - Add PHP 7.3 to allowed images. (https://github.com/ProboCI/probo/pull/175)
- - Add PHP 7.4 to allowed images. (https://github.com/ProboCI/probo/pull/175)
+## 4.5.2
+- Feb 5 2020
+- Add PHP 7.3 to allowed images. (https://github.com/ProboCI/probo/pull/175)
+- Add PHP 7.4 to allowed images. (https://github.com/ProboCI/probo/pull/175)
 
-## 4.4.1
+## 4.5.1
  - Feb 4 2020
  - Fix issues with mysql and varnish services starting properly in LAMP and Drupal plugins. (https://github.com/ProboCI/probo/pull/174)
+
+## 4.5.0
+ - Jan 21 2020
+ - Add self-hosted GitLab server support. (https://github.com/ProboCI/probo/pull/163)
+
+## 4.4.1
+ - May 16 2019
+ - Fix GitLab container naming error. (https://github.com/ProboCI/probo/pull/160)
 
 ## 4.4.0
  - Nov 20 2018
