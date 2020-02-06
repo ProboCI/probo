@@ -1,5 +1,9 @@
 # Probo Changelog
 
+## 4.4.1
+ - Feb 4 2020
+ - Fix issues with mysql and varnish services starting properly in LAMP and Drupal plugins. (https://github.com/ProboCI/probo/pull/174)
+
 ## 4.4.0
  - Nov 20 2018
  - Add lighthouse integration plugin (https://github.com/ProboCI/probo/pull/146)
