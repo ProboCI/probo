@@ -1,5 +1,10 @@
 # Probo Changelog
 
+## 4.5.0
+ - Feb 5 2020
+ - Add PHP 7.3 to allowed images. (https://github.com/ProboCI/probo/pull/175)
+ - Add PHP 7.4 to allowed images. (https://github.com/ProboCI/probo/pull/175)
+
 ## 4.4.1
  - Feb 4 2020
  - Fix issues with mysql and varnish services starting properly in LAMP and Drupal plugins. (https://github.com/ProboCI/probo/pull/174)
