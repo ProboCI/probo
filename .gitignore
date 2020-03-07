@@ -6,3 +6,4 @@ out
 .DS_Store
 *.sw*
 coverage
+.DS_Store

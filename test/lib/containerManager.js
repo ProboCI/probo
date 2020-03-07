@@ -65,7 +65,7 @@ describe('Server', function() {
   });
 
   after('Stop server', function(done) {
-    server = null;
+    server.close();
     done();
   });
 
