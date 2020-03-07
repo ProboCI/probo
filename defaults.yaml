@@ -39,6 +39,8 @@ images:
       apache:
         command: '/usr/sbin/apache2ctl -D FOREGROUND'
         port: 80
+      memcached:
+        command: memcached -u memcache
       mysql:
         command: 'mysqld_safe'
       redis:
@@ -56,6 +58,8 @@ images:
       apache:
         command: '/usr/sbin/apache2ctl -D FOREGROUND'
         port: 80
+      memcached:
+        command: memcached -u memcache
       mysql:
         command: 'mysqld_safe'
       redis:
@@ -73,6 +77,8 @@ images:
       apache:
         command: '/usr/sbin/apache2ctl -D FOREGROUND'
         port: 80
+      memcached:
+        command: memcached -u memcache
       mysql:
         command: 'mysqld_safe'
       redis:
@@ -90,6 +96,8 @@ images:
       apache:
         command: '/usr/sbin/apache2ctl -D FOREGROUND'
         port: 80
+      memcached:
+        command: memcached -u memcache
       mysql:
         command: 'mysqld_safe'
       redis:
@@ -107,6 +115,8 @@ images:
       apache:
         command: '/usr/sbin/apache2ctl -D FOREGROUND'
         port: 80
+      memcached:
+        command: memcached -u memcache
       mysql:
         command: 'mysqld_safe'
       redis:
@@ -124,6 +134,8 @@ images:
       apache:
         command: '/usr/sbin/apache2ctl -D FOREGROUND'
         port: 80
+      memcached:
+        command: memcached -u memcache
       mysql:
         command: 'mysqld_safe'
       redis:
@@ -141,6 +153,46 @@ images:
       apache:
         command: '/usr/sbin/apache2ctl -D FOREGROUND'
         port: 80
+      memcached:
+        command: memcached -u memcache
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      solr:
+        command: '/opt/solr/bin/solr start -f -force'
+      varnish:
+        command: 'service varnish start'
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
+  'proboci/ubuntu:18.04-php7.3':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      memcached:
+        command: memcached -u memcache
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      solr:
+        command: '/opt/solr/bin/solr start -f -force'
+      varnish:
+        command: 'service varnish start'
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
+  'proboci/ubuntu:18.04-php7.4':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      memcached:
+        command: memcached -u memcache
       mysql:
         command: 'mysqld_safe'
       redis:
