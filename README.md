@@ -22,6 +22,16 @@ See the [Quickstart](QUICKSTART.md) guide for how to get up and running with you
 ## Compatibility
 The code uses generators and requires node `io.js` or `node` 4.x+.
 
+### Node Version
+Several of Probo's microservices are currently on different Node versions as we update to newer Node versions, so the Node Verson Manager, [nvm](https://github.com/nvm-sh/nvm), is installed to switch between different versions of Node prior to running `npm install`.
+
+**Current Node Version:** Node 4.x (Current default Node version)
+
+Run the following commands in the `probo` installation directory to update the node_modules for probo.
+
+    nvm use default
+    npm install
+
 ## Error Codes
 Errors are thrown when a build cannot be found however there are man reasons a
 build may not be found. These include:
