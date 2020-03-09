@@ -220,6 +220,29 @@ images:
         command: 'service varnish start'
       php_log:
         command: 'tail -F /var/log/php/error.log'
+  'mbagnall/probo-lamp:php':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      redis:
+        command: 'redis-server'
+      memcached:
+        command: 'service memcached start'
+      mysql:
+        command: 'mysqld_safe'
+      postgresql:
+        command: 'service postgresql start'
+      mailcatcher:
+        command: 'mailcatcher --ip 0.0.0.0'
+        port: 1080
+      solr:
+        command: 'service solr start'
+        port: 8983
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
 dataDir: './container-manager-data'
 # Volumes to mount into created containers.
 binds: []
@@ -233,7 +256,7 @@ githubAPIToken: 'personal token here'
 # Settings for the API or Container Manager server
 # port
 api:
-  url: "http://localhost:3000"
+  url: "http://localhost:3020"
   token: "API token here"
 
 # loom (log aggregator server)
@@ -248,7 +271,7 @@ assets:
 
 # auth credentials service (i.e., for stash)
 auth:
-  url: "http://localhost:3000/auth_lookup"
+  url: "http://localhost:3020/auth_lookup"
 
 
 buildsEventStream:
