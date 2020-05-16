@@ -4,7 +4,7 @@
   * [Source Code](#source)
   * [Dependencies](#dependencies)
 * [Setup](#setup)
-  * [Github Handler](#github-handler)
+  * [GitHub Handler](#github-handler)
   * [Container Manager](#container-manager)
   * [Loom](#loom)
 * [Build Config](#builds)
@@ -50,9 +50,9 @@ In order to view the results of the builds ensure that `*.probo.domain.com` is a
 Note that this configuration is suitable for development, but do NOT use for production. Reverse-proxying and SSL configuration are out of scope for this document.
 
 
-## Github Handler <a name="github-handler"/>
+## GitHub Handler <a name="github-handler"/>
 
-The Github Handler (GHH) processes Github hook events each time a pull request is created or updated. It then triggers builds through the Container Manager. The Github Handler also sends commit status updates back to Github.
+The GitHub Handler (GHH) processes GitHub hook events each time a pull request is created or updated. It then triggers builds through the Container Manager. The GitHub Handler also sends commit status updates back to GitHub.
 
 It is implemented as a plugin of the `probo` repository.
 
@@ -70,7 +70,7 @@ Create a file `ggh.yaml` with the follwing contents:
 port: 3010
 hostname: 0.0.0.0
 
-# Github hook and credentials
+# GitHub hook and credentials
 githubWebhookPath: '/github-webhook'
 githubWebhookSecret: 'CHANGE-ME'
 githubAPIToken: 'personal token here'
@@ -91,7 +91,7 @@ The `githubWebhookSecret` value should be modified to a secure string as well.
 node ./bin/probo github-handler -c ghh.yaml
 ```
 
-Now add a webhook for your repository in Github to your server under `Settings` -> `Webhooks & services`. Direct link to the configuration page: https://github.com/OWNER/REPO/settings/hooks.
+Now add a webhook for your repository in GitHub to your server under `Settings` -> `Webhooks & services`. Direct link to the configuration page: https://github.com/OWNER/REPO/settings/hooks.
 
 Set the following properties:
 
@@ -103,7 +103,7 @@ Secret: CHANGE-ME (or your value from `githubWebhookSecret` in the config file)
 Next, under "Which events would you like to trigger this webhook?", select "Let me select individual events", and select "Pull Request"
 
 
-If you see a green checkmark next to your new webhook, you're all set. Github can succesfully send requests to your handler.
+If you see a green checkmark next to your new webhook, you're all set. GitHub can succesfully send requests to your handler.
 
 
 ## Container Manager <a name="container-manager"/>
@@ -129,7 +129,7 @@ port: 3020
 # name of the instance used in status updates
 instanceName: 'ProboCI-local'
 
-# Github Handler server
+# GitHub Handler server
 api:
   url: "http://localhost:3010"
 
@@ -211,7 +211,7 @@ npm run spy
 
 # Build Config <a name="builds"/>
 
-Probo runs builds based on a `/.probo.yaml` file found in the root of your repository. You can task the Container Manager to run any number of build steps. Each step is a runnable plugin, and will get a status update sent to Github for the commit.
+Probo runs builds based on a `/.probo.yaml` file found in the root of your repository. You can task the Container Manager to run any number of build steps. Each step is a runnable plugin, and will get a status update sent to GitHub for the commit.
 
 When the build runs, your source code for the commit that triggered the build is automatically available to you in the `$SRC_DIR` directory inside the container.
 
