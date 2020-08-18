@@ -271,7 +271,7 @@ assets:
 
 # auth credentials service (i.e., for stash)
 auth:
-  url: "http://localhost:3020/auth_lookup"
+  url: "http://localhost:3012/auth_lookup"
 
 
 buildsEventStream:
