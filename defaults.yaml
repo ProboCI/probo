@@ -207,9 +207,6 @@ images:
     services:
       cleanapache:
         command: 'rm /var/run/apache2/apache2.pid'
-      apache:
-        command: '/usr/sbin/apache2ctl -D FOREGROUND'
-        port: 80
       memcached:
         command: memcached -u memcache
       mysql:
@@ -220,15 +217,15 @@ images:
         command: '/opt/solr/bin/solr start -f -force'
       varnish:
         command: 'service varnish start'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
       php_log:
         command: 'tail -F /var/log/php/error.log'
   'mbagnall/ubuntu:18.04-php7.4':
     services:
       cleanapache:
         command: 'rm /var/run/apache2/apache2.pid'
-      apache:
-        command: '/usr/sbin/apache2ctl -D FOREGROUND'
-        port: 80
       memcached:
         command: memcached -u memcache
       mysql:
@@ -239,15 +236,15 @@ images:
         command: '/opt/solr/bin/solr start -f -force'
       varnish:
         command: 'service varnish start'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
       php_log:
         command: 'tail -F /var/log/php/error.log'
   'mbagnall/ubuntu:18.04-php8.0':
     services:
       cleanapache:
         command: 'rm /var/run/apache2/apache2.pid'
-      apache:
-        command: '/usr/sbin/apache2ctl -D FOREGROUND'
-        port: 80
       memcached:
         command: memcached -u memcache
       mysql:
@@ -258,6 +255,9 @@ images:
         command: '/opt/solr/bin/solr start -f -force'
       varnish:
         command: 'service varnish start'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
       php_log:
         command: 'tail -F /var/log/php/error.log'
 dataDir: './container-manager-data'
