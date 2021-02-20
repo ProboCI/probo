@@ -1,9 +1,10 @@
 'use strict';
 
 /* eslint-disable no-unused-expressions */
+require('should');
 
 const DrupalApp = require('../../lib/plugins/TaskRunner/Drupal');
-const constants = require('../../lib/plugins/TaskRunner/constants');
+
 const mockContainer = {
   log: {child: function() {}},
   build: {
@@ -29,7 +30,7 @@ describe('Drupal App', function() {
       databaseGzipped: true,
       clearCaches: false,
       databasePrefix: 'my_custom_prefix',
-      varnish: { enable: true },
+      varnish: {enable: true},
     };
     done();
   });
@@ -65,7 +66,7 @@ describe('Drupal App', function() {
 
   it('gives the correct description', function(done) {
     const description = app.description();
-    description.should.be.a.String.which.match('Drupal \'Provisioning Drupal!\'');
+    description.should.match('Drupal \'Provisioning Drupal!\'');
     done();
   });
 
@@ -206,9 +207,9 @@ describe('Drupal App', function() {
     app.script.should.containEql('if [ -d "$SRC_DIR/docroot" ]');
     app.script.should.containEql('if [ -a "$SRC_DIR/index.php" ]');
     app.script.should.containEql('ln -s $SRC_DIR  /var/www/html');
-    app.script.should.containEql(`mysql -e 'create database '$DATABASE_NAME`);
+    app.script.should.containEql('mysql -e \'create database \'$DATABASE_NAME');
     app.script.should.containEql(
-      `cat $ASSET_DIR/my-cool-db.sql | $(mysql -u $DATABASE_USER --password=$DATABASE_PASS $DATABASE_NAME)`
+      'cat $ASSET_DIR/my-cool-db.sql | $(mysql -u $DATABASE_USER --password=$DATABASE_PASS $DATABASE_NAME)'
     );
     done();
   });
@@ -224,9 +225,9 @@ describe('Drupal App', function() {
   });
 
   it('cats the settings.php file', function(done) {
-    app.script.should.containEql(`'database' => '$DATABASE_NAME'`);
-    app.script.should.containEql(`'username' => '$DATABASE_USER'`);
-    app.script.should.containEql(`'password' => '$DATABASE_PASS'`);
+    app.script.should.containEql('\'database\' => \'$DATABASE_NAME\'');
+    app.script.should.containEql('\'username\' => \'$DATABASE_USER\'');
+    app.script.should.containEql('\'password\' => \'$DATABASE_PASS\'');
     done();
   });
 
