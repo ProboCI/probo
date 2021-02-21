@@ -241,7 +241,7 @@ images:
         port: 80
       php_log:
         command: 'tail -F /var/log/php/error.log'
- 'proboci/ubuntu:18.04-php7.3':
+  'proboci/ubuntu:18.04-php7.3':
     services:
       cleanapache:
         command: 'rm /var/run/apache2/apache2.pid'
