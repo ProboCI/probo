@@ -165,7 +165,7 @@ images:
         command: 'service varnish start'
       php_log:
         command: 'tail -F /var/log/php/error.log'
-   'proboci/ubuntu:18.04-php5.6':
+  'proboci/ubuntu:18.04-php5.6':
     services:
       cleanapache:
         command: 'rm /var/run/apache2/apache2.pid'
