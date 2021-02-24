@@ -1,3 +1,6 @@
 {
-  "extends": "./node_modules/eslint-config-probo/index.js"
+  "extends": "./node_modules/eslint-config-probo/index.js",
+  "parserOptions": {
+    "ecmaVersion": 2017
+  }
 }

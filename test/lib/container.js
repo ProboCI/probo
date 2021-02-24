@@ -44,14 +44,15 @@ describe('Container', function() {
       // mock out dockerode's container.modem.dial call,
       // to make sure our 'inspect' patch is working correctly
       // (and as are future dockerode versions)
-      sinon.stub(container.container.modem, 'dial', function(opts, cb) {
-        opts.should.containEql({
-          method: 'GET',
-          options: {size: true},
-          path: '/containers/blah/json?',
+      sinon.stub(container.container.modem, 'dial')
+        .callsFake(function(opts, cb) {
+          opts.should.containEql({
+            method: 'GET',
+            options: {size: true},
+            path: '/containers/blah/json?',
+          });
+          cb(null, require('../fixtures/container_inspect.json'));
         });
-        cb(null, require('../fixtures/container_inspect.json'));
-      });
 
       container.getDiskUsage(function(err, disk) {
         should.not.exist(err);

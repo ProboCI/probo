@@ -1,5 +1,7 @@
 'use strict';
 
+require('should');
+
 var Lighthouse = require('../../lib/plugins/TaskRunner/Lighthouse');
 
 var mockContainer = {
@@ -17,17 +19,17 @@ describe('Lighthouse plugin', function() {
 
   beforeEach(function(done) {
     app = new Lighthouse(mockContainer, options);
-    app.should.be.ok;
-    app.should.have.property('id').which.is.a.String;
+    app.should.be.ok();
+    app.should.have.property('id').which.is.a.String();
     app.id.should.match(/[0-9a-z]{16}/g);
     done();
   });
 
   it('should correctly instantiate', function(done) {
-    app.should.have.property('paths').which.is.a.Array;
-    app.should.have.property('categories').which.is.a.Array;
-    app.should.have.property('lighthouseOptions').which.is.a.Array;
-    app.should.have.property('plugin').which.eql('Lighthouse');
+    app.should.have.property('paths').which.is.a.Array();
+    app.should.have.property('categories').which.is.a.Array();
+    app.should.have.property('lighthouseOptions').which.is.a.Array();
+    app.should.have.property('plugin').which.equal('Lighthouse');
     done();
   });
 
