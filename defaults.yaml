@@ -389,8 +389,6 @@ images:
       apache:
         command: '/usr/sbin/apache2ctl -D FOREGROUND'
         port: 80
-      redis:
-        command: 'redis-server'
       php_log:
         command: 'tail -F /var/log/php/error.log'
   'mbagnall/ubuntu:18.04-php7.3':
