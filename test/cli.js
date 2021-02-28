@@ -1,5 +1,7 @@
 'use strict';
+
 var should = require('should');
+
 var lib = require('..');
 var cli = lib.cli;
 

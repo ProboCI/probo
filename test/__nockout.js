@@ -1,66 +1,46 @@
 'use strict';
 
+const nock = require('nock');
+
 // NOCK CONFIGUATION
-// var defaultNockMode = "RECORD"
-var defaultNockMode = 'PLAY';
+// opts: {processor, not_required}
+function initNock(opts) {
 
-var nock = require('nock');
-// opts: {processor, not_required, mode}
-function initNock(fixture, opts) {
-  var fixtureFile = './test/fixtures/' + fixture;
-
-  var nocked = {};
-  var requiredNocks = [];
+  let nocked = {};
+  let requiredNocks = [];
 
   opts = opts || {};
   opts.not_required = opts.not_required || [];
 
-  var nockMode = opts.mode || defaultNockMode;
+  let nocks = [];
 
-  var nocks;
-  if (nockMode === 'PLAY') {
-    nocks = nock.load(fixtureFile);
-
-    if (opts.processor) {
-      var ret = opts.processor(nocks);
-      if (typeof ret != 'undefined') {
-        nocks = ret;
-      }
+  if (opts.processor) {
+    let ret = opts.processor(nocks);
+    if (typeof ret != 'undefined') {
+      nocks = ret;
     }
+  }
 
-    nocks.forEach(function(n, i) {
-      nocked[n.name || 'loaded_' + i] = n;
-    });
+  nocks.forEach((n, i) => {
+    nocked[n.name || 'loaded_' + i] = n;
+  });
 
-
-    // allow some mocks to be not required
-    Object.keys(nocked).filter(function(name) {
+  // Allows some mocks to be not required
+  Object.keys(nocked)
+    .filter(name => {
       return opts.not_required.indexOf(name) < 0;
-    }).forEach(function(name) {
+    })
+    .forEach(name => {
       requiredNocks.push(nocked[name]);
     });
-  }
-
-  if (nockMode === 'RECORD') {
-    console.log('recording');
-    nock.recorder.rec({
-      output_objects: true,
-      dont_print: true,
-    });
-  }
 
   return {
     nock: nock,
     nocked: nocked,
     nocks: nocks,
     required: requiredNocks,
-    cleanup: function() {
-      if (nockMode === 'RECORD') {
-        var nockCallObjects = nock.recorder.play();
-        require('fs').writeFileSync(fixtureFile, JSON.stringify(nockCallObjects, null, 2));
-      }
-
-      // makesure all internal calls were made
+    cleanup: () => {
+      // Makes sure all internal calls were made
       try {
         for (let nockName in requiredNocks) {
           if (requiredNocks.hasOwnProperty(nockName)) {
@@ -74,6 +54,5 @@ function initNock(fixture, opts) {
     },
   };
 }
-
 
 module.exports = initNock;
