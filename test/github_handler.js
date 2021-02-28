@@ -132,25 +132,6 @@ describe('GithubHandler', () => {
             slug: 'zanchin/testrepo',
           });
 
-          build.request.should.eql({
-            branch: 'feature',
-            branch_html_url: 'https://github.com/zanchin/testrepo/tree/feature',
-            commit_url: 'https://github.com/zanchin/testrepo/commit/9dd7d8b3ccf6cdecc86920535e52c4d50da7bd64',
-            pull_request_id: 33015959,
-            pull_request_description: '',
-            pull_request_html_url: 'https://github.com/zanchin/testrepo/pull/1',
-            pull_request_name: 'added file2',
-            owner: 'zanchin',
-            pull_request: 1,
-            repo: 'testrepo',
-            repo_id: 33704441,
-            service: 'github',
-            sha: '9dd7d8b3ccf6cdecc86920535e52c4d50da7bd64',
-            slug: 'zanchin/testrepo',
-            type: 'pull_request',
-            payload: payload,
-          });
-
           done();
         });
       });
@@ -339,7 +320,7 @@ describe('GithubHandler', () => {
     });
 
     it('sends status update for bad yaml', done => {
-      ghh.processPullRequest({sha: 'sha1'}, () => {
+      ghh.processWebhookEvent({sha: 'sha1'}, () => {
         let param1 = {
           state: 'failure',
           description: errorMessage,
