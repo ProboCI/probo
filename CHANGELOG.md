@@ -1,5 +1,10 @@
 # Probo Changelog
 
+## 4.5.3
+- Feb 16 2020
+- Set Drupal 8 as default Drupal version in Probo Drupal plugin. (https://github.com/ProboCI/probo/pull/179) 
+- Add support for Drupal 9 in the Probo Drupal plugin. (https://github.com/ProboCI/probo/pull/179)
+
 ## 4.5.2
 - Feb 5 2020
 - Add PHP 7.3 to allowed images. (https://github.com/ProboCI/probo/pull/175)
