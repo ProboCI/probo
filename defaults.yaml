@@ -182,6 +182,82 @@ images:
         command: 'service varnish start'
       php_log:
         command: 'tail -F /var/log/php/error.log'
+  'proboci/ubuntu:18.04-php5.6':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      memcached:
+        command: memcached -u memcache
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      solr:
+        command: '/opt/solr/bin/solr start -f -force'
+      varnish:
+        command: 'service varnish start'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
+  'proboci/ubuntu:18.04-php7.0':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      memcached:
+        command: memcached -u memcache
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      solr:
+        command: '/opt/solr/bin/solr start -f -force'
+      varnish:
+        command: 'service varnish start'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
+  'proboci/ubuntu:18.04-php7.1':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      memcached:
+        command: memcached -u memcache
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      solr:
+        command: '/opt/solr/bin/solr start -f -force'
+      varnish:
+        command: 'service varnish start'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
+  'proboci/ubuntu:18.04-php7.2':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      memcached:
+        command: memcached -u memcache
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      solr:
+        command: '/opt/solr/bin/solr start -f -force'
+      varnish:
+        command: 'service varnish start'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
   'proboci/ubuntu:18.04-php7.3':
     services:
       cleanapache:
@@ -220,6 +296,141 @@ images:
         command: 'service varnish start'
       php_log:
         command: 'tail -F /var/log/php/error.log'
+  'proboci/ubuntu:18.04-php8.0':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      memcached:
+        command: memcached -u memcache
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      solr:
+        command: '/opt/solr/bin/solr start -f -force'
+      varnish:
+        command: 'service varnish start'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
+  'mbagnall/ubuntu:18.04-php5.6':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      memcached:
+        command: memcached -u memcache
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      solr:
+        command: '/opt/solr/bin/solr start -f -force'
+      varnish:
+        command: 'service varnish start'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
+  'mbagnall/ubuntu:18.04-php7.0':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      memcached:
+        command: memcached -u memcache
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      solr:
+        command: '/opt/solr/bin/solr start -f -force'
+      varnish:
+        command: 'service varnish start'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
+  'mbagnall/ubuntu:18.04-php7.1':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      memcached:
+        command: memcached -u memcache
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      solr:
+        command: '/opt/solr/bin/solr start -f -force'
+      varnish:
+        command: 'service varnish start'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
+  'mbagnall/ubuntu:18.04-php7.2':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      memcached:
+        command: memcached -u memcache
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      solr:
+        command: '/opt/solr/bin/solr start -f -force'
+      varnish:
+        command: 'service varnish start'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      redis:
+        command: 'redis-server'
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
+  'mbagnall/ubuntu:18.04-php7.3':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      memcached:
+        command: memcached -u memcache
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      solr:
+        command: '/opt/solr/bin/solr start -f -force'
+      varnish:
+        command: 'service varnish start'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
+  'mbagnall/ubuntu:18.04-php7.4':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      memcached:
+        command: memcached -u memcache
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      solr:
+        command: '/opt/solr/bin/solr start -f -force'
+      varnish:
+        command: 'service varnish start'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
   'mbagnall/probo-lamp:php':
     services:
       cleanapache:
@@ -243,6 +454,7 @@ images:
         port: 8983
       php_log:
         command: 'tail -F /var/log/php/error.log'
+
 dataDir: './container-manager-data'
 # Volumes to mount into created containers.
 binds: []
@@ -291,5 +503,3 @@ buildsEventStream:
 #     # for available options
 #     kafkaClientOptions:
 #       connectionString: 'localhost:2181'
-
-

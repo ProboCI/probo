@@ -1,6 +1,6 @@
 'use strict';
 
-var GitHubHandler = require('../lib/GitHubHandler');
+var GitHubHandler = require('../lib/GithubHandler');
 
 var exports = function() {
   this.configure = this.configure.bind(this);
