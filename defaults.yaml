@@ -433,15 +433,12 @@ images:
     services:
       cleanapache:
         command: 'rm /var/run/apache2/apache2.pid'
-      apache:
-        command: '/usr/sbin/apache2ctl -D FOREGROUND'
-        port: 80
+      mysql:
+        command: 'mysqld_safe'
       redis:
         command: 'redis-server'
       memcached:
         command: 'service memcached start'
-      mysql:
-        command: 'mysqld_safe'
       postgresql:
         command: 'service postgresql start'
       mailcatcher:
@@ -450,6 +447,9 @@ images:
       solr:
         command: 'service solr start'
         port: 8983
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
       php_log:
         command: 'tail -F /var/log/php/error.log'
 
