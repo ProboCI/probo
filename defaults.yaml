@@ -32,6 +32,23 @@ defaultImage: 'mbagnall/probo-lamp:php'
 image: 'mbagnall/probo-lamp:php'
 # The images used by the host manager
 images:
+  'mbagnall/ubuntu-14.04:php7.1':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      solr:
+        command: '/opt/solr/bin/solr start -f -force'
+      varnish:
+        command: 'service varnish start'
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
   'proboci/ubuntu-14.04-lamp:php-5.5':
     services:
       cleanapache:
@@ -279,6 +296,25 @@ images:
         command: 'service varnish start'
       php_log:
         command: 'tail -F /var/log/php/error.log'
+  'proboci/ubuntu:18.04-php8.0':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      memcached:
+        command: memcached -u memcache
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      solr:
+        command: '/opt/solr/bin/solr start -f -force'
+      varnish:
+        command: 'service varnish start'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
   'mbagnall/ubuntu:18.04-php5.6':
     services:
       cleanapache:
@@ -353,6 +389,8 @@ images:
       apache:
         command: '/usr/sbin/apache2ctl -D FOREGROUND'
         port: 80
+      redis:
+        command: 'redis-server'
       php_log:
         command: 'tail -F /var/log/php/error.log'
   'mbagnall/ubuntu:18.04-php7.3':
@@ -393,25 +431,30 @@ images:
         port: 80
       php_log:
         command: 'tail -F /var/log/php/error.log'
-  'mbagnall/ubuntu:18.04-php8.0':
+  'mbagnall/probo-lamp:php':
     services:
       cleanapache:
         command: 'rm /var/run/apache2/apache2.pid'
-      memcached:
-        command: memcached -u memcache
-      mysql:
-        command: 'mysqld_safe'
-      redis:
-        command: 'redis-server'
-      solr:
-        command: '/opt/solr/bin/solr start -f -force'
-      varnish:
-        command: 'service varnish start'
       apache:
         command: '/usr/sbin/apache2ctl -D FOREGROUND'
         port: 80
+      redis:
+        command: 'redis-server'
+      memcached:
+        command: 'service memcached start'
+      mysql:
+        command: 'mysqld_safe'
+      postgresql:
+        command: 'service postgresql start'
+      mailcatcher:
+        command: 'mailcatcher --ip 0.0.0.0'
+        port: 1080
+      solr:
+        command: 'service solr start'
+        port: 8983
       php_log:
         command: 'tail -F /var/log/php/error.log'
+
 dataDir: './container-manager-data'
 # Volumes to mount into created containers.
 binds: []
@@ -425,7 +468,7 @@ githubAPIToken: 'personal token here'
 # Settings for the API or Container Manager server
 # port
 api:
-  url: "http://localhost:3000"
+  url: "http://localhost:3020"
   token: "API token here"
 
 # loom (log aggregator server)
@@ -440,7 +483,7 @@ assets:
 
 # auth credentials service (i.e., for stash)
 auth:
-  url: "http://localhost:3000/auth_lookup"
+  url: "http://localhost:3012/auth_lookup"
 
 
 buildsEventStream:
