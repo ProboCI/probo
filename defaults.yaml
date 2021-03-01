@@ -452,7 +452,52 @@ images:
         port: 80
       php_log:
         command: 'tail -F /var/log/php/error.log'
-
+  'mbagnall/probo-lamp:php-mysql57':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      memcached:
+        command: 'service memcached start'
+      postgresql:
+        command: 'service postgresql start'
+      mailcatcher:
+        command: 'mailcatcher --ip 0.0.0.0'
+        port: 1080
+      solr:
+        command: 'service solr start'
+        port: 8983
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
+  'mbagnall/probo-lamp:php-mysql80':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      memcached:
+        command: 'service memcached start'
+      postgresql:
+        command: 'service postgresql start'
+      mailcatcher:
+        command: 'mailcatcher --ip 0.0.0.0'
+        port: 1080
+      solr:
+        command: 'service solr start'
+        port: 8983
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
 dataDir: './container-manager-data'
 # Volumes to mount into created containers.
 binds: []
