@@ -1,7 +1,16 @@
 # Probo Changelog
 
+## 4.5.4
+- March 6, 2021
+- Added Docker file for microservice building down the road
+- NodeJS 12 update
+- Update dependent packages
+- Add in 18.04 PHP packages as approved
+- Added support for PHP 8.0
+
+
 ## 4.5.3
-- Feb 16 2020
+- Feb 16 2021
 - Set Drupal 8 as default Drupal version in Probo Drupal plugin. (https://github.com/ProboCI/probo/pull/179) 
 - Add support for Drupal 9 in the Probo Drupal plugin. (https://github.com/ProboCI/probo/pull/179)
 

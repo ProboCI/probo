@@ -1,17 +1,18 @@
 'use strict';
 
-/* eslint no-unused-expressions: 0 */
-var util = require('util');
-var request = require('request');
-var should = require('should');
+const fs = require('fs');
+const nock = require('nock');
+const request = require('request');
+const should = require('should');
+const sinon = require('sinon');
+const util = require('util');
+const yaml = require('js-yaml');
 
-var sinon = require('sinon');
-var nock = require('nock');
-var nockout = require('./__nockout');
+const nockout = require('./__nockout');
 
-var GithubHandler = require('../lib/GithubHandler');
+const GithubHandler = require('../lib/GithubHandler');
 
-var config = {
+let config = {
   githubWebhookPath: '/ghh',
   githubWebhookSecret: 'secret',
   githubAPIToken: 'token',
@@ -22,11 +23,12 @@ var config = {
   },
   logLevel: Number.POSITIVE_INFINITY,
 };
-var ghhServer = new GithubHandler(config);
+
+let ghhServer = new GithubHandler(config);
 
 function http(path, ghh) {
   ghh = ghh || ghhServer;
-  var options = {
+  let options = {
     url: util.format('%s%s', ghh.server.url, path),
     json: true,
   };
@@ -34,52 +36,69 @@ function http(path, ghh) {
   return request.defaults(options);
 }
 
-describe('GithubHandler', function() {
-  describe('webhooks', function() {
-    before('start GithubHandler server', function(done) {
-      ghhServer.start(done);
+describe('GithubHandler', () => {
+  describe('webhooks', () => {
+
+    before('start GithubHandler server', () => {
+      ghhServer.start();
     });
 
-    after('stop GithubHandler server', function(done) {
-      ghhServer.stop(done);
+    after('stop GithubHandler server', () => {
+      ghhServer.close();
     });
 
-    describe('pull', function() {
-      var nocker;
-      beforeEach('nock out network calls', function() {
+
+    describe('pull', () => {
+      let nocker;
+      let handlerMocked;
+
+      before(() => {
+        // Mocks the download of the probo.yaml config file.
+        handlerMocked = sinon.stub(ghhServer.github, 'fetchProboYamlConfig')
+          .callsFake((project, sha, cb) => {
+            let settings = yaml.safeLoad(fs.readFileSync('test/files/probo.yaml', 'utf8'));
+
+            cb(null, settings);
+          });
+      });
+
+      beforeEach('nock out network calls', () => {
         nocker = initNock();
       });
 
-      afterEach('reset network mocks', function() {
+      after(() => {
+        handlerMocked.restore();
+      });
+
+      afterEach('reset network mocks', () => {
         nocker.cleanup();
       });
 
-      it('is routed', function(done) {
-        var payload = require('./fixtures/pull_payload');
-        var headers = {
+      it('is routed', done => {
+        let payload = require('./fixtures/pull_payload');
+        let headers = {
           'X-GitHub-Delivery': 'a60aa880-df33-11e4-857c-eca3ec12497c',
           'X-GitHub-Event': 'pull_request',
           'X-Hub-Signature': 'sha1=4636d00906034f52c099dfedae96095f8832994c',
         };
         http(config.githubWebhookPath)
-        .post({body: payload, headers: headers}, function(err, res, body) {
-          // handles push by returning OK and doing nothing else
-          body.should.eql({ok: true});
-          should.not.exist(err);
+          .post({body: payload, headers: headers}, function(err, res, body) {
+            should.not.exist(err);
+            body.should.eql({ok: true});
 
-          // TODO: WAT? why isn't this a set of async callbacks so we actually know when it's done?!
-          // pause for a little before finishing to allow push processing to run
-          // and hit all the GH nocked endpoints
-          setTimeout(done, 1000);
-        });
+            // TODO: WAT? why isn't this a set of async callbacks so we actually know when it's done?!
+            // pause for a little before finishing to allow push processing to run
+            // and hit all the GH nocked endpoints
+            setTimeout(done, 200);
+          });
       });
 
 
-      it('is handled', function(done) {
-        var payload = require('./fixtures/pull_payload');
+      it('is handled', done => {
+        let payload = require('./fixtures/pull_payload');
 
         // fire off handler event
-        var event = {
+        let event = {
           event: 'pull_request',
           id: 'a60aa880-df33-11e4-857c-eca3ec12497c',
           url: '/ghh',
@@ -87,32 +106,26 @@ describe('GithubHandler', function() {
         };
         ghhServer.pullRequestHandler(event, function(err, build) {
           should.not.exist(err);
-          build.should.be.a.object;
-          build.id.should.eql('build1');
-          build.projectId.should.eql('1234');
-          build.commit.should.be.a.object;
-          build.commit.ref.should.eql('9dd7d8b3ccf6cdecc86920535e52c4d50da7bd64');
-          build.pullRequest.should.be.a.object;
-          build.pullRequest.number.should.eql('1');
-          build.branch.should.be.a.object;
-          build.branch.name.should.eql('feature');
+          build.should.be.an.instanceOf(Object);
+          build.id.should.equal('build1');
+          build.projectId.should.equal('1234');
+          build.commit.should.be.an.instanceOf(Object);
+          build.commit.ref.should.equal('9dd7d8b3ccf6cdecc86920535e52c4d50da7bd64');
+          build.pullRequest.should.be.an.instanceOf(Object);
+          build.pullRequest.number.should.equal('1');
+          build.branch.should.be.an.instanceOf(Object);
+          build.branch.name.should.equal('feature');
 
           build.config.should.eql({
-            fetcher_config: {
-              'environment.remote': 'dev',
-              'info_fetcher.class': 'FetcherServices\\InfoFetcher\\FetcherServices',
-              'info_fetcher.config': {
-                host: 'https://extranet.zivtech.com',
-              },
-              'name': 'awesome',
-            },
-            image: 'lepew/ubuntu-14.04-lamp',
-            provisioner: 'fetcher',
+            steps: [{
+              name: 'Probo site setup',
+              plugin: 'LAMPApp',
+            }],
           });
 
           build.project.should.eql({
             id: '1234',
-              // provider_id: 33704441,
+            // provider_id: 33704441,
             owner: 'zanchin',
             repo: 'testrepo',
             service: 'github',
@@ -143,11 +156,11 @@ describe('GithubHandler', function() {
       });
     });
 
-    describe('push', function() {
-      it('is handled', function(done) {
-        var payload = require('./push_payload');
+    describe('push', () => {
+      it('is handled', done => {
+        let payload = require('./push_payload');
 
-        var headers = {
+        let headers = {
           'X-GitHub-Event': 'push',
           'X-GitHub-Delivery': '8ec7bd00-df2b-11e4-9807-657b8ba6b6bd',
           'X-Hub-Signature': 'sha1=cb4c474352a7708d24fffa864dab9919f54ac2f6',
@@ -162,37 +175,40 @@ describe('GithubHandler', function() {
     });
   });
 
-  describe('status update endpoint', function() {
-    var ghh;
+  describe('status update endpoint', () => {
+    let ghh;
 
-    before('start another ghh', function(done) {
+    before('start another ghh', done => {
       ghh = new GithubHandler(config);
-      ghh.start(function() {
+      ghh.start(() => {
         nock.enableNetConnect(ghh.server.url.replace('http://', ''));
         done();
       });
     });
 
-    var mocked;
-    before('set up mocks', function() {
+    let mocked;
+    before('set up mocks', () => {
       // call the first cb arg w/ no arguments
-      mocked = sinon.stub(ghh, 'postStatusToGithub').yields();
+      mocked = sinon.stub(ghh.github, 'postStatus').yields();
     });
 
-    after('clear mocks', function() {
-      mocked.reset();
+    after('clear mocks', done => {
+      mocked.restore();
+
+      // Stops the second GitHubHandler server.
+      ghh.close(done);
     });
 
-    it('accepts /update', function(done) {
+    it('accepts /update', done => {
 
-      var update = {
+      let update = {
         state: 'pending',
         description: 'Environment built!',
         context: 'ci/env',
         target_url: 'http://my_url.com',
       };
 
-      var build = {
+      let build = {
         projectId: '123',
 
         status: 'success',
@@ -219,15 +235,15 @@ describe('GithubHandler', function() {
       });
     });
 
-    it('accepts /builds/:bid/status/:context', function(done) {
-      var update = {
+    it('accepts /builds/:bid/status/:context', done => {
+      let update = {
         state: 'pending',
         description: 'Environment built!',
         context: 'ignored context',
         target_url: 'http://my_url.com',
       };
 
-      var build = {
+      let build = {
         projectId: '123',
 
         status: 'success',
@@ -262,33 +278,37 @@ describe('GithubHandler', function() {
   });
 
 
-  describe('probo.yaml file parsing', function() {
-    var mocks = [];
-    var updateSpy;
-    var ghh;
+  describe('probo.yaml file parsing', () => {
+    let mocks = [];
+    let updateSpy;
+    let ghh;
 
-    var errorMessage = `Failed to parse .probo.yaml:bad indentation of a mapping entry at line 3, column 3:
+    let errorMessage = `Failed to parse probo config file:bad indentation of a mapping entry at line 3, column 3:
       command: 'bad command'
       ^`;
 
-    before('init mocks', function() {
+    before('init mocks', () => {
       ghh = new GithubHandler(config);
 
       // mock out Github API calls
-      mocks.push(sinon.stub(ghh, 'getGithubApi').returns({
+      mocks.push(sinon.stub(ghh.github, 'getApi').returns({
         repos: {
-          getContent: function(opts, cb) {
+          getContents: function(opts) {
             if (opts.path === '') {
               // listing of files
-              cb(null, [{name: '.probo.yaml'}]);
+              return Promise.resolve({
+                data: [{name: '.probo.yaml'}],
+              });
             }
             else {
               // Getting content of a file - return a malformed YAML file.
-              cb(null, {
+              return Promise.resolve({
                 path: '.probo.yaml',
-                content: new Buffer(`steps:
+                data: {
+                  content: new Buffer.from(`steps:
   - name: task
   command: 'bad command'`).toString('base64'),
+                },
               });
             }
           },
@@ -305,27 +325,27 @@ describe('GithubHandler', function() {
       mocks.push(updateSpy);
     });
 
-    after('restore mocks', function() {
+    after('restore mocks', () => {
       mocks.forEach(function(mock) {
         mock.reset();
       });
     });
 
-    it('throws an error for a bad yaml', function(done) {
-      ghh.fetchProboYamlConfigFromGithub({}, null, function(err) {
+    it('throws an error for a bad yaml', done => {
+      ghh.github.fetchProboYamlConfig({}, null, function(err) {
         err.message.should.eql(errorMessage);
         done();
       });
     });
 
-    it('sends status update for bad yaml', function(done) {
-      ghh.processRequest({sha: 'sha1'}, function() {
-        var param1 = {
+    it('sends status update for bad yaml', done => {
+      ghh.processPullRequest({sha: 'sha1'}, () => {
+        let param1 = {
           state: 'failure',
           description: errorMessage,
           context: 'ProboCI/env',
         };
-        var param2 = {
+        let param2 = {
           commit: {ref: 'sha1'},
           project: {},
         };
@@ -337,7 +357,7 @@ describe('GithubHandler', function() {
 });
 
 function initNock() {
-  var project = {
+  let project = {
     id: '1234',
     service: 'github',
     owner: 'zanchin',
@@ -345,34 +365,35 @@ function initNock() {
     slug: 'zanchin/testrepo',
   };
 
-  var buildId = 'build1';
+  let buildId = 'build1';
 
-  // nock out ghh server - pass these requests through
+  // Enables requests to GitLab Handler through.
   nock.enableNetConnect(ghhServer.server.url.replace('http://', ''));
 
-  // Nock out github URLs.
-  return nockout('github.json', {
+  // Nocks out URLs related to the container API.
+  return nockout({
     not_required: ['status_update'],
-    processor: function(nocks) {
+    processor: nocks => {
       // nock out API URLs
       nocks.push(nock(config.api.url)
-                 .get('/projects?service=github&slug=zanchin%2Ftestrepo&single=true')
-                 .reply(200, project));
+        .get('/projects?service=github&slug=zanchin%2Ftestrepo&single=true')
+        .reply(200, project));
       nocks[nocks.length - 1].name = 'project_search';
 
       nocks.push(nock(config.api.url)
+        .defaultReplyHeaders({
+          'Content-Type': 'application/json',
+        })
         .post('/startbuild')
         .reply(200, function(uri, requestBody) {
           // start build sets id and project id on build
           // and puts project inside build, returning build
-          var body = JSON.parse(requestBody);
+          let body = requestBody;
           body.build.id = buildId;
           body.build.projectId = body.project.id;
           body.build.project = body.project;
           delete body.project;
           return body.build;
-        }, {
-          'content-type': 'application/json',
         }));
       nocks[nocks.length - 1].name = 'startbuild';
 
