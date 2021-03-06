@@ -1,6 +1,6 @@
 {
   "name": "probo",
-  "version": "4.4.0",
+  "version": "4.5.4",
   "description": "The main repository for the probo project.",
   "homepage": "http://probo.ci",
   "license": "Apache-2.0",
@@ -31,7 +31,8 @@
     "Howard Tyson <howard@howardtyson.com> (http://howardtyson.com)",
     "Ilya Braude <ilya@ilyabraude.com> (http://www.ilyabraude.com/)",
     "Laurence Liss <laurence@probo.ci> (https://www.laurenceliss.com)",
-    "James Cole <mail@ofjamescole.com> (https://ofjamescole.com)"
+    "James Cole <mail@ofjamescole.com> (https://ofjamescole.com)",
+    "Michael Bagnall <michael@bagnall.io> (https://www.bagnall.io)"
   ],
   "dependencies": {
     "@octokit/rest": "^16.27.3",
