@@ -13,4 +13,4 @@ RUN cd /home/probo/app/ && npm install
 
 WORKDIR /home/probo/app
 
-EXPOSE 3010 3011
+EXPOSE 3010 3014
