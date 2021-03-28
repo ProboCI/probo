@@ -329,20 +329,20 @@ auth:
   url: "http://localhost:3000/auth_lookup"
 
 
-buildsEventStream:
-  # currently supported plugins are: Kafka and Memory
-  plugin: 'Memory'
-
 # buildsEventStream:
 #   # currently supported plugins are: Kafka and Memory
-#   plugin: 'Kafka'
+#   plugin: 'Memory'
 
-#   # config for kafaka; memory plugin doesn't need a config
-#   config:
-#     version: 1
-#     topic: build_events
+buildsEventStream:
+  # currently supported plugins are: Kafka and Memory
+  plugin: 'Kafka'
 
-#     # see https://github.com/SOHU-Co/kafka-node#clientconnectionstring-clientid-zkoptions-noackbatchoptions
-#     # for available options
-#     kafkaClientOptions:
-#       connectionString: 'localhost:2181'
+  # config for kafaka; memory plugin doesn't need a config
+  config:
+    version: 1
+    topic: build_events
+
+    # see https://github.com/SOHU-Co/kafka-node#clientconnectionstring-clientid-zkoptions-noackbatchoptions
+    # for available options
+    kafkaClientOptions:
+      connectionString: 'localhost:2181'
