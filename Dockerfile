@@ -1,7 +1,7 @@
 # ProboCI
 # https://www.probo.ci
 
-FROM node:12.20.2
+FROM node:12
 USER root
 
 RUN apt -y update
