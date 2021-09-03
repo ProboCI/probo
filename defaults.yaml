@@ -260,7 +260,7 @@ images:
         port: 80
       php_log:
         command: 'tail -F /var/log/php/error.log'
-  'proboci/ubuntu:20.04-php8.1-mysql5.7':
+  'proboci/ubuntu:20.04-php8.1-mysql8.0':
     services:
       cleanapache:
         command: 'rm /var/run/apache2/apache2.pid'
