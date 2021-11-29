@@ -27,9 +27,9 @@ containerIdleTimeout: 30m # can use time units here. no units = ms
 # Prefixes all routes so that the app can be namespaced.
 prefix: ''
 # If a container is not specified in the repository's configuration, use this one.
-defaultImage: 'proboci/ubuntu:18.04-php7.3'
+defaultImage: 'proboci/ubuntu:18.04-php7.4'
 # The default image used if none is specified.
-image: 'proboci/ubuntu:18.04-php7.3'
+image: 'proboci/ubuntu:18.04-php7.4'
 # The images used by the host manager
 images:
   'proboci/ubuntu:18.04-php5.6':
@@ -165,7 +165,7 @@ images:
         port: 80
       php_log:
         command: 'tail -F /var/log/php/error.log'
-  'proboci/ubuntu:20.04-php8.0-mysql8.0':
+  'proboci/ubuntu:20.04-php8.0':
     services:
       cleanapache:
         command: 'rm /var/run/apache2/apache2.pid'
@@ -184,7 +184,7 @@ images:
         port: 80
       php_log:
         command: 'tail -F /var/log/php/error.log'
-  'proboci/ubuntu:20.04-php8.0-mysql5.7':
+  'proboci/ubuntu:20.04-php7.4':
     services:
       cleanapache:
         command: 'rm /var/run/apache2/apache2.pid'
@@ -203,64 +203,7 @@ images:
         port: 80
       php_log:
         command: 'tail -F /var/log/php/error.log'
-  'proboci/ubuntu:20.04-php7.4-mysql8.0':
-    services:
-      cleanapache:
-        command: 'rm /var/run/apache2/apache2.pid'
-      memcached:
-        command: memcached -u memcache
-      mysql:
-        command: 'mysqld_safe'
-      redis:
-        command: 'redis-server'
-      solr:
-        command: '/opt/solr/bin/solr start -f -force'
-      varnish:
-        command: 'service varnish start'
-      apache:
-        command: '/usr/sbin/apache2ctl -D FOREGROUND'
-        port: 80
-      php_log:
-        command: 'tail -F /var/log/php/error.log'
-  'proboci/ubuntu:20.04-php7.4-mysql5.7':
-    services:
-      cleanapache:
-        command: 'rm /var/run/apache2/apache2.pid'
-      memcached:
-        command: memcached -u memcache
-      mysql:
-        command: 'mysqld_safe'
-      redis:
-        command: 'redis-server'
-      solr:
-        command: '/opt/solr/bin/solr start -f -force'
-      varnish:
-        command: 'service varnish start'
-      apache:
-        command: '/usr/sbin/apache2ctl -D FOREGROUND'
-        port: 80
-      php_log:
-        command: 'tail -F /var/log/php/error.log'
-  'proboci/ubuntu:20.04-php8.1-mysql5.7':
-    services:
-      cleanapache:
-        command: 'rm /var/run/apache2/apache2.pid'
-      memcached:
-        command: memcached -u memcache
-      mysql:
-        command: 'mysqld_safe'
-      redis:
-        command: 'redis-server'
-      solr:
-        command: '/opt/solr/bin/solr start -f -force'
-      varnish:
-        command: 'service varnish start'
-      apache:
-        command: '/usr/sbin/apache2ctl -D FOREGROUND'
-        port: 80
-      php_log:
-        command: 'tail -F /var/log/php/error.log'
-  'proboci/ubuntu:20.04-php8.1-mysql8.0':
+  'proboci/ubuntu:20.04-php8.1':
     services:
       cleanapache:
         command: 'rm /var/run/apache2/apache2.pid'
