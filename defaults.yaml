@@ -165,6 +165,25 @@ images:
         port: 80
       php_log:
         command: 'tail -F /var/log/php/error.log'
+  'proboci/ubuntu:18.04-php8.1':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      memcached:
+        command: memcached -u memcache
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      solr:
+        command: '/opt/solr/bin/solr start -f -force'
+      varnish:
+        command: 'service varnish start'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
   'proboci/ubuntu:20.04-php8.0':
     services:
       cleanapache:
