@@ -8,9 +8,16 @@ var Loader = require('yaml-config-loader');
 var yargs = require('yargs');
 var loader = new Loader();
 
-loader.on('error', function(error) {
+loader.on('error', function (error) {
   if (error.name === 'YAMLException') {
-    console.error(util.print('Error parsing YAML file `', error.filePath, '`:', error.reason));
+    console.error(
+      util.print(
+        'Error parsing YAML file `',
+        error.filePath,
+        '`:',
+        error.reason
+      )
+    );
     console.log(error);
   }
 });
@@ -18,16 +25,18 @@ loader.on('error', function(error) {
 var probo = require('../index');
 
 var argv = yargs
-  .describe('config', 'A YAML config file or directory of yaml files to load, can be invoked multiple times and later files will override earlier.')
-  .alias('config', 'c')
-  .argv;
+  .describe(
+    'config',
+    'A YAML config file or directory of yaml files to load, can be invoked multiple times and later files will override earlier.'
+  )
+  .alias('config', 'c').argv;
 
 loader.add(path.resolve(path.join(__dirname, '..', 'defaults.yaml')));
 loader.addAndNormalizeObject(process.env);
 
 var commandName = argv._[0];
 
-probo.cli.loadCommands(function(error, commands) {
+probo.cli.loadCommands(function (error, commands) {
   if (error) throw error;
 
   if (commandName == undefined) {
@@ -43,7 +52,7 @@ probo.cli.loadCommands(function(error, commands) {
 
   if (argv.config) {
     if (typeof argv.config === 'string') {
-      argv.config = [ argv.config ];
+      argv.config = [argv.config];
     }
     for (var i in argv.config) {
       loader.add(path.resolve(argv.config[i]));
@@ -64,7 +73,7 @@ probo.cli.loadCommands(function(error, commands) {
     loader.addAndNormalizeObject(setOptions);
   }
 
-  loader.load(function(error, config) {
+  loader.load(function (error, config) {
     if (error) throw error;
     if (executor.configure) {
       executor.configure(config);
