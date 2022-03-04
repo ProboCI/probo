@@ -1,12 +1,12 @@
 #! /usr/bin/env node
 'use strict';
 
-var path = require('path');
-var util = require('util');
+const path = require('path');
+const util = require('util');
+const Loader = require('yaml-config-loader');
+const yargs = require('yargs');
 
-var Loader = require('yaml-config-loader');
-var yargs = require('yargs');
-var loader = new Loader();
+const loader = new Loader();
 
 loader.on('error', function (error) {
   if (error.name === 'YAMLException') {
@@ -22,9 +22,9 @@ loader.on('error', function (error) {
   }
 });
 
-var probo = require('../index');
+const probo = require('../index');
 
-var argv = yargs
+const argv = yargs
   .describe(
     'config',
     'A YAML config file or directory of yaml files to load, can be invoked multiple times and later files will override earlier.'
@@ -34,7 +34,7 @@ var argv = yargs
 loader.add(path.resolve(path.join(__dirname, '..', 'defaults.yaml')));
 loader.addAndNormalizeObject(process.env);
 
-var commandName = argv._[0];
+const commandName = argv._[0];
 
 probo.cli.loadCommands(function (error, commands) {
   if (error) throw error;
