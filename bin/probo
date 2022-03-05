@@ -4,7 +4,7 @@
 const path = require('path');
 const util = require('util');
 const Loader = require('yaml-config-loader');
-const yargs = require('yargs');
+let yargs = require('yargs');
 
 const loader = new Loader();
 
