@@ -1,16 +1,16 @@
 # ProboCI
 # https://www.probo.ci
 
-FROM node:12
+FROM node:16
 USER root
 
 RUN apt -y update
 RUN apt -y install \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    gnupg \
-    lsb-release
+  apt-transport-https \
+  ca-certificates \
+  curl \
+  gnupg \
+  lsb-release
 
 RUN wget https://download.docker.com/linux/static/stable/x86_64/docker-20.10.7.tgz \
   && tar -xvzf docker-20.10.7.tgz \
