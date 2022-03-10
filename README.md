@@ -9,7 +9,7 @@ shared space.
 Probo has a [Service Oriented Architecture](https://en.wikipedia.org/wiki/Service-oriented_architecture) so to
 get the full picture have a look at all of the projects in the [Probo Organization](https://github.com/ProboCI).
 This project currently contains the Container Manager (which provides a high level interface to docker) and
-the Github Handler (responsible for receiving data from and sending data to github). In the long term these
+the GitHub Handler (responsible for receiving data from and sending data to github). In the long term these
 services will be factored out into their own projects and this project will be a packaging project making it
 easy to install compatible versions of all of the individual services.
 
@@ -19,13 +19,13 @@ See the [Quickstart](QUICKSTART.md) guide for how to get up and running with you
 
 ## Compatibility
 
-The code uses generators and requires node `io.js` or `node` 4.x+.
+The code uses generators and requires node `io.js` or `node` 12.x+.
 
 ### Node Version
 
 Several of Probo's microservices are currently on different Node versions as we update to newer Node versions, so the Node Verson Manager, [nvm](https://github.com/nvm-sh/nvm), is installed to switch between different versions of Node prior to running `npm install`.
 
-**Current Node Version:** Node 4.x (Current default Node version)
+**Current Node Version:** Node 16.x (Current default Node version)
 
 Run the following commands in the `probo` installation directory to update the node_modules for probo.
 
