@@ -6,4 +6,3 @@ out
 .DS_Store
 *.sw*
 coverage
-buildf.sh
