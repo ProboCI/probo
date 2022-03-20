@@ -1,6 +1,6 @@
 # Probo Changelog
 
-## 5.0.2 - March 10, 2022
+## 5.0.3 - March 10, 2022
 
 - Added support for Alpine Images. (https://github.com/ProboCI/probo/pull/221)
 - NodeJS 16 Update. (https://github.com/ProboCI/probo/pull/221)
