@@ -11,7 +11,7 @@ help() {
   echo "Usage:"
   echo "./build.sh <repository_name> <tag>"
   echo ""
-  echo "Example: To build an image tagged 'dev' for DockerHub on my Account:"
+  echo "Example: To build an image tagged 'dev' for DockerHub on my account:"
   echo "./build.sh mbagnall dev\n"
   echo ""
   echo "Example: To build an image tagged 'dev' on a private registry with"
