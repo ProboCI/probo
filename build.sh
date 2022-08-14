@@ -1,12 +1,11 @@
 #!/bin/bash
-
-echo ""
-echo "-----------------------------------------------------"
-echo "Building Probo Container Manager/GitHub Handler Image"
-echo "-----------------------------------------------------"
+Cyan='\033[0;36m'
+Red='\033[0;31m'
+Green='\033[0;32m'
 
 help() {
-  echo "build.sh - script to build the container manager/github handler image"
+  echo ""
+  echo "build.sh - Script to build and push a Dockerfile to a repository."
   echo ""
   echo "Usage:"
   echo "./build.sh <repository_name> <tag>"
@@ -31,8 +30,19 @@ if [ -z "$1" ]; then
   help
 fi
 
-echo -n "Hash: "
-docker build . -q -t $1/container-manager:$tag
-echo -n  "Repo: "
-docker push -q $1/container-manager:$tag
-echo ""
+printf "${Cyan}Building Probo..............................."
+stuff=`docker build . -q -t $1/container-manager:$tag`;
+if [[ $? == 0 ]]; then
+  printf "${Green}[ok]\n";
+  printf "${Cyan}Pushing to Docker Repository................."
+  stuff=`docker push -q $1/container-manager:$tag`
+  if [[ $? == 0 ]]; then
+    printf "${Green}[ok]\n";
+  else
+    printf "${Red}[error]\n";
+    exit 1;
+  fi
+else
+  printf "${Red}[error]\n";
+  exit 1;
+fi
