@@ -31,11 +31,11 @@ if [ -z "$1" ]; then
 fi
 
 printf "${Cyan}Building Probo..............................."
-stuff=`docker build . -q -t $1/container-manager:$tag`;
+stuff=`docker build . -q -t $1/probo:$tag`;
 if [[ $? == 0 ]]; then
   printf "${Green}[ok]\n";
   printf "${Cyan}Pushing to Docker Repository................."
-  stuff=`docker push -q $1/container-manager:$tag`
+  stuff=`docker push -q $1/probo:$tag`
   if [[ $? == 0 ]]; then
     printf "${Green}[ok]\n";
   else
