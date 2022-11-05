@@ -1,15 +1,16 @@
 # Quickstart Table of Contents
 
-* [Install](#install)
-  * [Source Code](#source)
-  * [Dependencies](#dependencies)
-* [Setup](#setup)
-  * [Github Handler](#github-handler)
-  * [Container Manager](#container-manager)
-  * [Loom](#loom)
-* [Build Config](#builds)
+- [Install](#install)
+  - [Source Code](#source)
+  - [Dependencies](#dependencies)
+- [Setup](#setup)
+  - [GitHub Handler](#github-handler)
+  - [Container Manager](#container-manager)
+  - [Loom](#loom)
+- [Build Config](#builds)
 
 # Install <a name="install"/>
+
 ## Source Code <a name="source"/>
 
 Clone all repositories
@@ -35,7 +36,7 @@ wget -qO- https://get.docker.com/ | sudo sh
 
 ### Ensure Probo's base docker image is installed on your system
 
-``` bash
+```bash
 docker pull proboci/ubuntu-14.04-lamp
 ```
 
@@ -49,10 +50,9 @@ In order to view the results of the builds ensure that `*.probo.domain.com` is a
 
 Note that this configuration is suitable for development, but do NOT use for production. Reverse-proxying and SSL configuration are out of scope for this document.
 
+## GitHub Handler <a name="github-handler"/>
 
-## Github Handler <a name="github-handler"/>
-
-The Github Handler (GHH) processes Github hook events each time a pull request is created or updated. It then triggers builds through the Container Manager. The Github Handler also sends commit status updates back to Github.
+The GitHub Handler (GHH) processes GitHub hook events each time a pull request is created or updated. It then triggers builds through the Container Manager. The GitHub Handler also sends commit status updates back to GitHub.
 
 It is implemented as a plugin of the `probo` repository.
 
@@ -65,25 +65,24 @@ npm install
 
 Create a file `ggh.yaml` with the follwing contents:
 
-``` yaml
+```yaml
 # Port for the server to listen on
 port: 3010
 hostname: 0.0.0.0
 
-# Github hook and credentials
+# GitHub hook and credentials
 githubWebhookPath: '/github-webhook'
 githubWebhookSecret: 'CHANGE-ME'
 githubAPIToken: 'personal token here'
 
 # Container Manager API server
 api:
-  url: "http://localhost:3020"
+  url: 'http://localhost:3020'
 ```
 
 Of the defaults above, `githubAPIToken` must be set to your token. You can generate a personal token at [https://github.com/settings/tokens]. A token created from an OAuth flow will also work here. Probo requires the `repo` scope.
 
 The `githubWebhookSecret` value should be modified to a secure string as well.
-
 
 ### Run
 
@@ -91,7 +90,7 @@ The `githubWebhookSecret` value should be modified to a secure string as well.
 node ./bin/probo github-handler -c ghh.yaml
 ```
 
-Now add a webhook for your repository in Github to your server under `Settings` -> `Webhooks & services`. Direct link to the configuration page: https://github.com/OWNER/REPO/settings/hooks.
+Now add a webhook for your repository in GitHub to your server under `Settings` -> `Webhooks & services`. Direct link to the configuration page: https://github.com/OWNER/REPO/settings/hooks.
 
 Set the following properties:
 
@@ -102,9 +101,7 @@ Secret: CHANGE-ME (or your value from `githubWebhookSecret` in the config file)
 
 Next, under "Which events would you like to trigger this webhook?", select "Let me select individual events", and select "Pull Request"
 
-
-If you see a green checkmark next to your new webhook, you're all set. Github can succesfully send requests to your handler.
-
+If you see a green checkmark next to your new webhook, you're all set. GitHub can succesfully send requests to your handler.
 
 ## Container Manager <a name="container-manager"/>
 
@@ -121,7 +118,7 @@ npm install
 
 Create a file `cm.yaml` with the follwing contents:
 
-``` yaml
+```yaml
 # container manager config file
 
 hostname: localhost
@@ -129,20 +126,20 @@ port: 3020
 # name of the instance used in status updates
 instanceName: 'ProboCI-local'
 
-# Github Handler server
+# GitHub Handler server
 api:
-  url: "http://localhost:3010"
+  url: 'http://localhost:3010'
 
 # Loom (log aggregator server)
 loom:
-  url: "http://localhost:3060"
+  url: 'http://localhost:3060'
 
 # asset server (must NOT be localhost because it's called from within a container)
 assets:
-  url: "http://probo.domain.com:3070"
+  url: 'http://probo.domain.com:3070'
 
 # URL template string for viewing each build. {{buildId}} expands to the id of the build.
-buildUrl: "http://{{buildId}}.probo.domain.com:3050/"
+buildUrl: 'http://{{buildId}}.probo.domain.com:3050/'
 ```
 
 The defaults above are fine for a basic setup. However, make sure to modify the domain in `buildUrl` to match your setup.
@@ -152,7 +149,6 @@ The defaults above are fine for a basic setup. However, make sure to modify the 
 ```
 node ./bin/probo container-manager -c cm.yaml
 ```
-
 
 ## Build Proxy <a name="proxy"/>
 
@@ -164,25 +160,24 @@ npm install
 ```
 
 ### Configure
+
 Create a file `proxy.yaml` with the follwing contents:
 
-``` yaml
+```yaml
 # port that the proxy server is running on
 port: 3050
 
 # Host for the container lookup service that maps a build id to a host/port to proxy to
-containerLookupHost: "http://localhost:3020"
+containerLookupHost: 'http://localhost:3020'
 ```
 
 Ensure that `containerLookupHost` matches the URL of your Container Manager instance.
 
-
 ### Run
+
 ```
 node ./index.js -c proxy.yaml
 ```
-
-
 
 ## Loom <a name="loom"/>
 
@@ -194,40 +189,40 @@ npm install
 ```
 
 ### Configure
+
 The default config works well for a development setup.
 
 ### Run
+
 ```
 node ./index.js
 ```
 
 Loom comes with a handy spy tool that streams all live logs in one place. You can use it to view live output from your build tasks.
 
-
 ### Spy
+
 ```
 npm run spy
 ```
 
 # Build Config <a name="builds"/>
 
-Probo runs builds based on a `/.probo.yaml` file found in the root of your repository. You can task the Container Manager to run any number of build steps. Each step is a runnable plugin, and will get a status update sent to Github for the commit.
+Probo runs builds based on a `/.probo.yaml` file found in the root of your repository. You can task the Container Manager to run any number of build steps. Each step is a runnable plugin, and will get a status update sent to GitHub for the commit.
 
 When the build runs, your source code for the commit that triggered the build is automatically available to you in the `$SRC_DIR` directory inside the container.
 
 Sample `.probo.yaml` file:
 
-``` yaml
+```yaml
 # Each step is the build/test process
 # the name of each step is the build context, and will get its own status updates
 steps:
   - name: Look Around
-    plugin: 'Shell'  # this is the default plugin
-    command: "ls $SRC_DIR"  
+    plugin: 'Shell' # this is the default plugin
+    command: 'ls $SRC_DIR'
   - name: Create Site
-    command: "drush fec myrepo --json-config='{\"settings_php.snippets\": []}'"
+    command: 'drush fec myrepo --json-config=''{"settings_php.snippets": []}'''
 ```
 
-
 See the [Drupal Bear](https://github.com/zivtech/bear) repository for a full example.
-
