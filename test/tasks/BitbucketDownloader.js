@@ -1,4 +1,7 @@
 'use strict';
+
+require('should');
+
 var BitbucketDownloader = require('../../lib/plugins/TaskRunner/BitbucketDownloader');
 
 var mockContainer = {
@@ -31,16 +34,16 @@ describe('BitbucketDownloader', function() {
 
     gc.setBitbucketScript();
 
-    gc.script.should.eql(`unset HISTFILE
-export PS4='\$ '
-set -uex
+    gc.script.should.equal(`unset HISTFILE
+export PS4='$ '
+set -ux
 mkdir -p $SRC_DIR; cd $SRC_DIR
 mkdir -p $SRC_DIR
 cd $SRC_DIR
 wget -q -O - --header 'Authorization:Bearer access_token' "https://bitbucket.org/owner/repo/get/master.tar.gz" | tar xzf - --strip-components=1
 `);
 
-    gc.description().should.eql('BitbucketDownloader owner/repo @ master');
+    gc.description().should.equal('BitbucketDownloader owner/repo @ master');
   });
 });
 
