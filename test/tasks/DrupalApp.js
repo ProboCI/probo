@@ -1,9 +1,10 @@
 'use strict';
 
 /* eslint-disable no-unused-expressions */
+require('should');
 
 const DrupalApp = require('../../lib/plugins/TaskRunner/Drupal');
-const constants = require('../../lib/plugins/TaskRunner/constants');
+
 const mockContainer = {
   log: {child: function() {}},
   build: {
@@ -32,7 +33,7 @@ describe('Drupal App', function() {
       databaseGzipped: true,
       clearCaches: false,
       databasePrefix: 'my_custom_prefix',
-      varnish: { enable: true },
+      varnish: {enable: true},
     };
     options3 = {
       database: 'my-cool-db.sql',
@@ -63,7 +64,7 @@ describe('Drupal App', function() {
   });
 
   it('should correctly instantiate', function(done) {
-    app.should.have.property('databaseName').which.eql(constants.DRUPAL_DATABASE_NAME);
+    app.should.have.property('databaseName').which.eql('drupal');
     app.should.have.property('options').which.is.a.Object;
     app.options.should.have.property('siteFolder').which.eql('default');
     app.options.should.have.property('profileName').which.eql('standard');
@@ -79,7 +80,7 @@ describe('Drupal App', function() {
 
   it('gives the correct description', function(done) {
     const description = app.description();
-    description.should.be.a.String.which.match('Drupal \'Provisioning Drupal!\'');
+    description.should.match('Drupal \'Provisioning Drupal!\'');
     done();
   });
 
@@ -223,14 +224,14 @@ describe('Drupal App', function() {
     done();
   });
 
-  it('builds proper lamp script', function(done) {
+  it('builds proper LAMP script', function(done) {
     app.script.should.containEql('mkdir -p $SRC_DIR; cd $SRC_DIR');
     app.script.should.containEql('if [ -d "$SRC_DIR/docroot" ]');
     app.script.should.containEql('if [ -a "$SRC_DIR/index.php" ]');
     app.script.should.containEql('ln -s $SRC_DIR  /var/www/html');
-    app.script.should.containEql(`mysql -e 'create database ${constants.DRUPAL_DATABASE_NAME}'`);
+    app.script.should.containEql('mysql -e \'create database \'$DATABASE_NAME');
     app.script.should.containEql(
-      `cat $ASSET_DIR/my-cool-db.sql | $(mysql -u ${constants.DATABASE_USER} --password=${constants.DATABASE_PASSWORD} ${constants.DRUPAL_DATABASE_NAME})`
+      'cat $ASSET_DIR/my-cool-db.sql | $(mysql -u $DATABASE_USER --password=$DATABASE_PASS $DATABASE_NAME)'
     );
     done();
   });
@@ -246,9 +247,9 @@ describe('Drupal App', function() {
   });
 
   it('cats the settings.php file', function(done) {
-    app.script.should.containEql(`'database' => '${constants.DRUPAL_DATABASE_NAME}'`);
-    app.script.should.containEql(`'username' => '${constants.DATABASE_USER}'`);
-    app.script.should.containEql(`'password' => '${constants.DATABASE_PASSWORD}'`);
+    app.script.should.containEql('\'database\' => \'$DATABASE_NAME\'');
+    app.script.should.containEql('\'username\' => \'$DATABASE_USER\'');
+    app.script.should.containEql('\'password\' => \'$DATABASE_PASS\'');
     done();
   });
 

@@ -12,9 +12,9 @@ docker:
 # name of the instance used in status updates
 instanceName: 'ProboCI-dev'
 # prefix to use for container names
-containerNamePrefix: "probo"
+containerNamePrefix: 'probo'
 # container capacity of this container manager instance
-containerCapacity: -1  # -1 is unlimited or not set
+containerCapacity: -1 # -1 is unlimited or not set
 #proxyStartupPause: 2s   # Amount of time to pause after a proxy request starts a container
 
 # If a container proxy lookup needs to start a non-running (but existing)
@@ -26,19 +26,114 @@ containerIdleTimeout: 30m # can use time units here. no units = ms
 
 # Prefixes all routes so that the app can be namespaced.
 prefix: ''
-# If a cotnainer is not specified in the repository's configuration, use this one.
-defaultImage: 'proboci/ubuntu-14.04-lamp:php-5.6'
+# If a container is not specified in the repository's configuration, use this one.
+defaultImage: 'proboci/ubuntu:18.04-php7.4'
 # The default image used if none is specified.
-image: 'proboci/ubuntu-14.04-lamp:php-5.6'
+image: 'proboci/ubuntu:18.04-php7.4'
 # The images used by the host manager
 images:
-  'proboci/ubuntu-14.04-lamp:php-5.5':
+  'proboci/alpine:php8.0':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/httpd.pid'
+      apache:
+        command: 'apachectl start'
+        port: 80
+      redis:
+        command: 'redis-server'
+      memcached:
+        command: memcached -u memcache
+      mysql:
+        command: 'mysql --user=mysql'
+      solr:
+        command: '/opt/solr/bin/solr start -f -force'
+      php_log:
+        command: 'tail -F /var/log/apache2/error.log'
+  'proboci/ubuntu:18.04-php5.6':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      memcached:
+        command: memcached -u memcache
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      solr:
+        command: '/opt/solr/bin/solr start -f -force'
+      varnish:
+        command: 'service varnish start'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
+  'proboci/ubuntu:18.04-php7.0':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      memcached:
+        command: memcached -u memcache
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      solr:
+        command: '/opt/solr/bin/solr start -f -force'
+      varnish:
+        command: 'service varnish start'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
+  'proboci/ubuntu:18.04-php7.1':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      memcached:
+        command: memcached -u memcache
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      solr:
+        command: '/opt/solr/bin/solr start -f -force'
+      varnish:
+        command: 'service varnish start'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
+  'proboci/ubuntu:18.04-php7.2':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      memcached:
+        command: memcached -u memcache
+      mysql:
+        command: 'mysqld_safe'
+      redis:
+        command: 'redis-server'
+      solr:
+        command: '/opt/solr/bin/solr start -f -force'
+      varnish:
+        command: 'service varnish start'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
+  'proboci/ubuntu:18.04-php7.3':
     services:
       cleanapache:
         command: 'rm /var/run/apache2/apache2.pid'
       apache:
         command: '/usr/sbin/apache2ctl -D FOREGROUND'
         port: 80
+      memcached:
+        command: memcached -u memcache
       mysql:
         command: 'mysqld_safe'
       postgresql:
@@ -51,13 +146,15 @@ images:
         command: 'service varnish start'
       php_log:
         command: 'tail -F /var/log/php/error.log'
-  'proboci/ubuntu-14.04-lamp:php-5.6':
+  'proboci/ubuntu:18.04-php7.4':
     services:
       cleanapache:
         command: 'rm /var/run/apache2/apache2.pid'
       apache:
         command: '/usr/sbin/apache2ctl -D FOREGROUND'
         port: 80
+      memcached:
+        command: memcached -u memcache
       mysql:
         command: 'mysqld_safe'
       postgresql:
@@ -70,13 +167,12 @@ images:
         command: 'service varnish start'
       php_log:
         command: 'tail -F /var/log/php/error.log'
-  'proboci/ubuntu-14.04-lamp:php-7.0':
+  'proboci/ubuntu:18.04-php8.0':
     services:
       cleanapache:
         command: 'rm /var/run/apache2/apache2.pid'
-      apache:
-        command: '/usr/sbin/apache2ctl -D FOREGROUND'
-        port: 80
+      memcached:
+        command: memcached -u memcache
       mysql:
         command: 'mysqld_safe'
       postgresql:
@@ -87,15 +183,17 @@ images:
         command: '/opt/solr/bin/solr start -f -force'
       varnish:
         command: 'service varnish start'
-      php_log:
-        command: 'tail -F /var/log/php/error.log'
-  'proboci/ubuntu-14.04-lamp:php-7.1':
-    services:
-      cleanapache:
-        command: 'rm /var/run/apache2/apache2.pid'
       apache:
         command: '/usr/sbin/apache2ctl -D FOREGROUND'
         port: 80
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
+  'proboci/ubuntu:18.04-php8.1':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      memcached:
+        command: memcached -u memcache
       mysql:
         command: 'mysqld_safe'
       postgresql:
@@ -106,15 +204,17 @@ images:
         command: '/opt/solr/bin/solr start -f -force'
       varnish:
         command: 'service varnish start'
-      php_log:
-        command: 'tail -F /var/log/php/error.log'
-  'proboci/ubuntu-16.04-lamp:php-7.0':
-    services:
-      cleanapache:
-        command: 'rm /var/run/apache2/apache2.pid'
       apache:
         command: '/usr/sbin/apache2ctl -D FOREGROUND'
         port: 80
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
+  'proboci/ubuntu:20.04-php8.0':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      memcached:
+        command: memcached -u memcache
       mysql:
         command: 'mysqld_safe'
       postgresql:
@@ -125,15 +225,17 @@ images:
         command: '/opt/solr/bin/solr start -f -force'
       varnish:
         command: 'service varnish start'
-      php_log:
-        command: 'tail -F /var/log/php/error.log'
-  'proboci/ubuntu-16.04-lamp:php-7.1':
-    services:
-      cleanapache:
-        command: 'rm /var/run/apache2/apache2.pid'
       apache:
         command: '/usr/sbin/apache2ctl -D FOREGROUND'
         port: 80
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
+  'proboci/ubuntu:20.04-php7.4':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      memcached:
+        command: memcached -u memcache
       mysql:
         command: 'mysqld_safe'
       postgresql:
@@ -144,15 +246,17 @@ images:
         command: '/opt/solr/bin/solr start -f -force'
       varnish:
         command: 'service varnish start'
-      php_log:
-        command: 'tail -F /var/log/php/error.log'
-  'proboci/ubuntu-16.04-lamp:php-7.2':
-    services:
-      cleanapache:
-        command: 'rm /var/run/apache2/apache2.pid'
       apache:
         command: '/usr/sbin/apache2ctl -D FOREGROUND'
         port: 80
+      php_log:
+        command: 'tail -F /var/log/php/error.log'
+  'proboci/ubuntu:20.04-php8.1':
+    services:
+      cleanapache:
+        command: 'rm /var/run/apache2/apache2.pid'
+      memcached:
+        command: memcached -u memcache
       mysql:
         command: 'mysqld_safe'
       postgresql:
@@ -163,6 +267,9 @@ images:
         command: '/opt/solr/bin/solr start -f -force'
       varnish:
         command: 'service varnish start'
+      apache:
+        command: '/usr/sbin/apache2ctl -D FOREGROUND'
+        port: 80
       php_log:
         command: 'tail -F /var/log/php/error.log'
 dataDir: './container-manager-data'
@@ -178,28 +285,26 @@ githubAPIToken: 'personal token here'
 # Settings for the API or Container Manager server
 # port
 api:
-  url: "http://localhost:3000"
-  token: "API token here"
+  url: 'http://localhost:3000'
+  token: 'API token here'
 
 # loom (log aggregator server)
 loom:
-  url: "http://localhost:3060"
-  token: "API token here"
+  url: 'http://localhost:3060'
+  token: 'API token here'
 
 # asset server (must NOT be localhost because it's called from within container)
 assets:
-  url: "http://localhost:3070"
-  token: "API token here"
+  url: 'http://localhost:3070'
+  token: 'API token here'
 
 # auth credentials service (i.e., for stash)
 auth:
-  url: "http://localhost:3000/auth_lookup"
-
+  url: 'http://localhost:3000/auth_lookup'
 
 buildsEventStream:
   # currently supported plugins are: Kafka and Memory
   plugin: 'Memory'
-
 # buildsEventStream:
 #   # currently supported plugins are: Kafka and Memory
 #   plugin: 'Kafka'
@@ -213,5 +318,3 @@ buildsEventStream:
 #     # for available options
 #     kafkaClientOptions:
 #       connectionString: 'localhost:2181'
-
-

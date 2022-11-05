@@ -1,6 +1,8 @@
 'use strict';
+
+require('should');
+
 var LAMPApp = require('../../lib/plugins/TaskRunner/LAMPApp');
-var constants = require('../../lib/plugins/TaskRunner/constants');
 
 var mockContainer = {
   log: {child: function() {}},
@@ -24,24 +26,26 @@ describe('LAMP App', function() {
     phpIniOptions: {
       'opcache.max_file_size': 0,
       'opcache.optimization_level': 0xffffffff,
-      'soap.wsdl_cache_dir': '/tmp',
       'cli': {
-        'memory_limit': '256M',
+        memory_limit: '256M',
+      },
+      'apache2': {
+        'soap.wsdl_cache_dir': '/tmp',
       },
       'all': {
-        'post_max_size': '20M',
-      }
+        post_max_size: '20M',
+      },
     },
     mysqlCnfOptions: {
-      'innodb_large_prefix': true,
-      'innodb_file_format': 'barracuda',
-      'innodb_file_per_table': true,
+      innodb_large_prefix: true,
+      innodb_file_format: 'barracuda',
+      innodb_file_per_table: true,
     },
     apacheMods: ['dir', 'my-cool-apachemod'],
     phpMods: ['mcrypt', 'my-cool-php5mod'],
     installPackages: ['php5-mcrypt', 'my-cool-package'],
     phpConstants: {PI: 3.14, FUZZY_PI: '3.14ish'},
-    varnish: { enable: true },
+    varnish: {enable: true},
   };
 
   /*
@@ -69,16 +73,17 @@ describe('LAMP App', function() {
 
   it('builds proper lamp script', function() {
 
+
     app.script.should.containEql('mkdir -p $SRC_DIR; cd $SRC_DIR');
 
     app.script.should.containEql('if [ -d "$SRC_DIR/docroot" ]');
     app.script.should.containEql('if [ -a "$SRC_DIR/index.php" ]');
     app.script.should.containEql('ln -s $SRC_DIR  /var/www/html');
 
-    app.script.should.containEql('mysql -e \'create database my-cool-db\'');
+    app.script.should.containEql('mysql -e \'create database \'$DATABASE_NAME');
 
     app.script.should.containEql(
-      `cat $ASSET_DIR/my-cool-db.sql | $(mysql -u ${constants.DATABASE_USER} --password=${constants.DATABASE_PASSWORD} my-cool-db)`
+      'cat $ASSET_DIR/my-cool-db.sql | $(mysql -u $DATABASE_USER --password=$DATABASE_PASS $DATABASE_NAME)'
     );
 
     appPgsql.script.should.not.containEql('mysql -e \'create database my-cool-db\'');
@@ -102,20 +107,20 @@ describe('LAMP App', function() {
   });
 
   it('exports an variable for apache config directory', function() {
-    app.script.should.containEql(`PHPINI_PATH="$(php -i | grep php.ini | head -1 | sed \'s/\\/cli//g\' | sed \'s/.* //g\')"`);
+    app.script.should.containEql('PHPINI_PATH="$(php -i | grep php.ini | head -1 | sed \'s/\\/cli//g\' | sed \'s/.* //g\')"');
   });
 
   it('handles custom php options', function() {
     app.script.should.containEql('echo "opcache.max_file_size=0" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');
     app.script.should.containEql('echo "opcache.optimization_level=4294967295" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');
+    app.script.should.containEql('echo "opcache.optimization_level=4294967295" >> $PHPINI_PATH/cli/conf.d/99-probo-settings.ini\n');
     app.script.should.containEql('echo "soap.wsdl_cache_dir=\'/tmp\'" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');
-    app.script.should.containEql('echo "soap.wsdl_cache_dir=\'/tmp\'" >> $PHPINI_PATH/cli/conf.d/99-probo-settings.ini\n');
     app.script.should.containEql('echo "memory_limit=\'256M\'" >> $PHPINI_PATH/cli/conf.d/99-probo-settings.ini\n');
     app.script.should.containEql('echo "post_max_size=\'20M\'" >> $PHPINI_PATH/cli/conf.d/99-probo-settings.ini\n');
     app.script.should.containEql('echo "post_max_size=\'20M\'" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');
     app.script.should.not.containEql('echo "memory_limit=\'256M\'" >> $PHPINI_PATH/apache2/conf.d/99-probo-settings.ini\n');
   });
-  
+
   it('handles custom mysql options', function() {
     app.script.should.containEql('echo "[mysqld]" >> /etc/mysql/probo-settings.cnf');
     app.script.should.containEql('echo "innodb_large_prefix=true" >> /etc/mysql/probo-settings.cnf\n');
@@ -158,8 +163,8 @@ describe('LAMP App', function() {
   });
 
   it('sanitizes strings for the command line and wraps them in single-quotes', function() {
-    var s = app.sanitizeValue('hi\'\"');
-    s.should.eql('\'hi\\\'\\\"\'');
+    var s = app.sanitizeValue('hi\'"');
+    s.should.equal('\'hi\\\'\\"\'');
   });
 
   it('should have default values for any options that are output as strings', function(done) {
