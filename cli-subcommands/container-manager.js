@@ -15,6 +15,8 @@ exports.options = function(yargs) {
   return yargs
     .describe('port', 'The port to listen on.')
     .alias('port', 'p')
+    .describe('host', 'The host to listen on.')
+    .alias('host', 'h')
     .describe('data-dir', 'The directory to store data in via leveldb.')
     .alias('data-dir', 'd')
     .describe('jwt-public-key', 'An RSA key in PEM format. This should be the contents of the key and NOT a path to the file.')
@@ -28,9 +30,11 @@ exports.run = function(amour) {
   var config = amour.config;
   process.title = 'probo-cm';
   server.configure(config, function(error) {
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
     server.run(amour, function(error) {
-      logger.getLogger('container-manager')
+      logger.get('container-manager')
         .info({config}, `Listening on ${config.port}`);
     });
   });

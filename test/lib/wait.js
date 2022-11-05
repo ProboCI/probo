@@ -1,9 +1,9 @@
 'use strict';
-require('co-mocha');
-var net = require('net');
-var http = require('http');
 
+var http = require('http');
+var net = require('net');
 var should = require('should');
+
 var waitForPort = require('../../lib/waitForPort');
 
 var waitOpts = {numRetries: 1, retryInterval: 100, debug: false};
@@ -43,9 +43,13 @@ describe('waiting for port to be open', function() {
       }).should.throw('Invalid opt \'retries\', probably a typo');
     });
 
-    it('returns a Promise', function() {
+    it('returns a Promise', function(done) {
       var ret = waitForPort('hi', 2213);
+
       ret.should.have.property('then').which.is.type('function');
+      ret.should.be.rejected();
+
+      done();
     });
   });
 

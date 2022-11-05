@@ -1,0 +1,48 @@
+#!/bin/bash
+Cyan='\033[0;36m'
+Red='\033[0;31m'
+Green='\033[0;32m'
+
+help() {
+  echo ""
+  echo "build.sh - Script to build and push a Dockerfile to a repository."
+  echo ""
+  echo "Usage:"
+  echo "./build.sh <repository_name> <tag>"
+  echo ""
+  echo "Example: To build an image tagged 'dev' for DockerHub on my account:"
+  echo "./build.sh mbagnall dev\n"
+  echo ""
+  echo "Example: To build an image tagged 'dev' on a private registry with"
+  echo "the 'probo' namespace:"
+  echo "./build.sh docker.example.com/probo dev"
+  echo ""
+  exit 1;
+}
+
+if [ -n "$2" ]; then
+  export tag=$2
+else
+  help
+fi
+
+if [ -z "$1" ]; then
+  help
+fi
+
+printf "${Cyan}Building Probo..............................."
+stuff=`docker build . -q -t $1/container-manager:$tag`;
+if [[ $? == 0 ]]; then
+  printf "${Green}[ok]\n";
+  printf "${Cyan}Pushing to Docker Repository................."
+  stuff=`docker push -q $1/container-manager:$tag`
+  if [[ $? == 0 ]]; then
+    printf "${Green}[ok]\n";
+  else
+    printf "${Red}[error]\n";
+    exit 1;
+  fi
+else
+  printf "${Red}[error]\n";
+  exit 1;
+fi
