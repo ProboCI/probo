@@ -31,7 +31,7 @@ exports.run = function(amour) {
       throw error;
     }
     server.run(amour, function(error) {
-      logger.getLogger('container-manager')
+      logger.get('container-manager')
         .info({config}, `Listening on ${config.port}`);
     });
   });
