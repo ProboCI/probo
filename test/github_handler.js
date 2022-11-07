@@ -298,7 +298,7 @@ describe('GithubHandler', () => {
 
       // mock out internal API calls
       mocks.push(
-        sinon.stub(ghh.api, 'findProjectByRepo').yields(null, {})
+        sinon.stub(ghh.api, 'findProjectByRepo').yields(null, {}),
       );
 
       // ensure that buildStatusUpdateHandler is called

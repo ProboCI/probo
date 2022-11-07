@@ -74,7 +74,7 @@ describe('LAMP App', function() {
     app.script.should.containEql('mysql -e \'create database \'$DATABASE_NAME');
 
     app.script.should.containEql(
-      'cat $ASSET_DIR/my-cool-db.sql | $(mysql -u $DATABASE_USER --password=$DATABASE_PASS $DATABASE_NAME)'
+      'cat $ASSET_DIR/my-cool-db.sql | $(mysql -u $DATABASE_USER --password=$DATABASE_PASS $DATABASE_NAME)',
     );
 
   });

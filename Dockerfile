@@ -17,11 +17,7 @@
 FROM node:16-alpine
 USER root
 
-RUN apk add curl gnupg
-
-RUN wget https://download.docker.com/linux/static/stable/x86_64/docker-20.10.7.tgz \
-  && tar -xvzf docker-20.10.7.tgz \
-  && cp docker/* /usr/bin/
+RUN apk add curl gnupg jq util-linux-misc
 
 RUN mkdir -p /home/probo/app
 COPY . /home/probo/app
@@ -29,6 +25,10 @@ COPY . /home/probo/app
 RUN cd /home/probo/app/ && npm install
 
 WORKDIR /home/probo/app
+
+RUN cd /home/probo/app && mkdir arm && mkdir x64 && \
+  cd arm && wget https://download.docker.com/linux/static/stable/aarch64/docker-20.10.9.tgz  && cd .. && \
+  cd x64 && wget https://download.docker.com/linux/static/stable/x86_64/docker-20.10.9.tgz && cd ..
 
 EXPOSE 3010 3020
 
