@@ -1,5 +1,5 @@
 #
-# Copyright 2022 ProboCI, LLC
+# Copyright 2023 ProboCI, LLC
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ USER root
 
 RUN apk add curl gnupg
 
-RUN wget https://download.docker.com/linux/static/stable/x86_64/docker-20.10.7.tgz \
-  && tar -xvzf docker-20.10.7.tgz \
+RUN wget https://download.docker.com/linux/static/stable/x86_64/docker-20.10.21.tgz \
+  && tar -xvzf docker-20.10.21.tgz \
   && cp docker/* /usr/bin/
 
 RUN mkdir -p /home/probo/app
