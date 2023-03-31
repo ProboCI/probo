@@ -292,9 +292,22 @@ auth:
 #   # currently supported plugins are: Kafka and Memory
 #   plugin: 'Memory'
 
+# currently supported plugins are: Kafka and Memory
 buildsEventStream:
-  plugin: 'Kafka'
+  plugin: Kafka
   config:
+    # DEPRECATED CONFIGURATIONS
+    version: 1
+    kafkaClientOptions:
+      connectionString: 'localhost:9092'
+    # New required configurations in Probo Eventbus
     clientId: proboci
-    topic: build_events
-    brokers: 'localhost:9092'
+    groupId: coordinator
+    consumerTopic: build_events
+    topics:
+      event: build_events
+      email: email
+      error: error
+      step: step
+    brokers:
+      - 'localhost:9092'
