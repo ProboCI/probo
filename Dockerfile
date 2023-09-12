@@ -19,8 +19,8 @@ USER root
 
 RUN apk add curl gnupg
 
-RUN wget https://download.docker.com/linux/static/stable/x86_64/docker-20.10.21.tgz \
-  && tar -xvzf docker-20.10.21.tgz \
+RUN wget https://download.docker.com/linux/static/stable/x86_64/docker-24.0.6.tgz \
+  && tar -xvzf docker-24.0.6.tgz \
   && cp docker/* /usr/bin/
 
 RUN mkdir -p /home/probo/app
