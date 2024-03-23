@@ -31,7 +31,8 @@ if [ -z "$1" ]; then
 fi
 
 printf "${Cyan}Building Probo..............................."
-stuff=`docker buildx build --quiet --platform linux/amd64 -t $1/probo:$tag --push .`;
+stuff=`docker build . -t $1/probo:$tag`;
+stuff2=`docker push $1/probo:$tag`;
 if [[ $? == 0 ]]; then
   printf "${Green}[ok]\n";
 else
