@@ -17,8 +17,10 @@ const mockContainer = {
 describe('Drupal App', function() {
   let options;
   let options2;
+  let options3;
   let app;
   let app2;
+  let app3;
 
   before(function(done) {
     options = {
@@ -27,10 +29,17 @@ describe('Drupal App', function() {
     };
     options2 = {
       database: 'my-cool-db.sql',
+      databaseEngine: 'mysql',
       databaseGzipped: true,
       clearCaches: false,
       databasePrefix: 'my_custom_prefix',
       varnish: {enable: true},
+    };
+    options3 = {
+      database: 'my-cool-db.sql',
+      databaseEngine: 'pgsql',
+      databaseGzipped: true,
+      clearCaches: false,
     };
     done();
   });
@@ -45,6 +54,11 @@ describe('Drupal App', function() {
     app2.should.be.ok;
     app2.should.have.property('id').which.is.a.String;
     app2.id.should.match(/[0-9a-z]{16}/g);
+
+    app3 = new DrupalApp(mockContainer, options3);
+    app3.should.be.ok;
+    app3.should.have.property('id').which.is.a.String;
+    app3.id.should.match(/[0-9a-z]{16}/g);
 
     done();
   });
@@ -74,11 +88,11 @@ describe('Drupal App', function() {
     let support = app.drupalVersionSupported();
     support.should.be.ok;
 
-    const app3 = new DrupalApp(mockContainer, Object.assign({}, options, {drupalVersion: 1}));
-    app3.script = [];
-    app3.addScriptUnsupportedDrupalVersion();
-    app3.script.should.have.length(2);
-    support = app3.drupalVersionSupported();
+    const app4 = new DrupalApp(mockContainer, Object.assign({}, options, {drupalVersion: 1}));
+    app4.script = [];
+    app4.addScriptUnsupportedDrupalVersion();
+    app4.script.should.have.length(2);
+    support = app4.drupalVersionSupported();
     support.should.not.be.ok;
     done();
   });
@@ -91,11 +105,11 @@ describe('Drupal App', function() {
     app.script.should.eql(['drush --root=/var/www/html cache-clear all']);
 
     // testing D8
-    const app3 = new DrupalApp(mockContainer, Object.assign({}, options, {drupalVersion: 8}));
-    app3.script = [];
-    app3.addScriptClearCaches();
-    app3.script.should.have.length(1);
-    app3.script.should.eql(['drush --root=/var/www/html cache-rebuild']);
+    const app4 = new DrupalApp(mockContainer, Object.assign({}, options, {drupalVersion: 8}));
+    app4.script = [];
+    app4.addScriptClearCaches();
+    app4.script.should.have.length(1);
+    app4.script.should.eql(['drush --root=/var/www/html cache-rebuild']);
     done();
   });
 
@@ -162,11 +176,11 @@ describe('Drupal App', function() {
   });
 
   it('should append custom settings to script', function(done) {
-    const app3 = new DrupalApp(mockContainer, Object.assign({}, options, {settingsRequireFile: 'dummy.php', settingsAppend: 'dummy'}));
-    app3.script = [];
-    app3.appendCustomSettings();
-    app3.script.should.have.length(2);
-    app3.script.should.eql([
+    const app4 = new DrupalApp(mockContainer, Object.assign({}, options, {settingsRequireFile: 'dummy.php', settingsAppend: 'dummy'}));
+    app4.script = [];
+    app4.appendCustomSettings();
+    app4.script.should.have.length(2);
+    app4.script.should.eql([
       'echo "require_once(\'dummy.php\');" >> /var/www/html/sites/default/settings.php',
       'echo dummy >> /var/www/html/sites/default/settings.php',
     ]);
@@ -176,7 +190,7 @@ describe('Drupal App', function() {
   it('should add D8 settings', function(done) {
     app.script = [];
     app.addD8PHPSettings();
-    app.script.should.have.length(24);
+    app.script.should.have.length(23);
     done();
   });
 
@@ -184,9 +198,17 @@ describe('Drupal App', function() {
     app.script = [];
     app.addD7PHPSettings();
     app.script.should.have.length(19);
+    app.script.should.containEql('      \'driver\' => \'mysql\',');
     done();
   });
 
+  it('should add postgreSQL settings', function(done) {
+    app3.script = [];
+    app3.addD7PHPSettings();
+    app3.script.should.have.length(19);
+    app3.script.should.containEql('      \'driver\' => \'pgsql\',');
+    done();
+  });
 
   it('should add Drupal settings and any custom settings', function(done) {
     // testing D7 (default)
@@ -195,10 +217,10 @@ describe('Drupal App', function() {
     app.script.should.have.length(19);
 
     // testing D8
-    const app3 = new DrupalApp(mockContainer, Object.assign({}, options, {drupalVersion: 8}));
-    app3.script = [];
-    app3.addScriptAppendSettingsPHPSettings();
-    app3.script.should.have.length(24);
+    const app4 = new DrupalApp(mockContainer, Object.assign({}, options, {drupalVersion: 8}));
+    app4.script = [];
+    app4.addScriptAppendSettingsPHPSettings();
+    app4.script.should.have.length(23);
     done();
   });
 
