@@ -36,7 +36,7 @@
   ],
   "dependencies": {
     "@octokit/rest": "^16.27.3",
-    "async": "^3.0.1",
+    "async": "^3.2.6",
     "biguint-format": "^1.0.1",
     "bluebird": "^3.5.5",
     "bunyan": "^1.8.12",
@@ -63,7 +63,7 @@
     "probo-request-logger": "^1.1.2",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
-    "restify": "^8.3.2",
+    "restify": "^11.1.0",
     "restify-errors": "^8.0.0",
     "shell-escape": "^0.2.0",
     "stream-combiner": "^0.2.2",
