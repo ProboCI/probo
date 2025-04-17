@@ -19,16 +19,9 @@ USER root
 
 RUN apk add curl gnupg
 
-
 COPY conf/proc-specific-install.sh /proc-specific-install.sh
 RUN chmod 755 /proc-specific-install.sh && \
   sh /proc-specific-install.sh
-
-
-
-# RUN wget https://download.docker.com/linux/static/stable/x86_64/docker-24.0.6.tgz \
-#   && tar -xvzf docker-24.0.6.tgz \
-#   && cp docker/* /usr/bin/
 
 RUN mkdir -p /home/probo/app
 COPY . /home/probo/app
