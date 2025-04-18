@@ -23,16 +23,25 @@ help() {
 if [ -n "$2" ]; then
   export tag=$2
 else
-  help
+  export tag="latest"
 fi
 
 if [ -z "$1" ]; then
-  help
+  export repo="proboci"
+else
+  export repo=$1
 fi
 
 printf "${Cyan}Building Probo..............................."
-stuff=`docker build . -t $1/probo:$tag`;
-stuff2=`docker push $1/probo:$tag`;
+stuff=`docker build . -q -t $1/probo:$tag`;
+if [[ $? == 0 ]]; then
+  printf "${Green}[ok]\n";
+else
+  printf "${Red}[error]\n";
+  exit 1;
+fi
+
+stuff=`docker push -q $1/probo:$tag`;
 if [[ $? == 0 ]]; then
   printf "${Green}[ok]\n";
 else
