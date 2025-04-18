@@ -27,7 +27,7 @@ else
 fi
 
 if [ -z "$1" ]; then
-  export repo="proboci"
+  help
 else
   export repo=$1
 fi
@@ -41,6 +41,7 @@ else
   exit 1;
 fi
 
+printf "${Cyan}Pushing Probo................................"
 stuff=`docker push -q $1/probo:$tag`;
 if [[ $? == 0 ]]; then
   printf "${Green}[ok]\n";
