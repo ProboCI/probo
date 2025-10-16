@@ -24,6 +24,13 @@ containerCapacity: -1 # -1 is unlimited or not set
 # is reset again to this timeout value
 containerIdleTimeout: 30m # can use time units here. no units = ms
 
+solr:
+  '5': ''
+  '6': ''
+  '7': ''
+  '8': ''
+  '9': ''
+
 # Prefixes all routes so that the app can be namespaced.
 prefix: ''
 # If a container is not specified in the repository's configuration, use this one.
