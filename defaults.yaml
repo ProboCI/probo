@@ -25,11 +25,21 @@ containerCapacity: -1 # -1 is unlimited or not set
 containerIdleTimeout: 30m # can use time units here. no units = ms
 
 solr:
-  '5': ''
-  '6': ''
-  '7': ''
-  '8': ''
-  '9': ''
+  '5':
+    url: ''
+    version: ''
+  '6':
+    url: ''
+    version: ''
+  '7':
+    url: ''
+    version: ''
+  '8':
+    url: ''
+    version: ''
+  '9':
+    url: ''
+    version: ''
 
 # Prefixes all routes so that the app can be namespaced.
 prefix: ''
