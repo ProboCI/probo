@@ -17,11 +17,11 @@
 FROM node:22-alpine
 USER root
 
-RUN apk add curl gnupg
+# RUN apk add curl gnupg
 
-COPY conf/proc-specific-install.sh /proc-specific-install.sh
-RUN chmod 755 /proc-specific-install.sh && \
-  sh /proc-specific-install.sh
+# COPY conf/proc-specific-install.sh /proc-specific-install.sh
+# RUN chmod 755 /proc-specific-install.sh && \
+#   sh /proc-specific-install.sh
 
 RUN mkdir -p /home/probo/app
 COPY . /home/probo/app
